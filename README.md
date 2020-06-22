@@ -1,5 +1,7 @@
 # tator-r
 
+NOTE: This package is in development and not ready for use. It will be available on CRAN when it is release-ready.
+
 [R](https://www.r-project.org) client for [Tator](https://github.com/cvisionai/tator).
 
 ## API documentation
