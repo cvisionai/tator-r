@@ -3721,7 +3721,7 @@
 #'
 #' library(tator)
 #' var.id <- 56 # integer | A unique integer identifying a media object.
-#' var.frames <- [0] # array[integer] | Comma-seperated list of frames to capture.
+#' var.frames <- c(0) # array[integer] | Comma-seperated list of frames to capture.
 #' var.tile <- 'tile_example' # character | wxh, if not supplied is made as squarish as possible.
 #' var.roi <- 'roi_example' # character | w:h:x:y, optionally crop each frame to a given roi in relative coordinates.
 #' var.animate <- 56 # integer | If not tiling, animate each frame at a given fps in a gif.
@@ -6971,7 +6971,7 @@ TatorApi <- R6::R6Class(
         ApiResponse$new("API server error", resp)
       }
     },
-    GetFrame = function(id, frames=[0], tile=NULL, roi=NULL, animate=NULL, quality=NULL, ...){
+    GetFrame = function(id, frames=c(0), tile=NULL, roi=NULL, animate=NULL, quality=NULL, ...){
       apiResponse <- self$GetFrameWithHttpInfo(id, frames, tile, roi, animate, quality, ...)
       resp <- apiResponse$response
       if (httr::status_code(resp) >= 200 && httr::status_code(resp) <= 299) {
@@ -6985,7 +6985,7 @@ TatorApi <- R6::R6Class(
       }
     },
 
-    GetFrameWithHttpInfo = function(id, frames=[0], tile=NULL, roi=NULL, animate=NULL, quality=NULL, ...){
+    GetFrameWithHttpInfo = function(id, frames=c(0), tile=NULL, roi=NULL, animate=NULL, quality=NULL, ...){
       args <- list(...)
       queryParams <- list()
       headerParams <- c()
