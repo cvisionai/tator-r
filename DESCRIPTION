@@ -14,3 +14,5 @@ Imports:
   caTools,
   httr,
   jsonlite
+Suggests: 
+    testthat

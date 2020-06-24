@@ -65,7 +65,7 @@ AttributeType <- R6::R6Class(
         self$`choices` <- `choices`
       }
       if (!is.null(`default`)) {
-        stopifnot(R6::is.R6(`default`))
+        #stopifnot(R6::is.R6(`default`))
         self$`default` <- `default`
       }
       if (!is.null(`description`)) {
