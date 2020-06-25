@@ -26,6 +26,11 @@ AlgorithmLaunchSpec <- R6::R6Class(
     `algorithm_name` = NULL,
     `media_ids` = NULL,
     `media_query` = NULL,
+    #' @description Create a new instance of AlgorithmLaunchSpec
+    #' @param algorithm_name (character) Name of the algorithm to execute.
+    #' @param media_ids (vector) List of media IDs. Must supply media_query or media_ids.
+    #' @param media_query (character) Query string used to filter media IDs. If supplied, media_ids will be ignored.
+    #' @param ... (list) local.optional.var
     initialize = function(`algorithm_name`, `media_ids`=NULL, `media_query`=NULL, ...){
       local.optional.var <- list(...)
       if (!missing(`algorithm_name`)) {
@@ -42,6 +47,7 @@ AlgorithmLaunchSpec <- R6::R6Class(
         self$`media_query` <- `media_query`
       }
     },
+    #' @description Convert an instance of AlgorithmLaunchSpec to an R list object
     toJSON = function() {
       AlgorithmLaunchSpecObject <- list()
       if (!is.null(self$`algorithm_name`)) {
@@ -59,6 +65,8 @@ AlgorithmLaunchSpec <- R6::R6Class(
 
       AlgorithmLaunchSpecObject
     },
+    #' @description Convert an R JSON object to an R list type
+    #' @param AlgorithmLaunchSpecJson (character) A JSON string representing an AlgorithmLaunchSpec
     fromJSON = function(AlgorithmLaunchSpecJson) {
       AlgorithmLaunchSpecObject <- jsonlite::fromJSON(AlgorithmLaunchSpecJson)
       if (!is.null(AlgorithmLaunchSpecObject$`algorithm_name`)) {
@@ -71,6 +79,7 @@ AlgorithmLaunchSpec <- R6::R6Class(
         self$`media_query` <- AlgorithmLaunchSpecObject$`media_query`
       }
     },
+    #' @description Convert an instance of AlgorithmLaunchSpec to a JSON string
     toJSONString = function() {
       jsoncontent <- c(
         if (!is.null(self$`algorithm_name`)) {
@@ -98,6 +107,8 @@ AlgorithmLaunchSpec <- R6::R6Class(
       jsoncontent <- paste(jsoncontent, collapse = ",")
       paste('{', jsoncontent, '}', sep = "")
     },
+    #' @description Create an instance of AlgorithmLaunchSpec from a JSON string
+    #' @param AlgorithmLaunchSpecJson (character) A JSON string representing an AlgorithmLaunchSpec
     fromJSONString = function(AlgorithmLaunchSpecJson) {
       AlgorithmLaunchSpecObject <- jsonlite::fromJSON(AlgorithmLaunchSpecJson)
       self$`algorithm_name` <- AlgorithmLaunchSpecObject$`algorithm_name`

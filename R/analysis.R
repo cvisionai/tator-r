@@ -26,6 +26,11 @@ Analysis <- R6::R6Class(
     `data_query` = NULL,
     `id` = NULL,
     `name` = NULL,
+    #' @description Create a new instance of Analysis
+    #' @param data_query (character) Lucene query string used to retrieve entities to analyze.
+    #' @param id (numeric) Unique integer identifying the analysis.
+    #' @param name (character) Name of analysis.
+    #' @param ... (list) local.optional.var
     initialize = function(`data_query`='*', `id`=NULL, `name`=NULL, ...){
       local.optional.var <- list(...)
       if (!is.null(`data_query`)) {
@@ -41,6 +46,7 @@ Analysis <- R6::R6Class(
         self$`name` <- `name`
       }
     },
+    #' @description Convert an instance of Analysis to an R list object
     toJSON = function() {
       AnalysisObject <- list()
       if (!is.null(self$`data_query`)) {
@@ -58,6 +64,8 @@ Analysis <- R6::R6Class(
 
       AnalysisObject
     },
+    #' @description Convert an R JSON object to an R list type
+    #' @param AnalysisJson (character) A JSON string representing an Analysis
     fromJSON = function(AnalysisJson) {
       AnalysisObject <- jsonlite::fromJSON(AnalysisJson)
       if (!is.null(AnalysisObject$`data_query`)) {
@@ -70,6 +78,7 @@ Analysis <- R6::R6Class(
         self$`name` <- AnalysisObject$`name`
       }
     },
+    #' @description Convert an instance of Analysis to a JSON string
     toJSONString = function() {
       jsoncontent <- c(
         if (!is.null(self$`data_query`)) {
@@ -97,6 +106,8 @@ Analysis <- R6::R6Class(
       jsoncontent <- paste(jsoncontent, collapse = ",")
       paste('{', jsoncontent, '}', sep = "")
     },
+    #' @description Create an instance of Analysis from a JSON string
+    #' @param AnalysisJson (character) A JSON string representing an Analysis
     fromJSONString = function(AnalysisJson) {
       AnalysisObject <- jsonlite::fromJSON(AnalysisJson)
       self$`data_query` <- AnalysisObject$`data_query`

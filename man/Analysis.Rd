@@ -36,15 +36,30 @@ Analysis Class
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new instance of Analysis
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Analysis$new(data_query = "*", id = NULL, name = NULL, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data_query}}{(character) Lucene query string used to retrieve entities to analyze.}
+
+\item{\code{id}}{(numeric) Unique integer identifying the analysis.}
+
+\item{\code{name}}{(character) Name of analysis.}
+
+\item{\code{...}}{(list) local.optional.var}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-toJSON"></a>}}
 \if{latex}{\out{\hypertarget{method-toJSON}{}}}
 \subsection{Method \code{toJSON()}}{
+Convert an instance of Analysis to an R list object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Analysis$toJSON()}\if{html}{\out{</div>}}
 }
@@ -54,15 +69,24 @@ Analysis Class
 \if{html}{\out{<a id="method-fromJSON"></a>}}
 \if{latex}{\out{\hypertarget{method-fromJSON}{}}}
 \subsection{Method \code{fromJSON()}}{
+Convert an R JSON object to an R list type
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Analysis$fromJSON(AnalysisJson)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{AnalysisJson}}{(character) A JSON string representing an Analysis}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-toJSONString"></a>}}
 \if{latex}{\out{\hypertarget{method-toJSONString}{}}}
 \subsection{Method \code{toJSONString()}}{
+Convert an instance of Analysis to a JSON string
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Analysis$toJSONString()}\if{html}{\out{</div>}}
 }
@@ -72,10 +96,18 @@ Analysis Class
 \if{html}{\out{<a id="method-fromJSONString"></a>}}
 \if{latex}{\out{\hypertarget{method-fromJSONString}{}}}
 \subsection{Method \code{fromJSONString()}}{
+Create an instance of Analysis from a JSON string
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Analysis$fromJSONString(AnalysisJson)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{AnalysisJson}}{(character) A JSON string representing an Analysis}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
