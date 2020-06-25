@@ -25,11 +25,11 @@
 #' @format An \code{R6Class} generator object
 #' @field basePath Base url
 #' @field userAgent Default user agent
-#' @field defaultHeaders
+#' @field defaultHeaders Default headers in the HTTP request
 #' @field username Username for HTTP basic authentication
 #' @field password Password for HTTP basic authentication
-#' @field apiKeys
-#' @field accessToken
+#' @field apiKeys API keys
+#' @field accessToken Access token
 #' @field timeout Default timeout in seconds
 #' @importFrom httr add_headers accept timeout content
 #' @export

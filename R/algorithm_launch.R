@@ -26,6 +26,11 @@ AlgorithmLaunch <- R6::R6Class(
     `group_id` = NULL,
     `message` = NULL,
     `run_uids` = NULL,
+    #' @description Create a new instance of AlgorithmLaunch
+    #' @param group_id (character) A uuid1 string identifying the group of jobs started.
+    #' @param message (character) Message indicating successful launch.
+    #' @param run_uids (vector) A list of uuid1 strings identifying each job started.
+    #' @param ... (list) local.optional.var
     initialize = function(`group_id`=NULL, `message`=NULL, `run_uids`=NULL, ...){
       local.optional.var <- list(...)
       if (!is.null(`group_id`)) {
@@ -42,6 +47,7 @@ AlgorithmLaunch <- R6::R6Class(
         self$`run_uids` <- `run_uids`
       }
     },
+    #' @description Convert an instance of AlgorithmLaunch to an R list object
     toJSON = function() {
       AlgorithmLaunchObject <- list()
       if (!is.null(self$`group_id`)) {
@@ -59,6 +65,8 @@ AlgorithmLaunch <- R6::R6Class(
 
       AlgorithmLaunchObject
     },
+    #' @description Convert an R JSON object to an R list type
+    #' @param AlgorithmLaunchJson (character) A JSON string representing an AlgorithmLaunch
     fromJSON = function(AlgorithmLaunchJson) {
       AlgorithmLaunchObject <- jsonlite::fromJSON(AlgorithmLaunchJson)
       if (!is.null(AlgorithmLaunchObject$`group_id`)) {
@@ -71,6 +79,7 @@ AlgorithmLaunch <- R6::R6Class(
         self$`run_uids` <- ApiClient$new()$deserializeObj(AlgorithmLaunchObject$`run_uids`, "array[character]", loadNamespace("tator"))
       }
     },
+    #' @description Convert an instance of AlgorithmLaunch to a JSON string
     toJSONString = function() {
       jsoncontent <- c(
         if (!is.null(self$`group_id`)) {
@@ -98,6 +107,8 @@ AlgorithmLaunch <- R6::R6Class(
       jsoncontent <- paste(jsoncontent, collapse = ",")
       paste('{', jsoncontent, '}', sep = "")
     },
+    #' @description Create an instance of AlgorithmLaunch from a JSON string
+    #' @param AlgorithmLaunchJson (character) A JSON string representing an AlgorithmLaunch
     fromJSONString = function(AlgorithmLaunchJson) {
       AlgorithmLaunchObject <- jsonlite::fromJSON(AlgorithmLaunchJson)
       self$`group_id` <- AlgorithmLaunchObject$`group_id`

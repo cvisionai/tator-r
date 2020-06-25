@@ -30,9 +30,15 @@ Do not edit the class manually.
 
 \item{\code{userAgent}}{Default user agent}
 
+\item{\code{defaultHeaders}}{Default headers in the HTTP request}
+
 \item{\code{username}}{Username for HTTP basic authentication}
 
 \item{\code{password}}{Password for HTTP basic authentication}
+
+\item{\code{apiKeys}}{API keys}
+
+\item{\code{accessToken}}{Access token}
 
 \item{\code{timeout}}{Default timeout in seconds}
 }
