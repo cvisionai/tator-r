@@ -52,7 +52,15 @@ ApiClient  <- R6::R6Class(
     accessToken = NULL,
     # Time Out (seconds)
     timeout = NULL,
-    # constructor
+    #' @description Create a new instance of ApiClient
+    #' @param basePath (character) Base path of all requests.
+    #' @param userAgent (character) User agent in the HTTP request
+    #' @param defaultHeaders (character) Default headers in the HTTP request
+    #' @param username (character) Username (HTTP basic authentication)
+    #' @param password (character) Password (HTTP basic authentication)
+    #' @param apiKeys (list) API keys
+    #' @param accessToken (character) Access token
+    #' @param timeout (numeric) Time Out (seconds)
     initialize = function(basePath=NULL, userAgent=NULL, defaultHeaders=NULL, username=NULL, password=NULL, apiKeys=NULL, accessToken=NULL, timeout=NULL){
       if (!is.null(basePath)) {
         self$basePath <- basePath
@@ -88,6 +96,13 @@ ApiClient  <- R6::R6Class(
         self$timeout <- timeout
       }
     },
+    #' @description Makes the HTTP request (synchronous) and returns deserialized data.
+    #' @param url (character)
+    #' @param method (character)
+    #' @param queryParams (character)
+    #' @param headerParams (character)
+    #' @param body (character)
+    #' @param ... (list) local.optional.var
     CallApi = function(url, method, queryParams, headerParams, body, ...){
       headers <- httr::add_headers(c(headerParams, self$defaultHeaders))
 
