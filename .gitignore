@@ -2,4 +2,5 @@
 /*.Rcheck/
 .RData
 .Rhistory
+.Rapp.history
 *.tar.gz
