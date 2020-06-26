@@ -29,6 +29,8 @@ result <- tator_api$CreateProject(ProjectSpec$new("Test Project", "A test projec
 project <- result$id
 loginfo(result$message)
 
+stopifnot("Project was not created"=is.numeric(project))
+
 # Create image type.
 result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
   name = "Test Images",
@@ -85,4 +87,270 @@ result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
   )
 ))
 image_type <- result$id
-loginfo(result)
+loginfo(result$message)
+
+
+# Create video type.
+result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
+  name = "Test Videos",
+  description = "A test video type.",
+  dtype = "video",
+  default_volume = 50,
+  attribute_types = c(
+    AttributeType$new(
+      name = "Test Bool",
+      dtype = "bool",
+      order = 0,
+      default = FALSE
+    ),
+    AttributeType$new(
+      name = "Test Int",
+      dtype = "int",
+      order = 1,
+      default = 0,
+      minimum = 0,
+      maximum = 1000
+    ),
+    AttributeType$new(
+      name = "Test Float",
+      dtype = "float",
+      order = 2,
+      default = 0.0,
+      minimum = -1000.0,
+      maximum = 1000.0
+    ),
+    AttributeType$new(
+      name = "Test String",
+      dtype = "string",
+      order = 3
+    ),
+    AttributeType$new(
+      name = "Test Enum",
+      dtype = "enum",
+      order = 4,
+      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      default = "Test Choice 1"
+    ),
+    AttributeType$new(
+      name = "Test Datetime",
+      dtype = "datetime",
+      order = 5,
+      use_current = TRUE
+    ),
+    AttributeType$new(
+      name = "Test Geoposition",
+      dtype = "geopos",
+      order = 6,
+      default = c(-71.05674, 42.35866)
+    )
+  )
+))
+video_type <- result$id
+loginfo(result$message)
+
+# Get baseline version.
+baseline_version <- tator_api$GetVersionList(project)[1]$id
+
+# Create additional version.
+result <- tator_api$CreateVersion(project, VersionSpec$new(
+  name = "Test Version",
+  description = "A test version.",
+  show_empty = TRUE,
+  bases = c(baseline_version)
+))
+version <- result$id
+loginfo(result$message)
+
+# Create box type.
+result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
+  name = "Test Boxes",
+  description = "A test box type.",
+  dtype = "box",
+  media_types = c(image_type, video_type),
+  colorMap = ColorMap$new(
+    default = c(255, 0, 0),
+    key = "Test Enum",
+    map = list(
+        "Test Choice 1" = c(0, 255, 0),
+        "Test Choice 2" = c(0, 0, 255)
+    )
+  ),
+  attribute_types = c(
+    AttributeType$new(
+      name = "Test Bool",
+      dtype = "bool",
+      order = 0,
+      default = FALSE
+    ),
+    AttributeType$new(
+      name = "Test Int",
+      dtype = "int",
+      order = 1,
+      default = 0,
+      minimum = 0,
+      maximum = 1000
+    ),
+    AttributeType$new(
+      name = "Test Float",
+      dtype = "float",
+      order = 2,
+      default = 0.0,
+      minimum = -1000.0,
+      maximum = 1000.0
+    ),
+    AttributeType$new(
+      name = "Test String",
+      dtype = "string",
+      order = 3
+    ),
+    AttributeType$new(
+      name = "Test Enum",
+      dtype = "enum",
+      order = 4,
+      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      default = "Test Choice 1"
+    ),
+    AttributeType$new(
+      name = "Test Datetime",
+      dtype = "datetime",
+      order = 5,
+      use_current = TRUE
+    ),
+    AttributeType$new(
+      name = "Test Geoposition",
+      dtype = "geopos",
+      order = 6,
+      default = c(-71.05674, 42.35866)
+    )
+  )
+))
+box_type <- result$id
+loginfo(result$message)
+
+# Create line type.
+result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
+  name = "Test Lines",
+  description = "A test line type.",
+  dtype = "line",
+  media_types = c(image_type, video_type),
+  attribute_types = c(
+    AttributeType$new(
+      name = "Test Bool",
+      dtype = "bool",
+      order = 0,
+      default = FALSE
+    ),
+    AttributeType$new(
+      name = "Test Int",
+      dtype = "int",
+      order = 1,
+      default = 0,
+      minimum = 0,
+      maximum = 1000
+    ),
+    AttributeType$new(
+      name = "Test Float",
+      dtype = "float",
+      order = 2,
+      default = 0.0,
+      minimum = -1000.0,
+      maximum = 1000.0
+    ),
+    AttributeType$new(
+      name = "Test String",
+      dtype = "string",
+      order = 3
+    ),
+    AttributeType$new(
+      name = "Test Enum",
+      dtype = "enum",
+      order = 4,
+      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      default = "Test Choice 1"
+    ),
+    AttributeType$new(
+      name = "Test Datetime",
+      dtype = "datetime",
+      order = 5,
+      use_current = TRUE
+    ),
+    AttributeType$new(
+      name = "Test Geoposition",
+      dtype = "geopos",
+      order = 6,
+      default = c(-71.05674, 42.35866)
+    )
+  )
+))
+line_type <- result$id
+loginfo(result$message)
+
+# Create dot type.
+result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
+  name = "Test Dots",
+  description = "A test dot type.",
+  dtype = "dot",
+  media_types = c(image_type, video_type),
+  colorMap = ColorMap$new(
+    default = c(255, 0, 0),
+    version = list(
+        baseline_version = c(0, 255, 0),
+        version = c(0, 0, 255)
+    )
+  ),
+  attribute_types = c(
+    AttributeType$new(
+      name = "Test Bool",
+      dtype = "bool",
+      order = 0,
+      default = FALSE
+    ),
+    AttributeType$new(
+      name = "Test Int",
+      dtype = "int",
+      order = 1,
+      default = 0,
+      minimum = 0,
+      maximum = 1000
+    ),
+    AttributeType$new(
+      name = "Test Float",
+      dtype = "float",
+      order = 2,
+      default = 0.0,
+      minimum = -1000.0,
+      maximum = 1000.0
+    ),
+    AttributeType$new(
+      name = "Test String",
+      dtype = "string",
+      order = 3
+    ),
+    AttributeType$new(
+      name = "Test Enum",
+      dtype = "enum",
+      order = 4,
+      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      default = "Test Choice 1"
+    ),
+    AttributeType$new(
+      name = "Test Datetime",
+      dtype = "datetime",
+      order = 5,
+      use_current = TRUE
+    ),
+    AttributeType$new(
+      name = "Test Geoposition",
+      dtype = "geopos",
+      order = 6,
+      default = c(-71.05674, 42.35866)
+    )
+  )
+))
+dot_type <- result$id
+loginfo(result$message)
+loginfo("Test project setup complete!")

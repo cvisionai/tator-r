@@ -65,7 +65,8 @@ AttributeType <- R6::R6Class(
         self$`choices` <- `choices`
       }
       if (!is.null(`default`)) {
-        #stopifnot(R6::is.R6(`default`))
+        allowed <- (is.logical(`default`)||is.numeric(`default`)||is.character(`default`)||is.vector(`default`))
+        stopifnot(allowed)
         self$`default` <- `default`
       }
       if (!is.null(`description`)) {
@@ -114,7 +115,7 @@ AttributeType <- R6::R6Class(
       }
       if (!is.null(self$`default`)) {
         AttributeTypeObject[['default']] <-
-          self$`default`$toJSON()
+          self$`default`
       }
       if (!is.null(self$`description`)) {
         AttributeTypeObject[['description']] <-

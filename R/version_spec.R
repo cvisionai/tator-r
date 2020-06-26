@@ -110,9 +110,9 @@ VersionSpec <- R6::R6Class(
         if (!is.null(self$`show_empty`)) {
         sprintf(
         '"show_empty":
-          "%s"
+          %s
                 ',
-        self$`show_empty`
+        jsonlite::toJSON(self$`show_empty`, auto_unbox = TRUE)
         )}
       )
       jsoncontent <- paste(jsoncontent, collapse = ",")

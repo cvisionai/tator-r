@@ -49,7 +49,7 @@ LocalizationTypeSpec <- R6::R6Class(
       }
       if (!missing(`media_types`)) {
         stopifnot(is.vector(`media_types`), length(`media_types`) != 0)
-        sapply(`media_types`, function(x) stopifnot(is.character(x)))
+        sapply(`media_types`, function(x) stopifnot(is.numeric(x)))
         self$`media_types` <- `media_types`
       }
       if (!missing(`name`)) {
@@ -185,7 +185,7 @@ LocalizationTypeSpec <- R6::R6Class(
         '"media_types":
            [%s]
         ',
-        paste(unlist(lapply(self$`media_types`, function(x) paste0('"', x, '"'))), collapse=",")
+        paste(unlist(lapply(self$`media_types`, function(x) paste0(x))), collapse=",")
         )},
         if (!is.null(self$`name`)) {
         sprintf(
@@ -197,9 +197,9 @@ LocalizationTypeSpec <- R6::R6Class(
         if (!is.null(self$`visible`)) {
         sprintf(
         '"visible":
-          "%s"
+          %s
                 ',
-        self$`visible`
+        jsonlite::toJSON(self$`visible`, auto_unbox = TRUE)
         )}
       )
       jsoncontent <- paste(jsoncontent, collapse = ",")

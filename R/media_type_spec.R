@@ -66,6 +66,7 @@ MediaTypeSpec <- R6::R6Class(
         self$`file_format` <- `file_format`
       }
       if (!is.null(`keep_original`)) {
+        stopifnot(is.logical(`keep_original`))
         self$`keep_original` <- `keep_original`
       }
     },
@@ -92,6 +93,7 @@ MediaTypeSpec <- R6::R6Class(
           self$`file_format`
       }
       if (!is.null(self$`keep_original`)) {
+        stopifnot(is.logical(`keep_original`))
         MediaTypeSpecObject[['keep_original']] <-
           self$`keep_original`
       }
@@ -166,9 +168,9 @@ MediaTypeSpec <- R6::R6Class(
         if (!is.null(self$`keep_original`)) {
         sprintf(
         '"keep_original":
-          "%s"
+          %s
                 ',
-        self$`keep_original`
+        jsonlite::toJSON(self$`keep_original`, auto_unbox = TRUE)
         )},
         if (!is.null(self$`name`)) {
         sprintf(
