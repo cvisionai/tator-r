@@ -4,3 +4,4 @@
 .Rhistory
 .Rapp.history
 *.tar.gz
+library/*
