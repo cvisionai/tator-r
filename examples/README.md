@@ -7,17 +7,23 @@
 # Running examples from the shell
 ## Make sure R executables are in your $PATH
 ```shell
+# Windows (PowerShell)
+> (get-command R.exe).Path
+# MacOS, Linux or Windows w/ Git Bash, MINGW
 $ which R
 ```
 If it is not:
 ```shell
-# Windows
-$ export PATH=$PATH:/c/Program\ Files/R/R-4.0.2/bin
-# MacOS/Linux
-$ export PATH=$PATH:/path/to/R
+# Windows (PowerShell)
+> $env:Path = $env:Path + ";" + "C:\Program Files\R\R-<YOUR VERSION>\bin"
+# MacOS/Linux or Windows w/ Git Bash, MINGW
+$ export PATH=$PATH:/path/to/R/version/bin
 ```
 ## Build the package
 ```shell
+# Windows (PowerShell)
+> build.bat
+# MacOS/Linux or Windows w/ Git Bash, MINGW
 $ ./build.sh
 ```
 ## Run an example
