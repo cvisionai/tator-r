@@ -26,6 +26,11 @@ Algorithm <- R6::R6Class(
     `description` = NULL,
     `id` = NULL,
     `name` = NULL,
+    #' @description Create a new instance of Algorithm
+    #' @param description (character) Description of the algorithm.
+    #' @param id (numeric) Unique integer identifying the algorithm.
+    #' @param name (character) Name of the algorithm.
+    #' @param ... (list) local.optional.var
     initialize = function(`description`=NULL, `id`=NULL, `name`=NULL, ...){
       local.optional.var <- list(...)
       if (!is.null(`description`)) {
@@ -41,6 +46,7 @@ Algorithm <- R6::R6Class(
         self$`name` <- `name`
       }
     },
+    #' @description Convert an instance of Algorithm to an R list object
     toJSON = function() {
       AlgorithmObject <- list()
       if (!is.null(self$`description`)) {
@@ -58,6 +64,8 @@ Algorithm <- R6::R6Class(
 
       AlgorithmObject
     },
+    #' @description Convert an R JSON object to an R list type
+    #' @param AlgorithmJson (character) A JSON string representing an Algorithm
     fromJSON = function(AlgorithmJson) {
       AlgorithmObject <- jsonlite::fromJSON(AlgorithmJson)
       if (!is.null(AlgorithmObject$`description`)) {
@@ -70,6 +78,7 @@ Algorithm <- R6::R6Class(
         self$`name` <- AlgorithmObject$`name`
       }
     },
+    #' @description Convert an instance of Algorithm to a JSON string
     toJSONString = function() {
       jsoncontent <- c(
         if (!is.null(self$`description`)) {
@@ -97,6 +106,8 @@ Algorithm <- R6::R6Class(
       jsoncontent <- paste(jsoncontent, collapse = ",")
       paste('{', jsoncontent, '}', sep = "")
     },
+    #' @description Create an instance of Algorithm from a JSON string
+    #' @param AlgorithmJson (character) A JSON string representing an Algorithm
     fromJSONString = function(AlgorithmJson) {
       AlgorithmObject <- jsonlite::fromJSON(AlgorithmJson)
       self$`description` <- AlgorithmObject$`description`

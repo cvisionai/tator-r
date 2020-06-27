@@ -1,1 +1,8 @@
 .DS_Store
+/*.Rcheck/
+.RData
+.Rhistory
+.Rapp.history
+*.tar.gz
+library/*
+.Rproj.user

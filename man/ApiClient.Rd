@@ -30,9 +30,15 @@ Do not edit the class manually.
 
 \item{\code{userAgent}}{Default user agent}
 
+\item{\code{defaultHeaders}}{Default headers in the HTTP request}
+
 \item{\code{username}}{Username for HTTP basic authentication}
 
 \item{\code{password}}{Password for HTTP basic authentication}
+
+\item{\code{apiKeys}}{API keys}
+
+\item{\code{accessToken}}{Access token}
 
 \item{\code{timeout}}{Default timeout in seconds}
 }
@@ -52,6 +58,7 @@ Do not edit the class manually.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new instance of ApiClient
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ApiClient$new(
   basePath = NULL,
@@ -65,15 +72,54 @@ Do not edit the class manually.
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{basePath}}{(character) Base path of all requests.}
+
+\item{\code{userAgent}}{(character) User agent in the HTTP request}
+
+\item{\code{defaultHeaders}}{(character) Default headers in the HTTP request}
+
+\item{\code{username}}{(character) Username (HTTP basic authentication)}
+
+\item{\code{password}}{(character) Password (HTTP basic authentication)}
+
+\item{\code{apiKeys}}{(list) API keys}
+
+\item{\code{accessToken}}{(character) Access token}
+
+\item{\code{timeout}}{(numeric) Time Out (seconds)}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CallApi"></a>}}
 \if{latex}{\out{\hypertarget{method-CallApi}{}}}
 \subsection{Method \code{CallApi()}}{
+Makes the HTTP request (synchronous) and returns deserialized data.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ApiClient$CallApi(url, method, queryParams, headerParams, body, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{url}}{(character)}
+
+\item{\code{method}}{(character)}
+
+\item{\code{queryParams}}{(character)}
+
+\item{\code{headerParams}}{(character)}
+
+\item{\code{body}}{(character)}
+
+\item{\code{...}}{(list) local.optional.var}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-deserialize"></a>}}

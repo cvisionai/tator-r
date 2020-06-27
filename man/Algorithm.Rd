@@ -36,15 +36,30 @@ Algorithm Class
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new instance of Algorithm
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Algorithm$new(description = NULL, id = NULL, name = NULL, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{description}}{(character) Description of the algorithm.}
+
+\item{\code{id}}{(numeric) Unique integer identifying the algorithm.}
+
+\item{\code{name}}{(character) Name of the algorithm.}
+
+\item{\code{...}}{(list) local.optional.var}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-toJSON"></a>}}
 \if{latex}{\out{\hypertarget{method-toJSON}{}}}
 \subsection{Method \code{toJSON()}}{
+Convert an instance of Algorithm to an R list object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Algorithm$toJSON()}\if{html}{\out{</div>}}
 }
@@ -54,15 +69,24 @@ Algorithm Class
 \if{html}{\out{<a id="method-fromJSON"></a>}}
 \if{latex}{\out{\hypertarget{method-fromJSON}{}}}
 \subsection{Method \code{fromJSON()}}{
+Convert an R JSON object to an R list type
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Algorithm$fromJSON(AlgorithmJson)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{AlgorithmJson}}{(character) A JSON string representing an Algorithm}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-toJSONString"></a>}}
 \if{latex}{\out{\hypertarget{method-toJSONString}{}}}
 \subsection{Method \code{toJSONString()}}{
+Convert an instance of Algorithm to a JSON string
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Algorithm$toJSONString()}\if{html}{\out{</div>}}
 }
@@ -72,10 +96,18 @@ Algorithm Class
 \if{html}{\out{<a id="method-fromJSONString"></a>}}
 \if{latex}{\out{\hypertarget{method-fromJSONString}{}}}
 \subsection{Method \code{fromJSONString()}}{
+Create an instance of Algorithm from a JSON string
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Algorithm$fromJSONString(AlgorithmJson)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{AlgorithmJson}}{(character) A JSON string representing an Algorithm}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

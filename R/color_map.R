@@ -36,11 +36,11 @@ ColorMap <- R6::R6Class(
       local.optional.var <- list(...)
       if (!is.null(`alpha_ranges`)) {
         stopifnot(is.vector(`alpha_ranges`), length(`alpha_ranges`) != 0)
-        sapply(`alpha_ranges`, function(x) stopifnot(R6::is.R6(x)))
+        sapply(`alpha_ranges`, function(x) stopifnot(is.double(x)))
         self$`alpha_ranges` <- `alpha_ranges`
       }
       if (!is.null(`default`)) {
-        stopifnot(R6::is.R6(`default`))
+        stopifnot(is.vector(`default`), length(`default`) != 0)
         self$`default` <- `default`
       }
       if (!is.null(`key`)) {
@@ -49,12 +49,12 @@ ColorMap <- R6::R6Class(
       }
       if (!is.null(`map`)) {
         stopifnot(is.vector(`map`), length(`map`) != 0)
-        sapply(`map`, function(x) stopifnot(R6::is.R6(x)))
+        sapply(`map`, function(x) stopifnot(is.double(x)))
         self$`map` <- `map`
       }
       if (!is.null(`version`)) {
         stopifnot(is.vector(`version`), length(`version`) != 0)
-        sapply(`version`, function(x) stopifnot(R6::is.R6(x)))
+        sapply(`version`, function(x) stopifnot(is.double(x)))
         self$`version` <- `version`
       }
     },
@@ -62,11 +62,11 @@ ColorMap <- R6::R6Class(
       ColorMapObject <- list()
       if (!is.null(self$`alpha_ranges`)) {
         ColorMapObject[['alpha_ranges']] <-
-          lapply(self$`alpha_ranges`, function(x) x$toJSON())
+          self$`alpha_ranges`
       }
       if (!is.null(self$`default`)) {
         ColorMapObject[['default']] <-
-          self$`default`$toJSON()
+          self$`default`
       }
       if (!is.null(self$`key`)) {
         ColorMapObject[['key']] <-
@@ -74,11 +74,11 @@ ColorMap <- R6::R6Class(
       }
       if (!is.null(self$`map`)) {
         ColorMapObject[['map']] <-
-          lapply(self$`map`, function(x) x$toJSON())
+          self$`map`
       }
       if (!is.null(self$`version`)) {
         ColorMapObject[['version']] <-
-          lapply(self$`version`, function(x) x$toJSON())
+          self$`version`
       }
 
       ColorMapObject
@@ -110,14 +110,14 @@ ColorMap <- R6::R6Class(
         '"alpha_ranges":
         %s
 ',
-        jsonlite::toJSON(lapply(self$`alpha_ranges`, function(x){ x$toJSON() }), auto_unbox = TRUE, digits=NA)
+        jsonlite::toJSON(self$`alpha_ranges`, auto_unbox = TRUE, digits=NA)
         )},
         if (!is.null(self$`default`)) {
         sprintf(
         '"default":
         %s
         ',
-        jsonlite::toJSON(self$`default`$toJSON(), auto_unbox=TRUE, digits = NA)
+        jsonlite::toJSON(self$`default`, auto_unbox=TRUE, digits = NA)
         )},
         if (!is.null(self$`key`)) {
         sprintf(
@@ -131,14 +131,14 @@ ColorMap <- R6::R6Class(
         '"map":
         %s
 ',
-        jsonlite::toJSON(lapply(self$`map`, function(x){ x$toJSON() }), auto_unbox = TRUE, digits=NA)
+        jsonlite::toJSON(self$`map`, auto_unbox = TRUE, digits=NA)
         )},
         if (!is.null(self$`version`)) {
         sprintf(
         '"version":
         %s
 ',
-        jsonlite::toJSON(lapply(self$`version`, function(x){ x$toJSON() }), auto_unbox = TRUE, digits=NA)
+        jsonlite::toJSON(self$`version`, auto_unbox = TRUE, digits=NA)
         )}
       )
       jsoncontent <- paste(jsoncontent, collapse = ",")

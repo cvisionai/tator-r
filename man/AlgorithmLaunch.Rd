@@ -36,15 +36,30 @@ AlgorithmLaunch Class
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Create a new instance of AlgorithmLaunch
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AlgorithmLaunch$new(group_id = NULL, message = NULL, run_uids = NULL, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{group_id}}{(character) A uuid1 string identifying the group of jobs started.}
+
+\item{\code{message}}{(character) Message indicating successful launch.}
+
+\item{\code{run_uids}}{(vector) A list of uuid1 strings identifying each job started.}
+
+\item{\code{...}}{(list) local.optional.var}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-toJSON"></a>}}
 \if{latex}{\out{\hypertarget{method-toJSON}{}}}
 \subsection{Method \code{toJSON()}}{
+Convert an instance of AlgorithmLaunch to an R list object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AlgorithmLaunch$toJSON()}\if{html}{\out{</div>}}
 }
@@ -54,15 +69,24 @@ AlgorithmLaunch Class
 \if{html}{\out{<a id="method-fromJSON"></a>}}
 \if{latex}{\out{\hypertarget{method-fromJSON}{}}}
 \subsection{Method \code{fromJSON()}}{
+Convert an R JSON object to an R list type
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AlgorithmLaunch$fromJSON(AlgorithmLaunchJson)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{AlgorithmLaunchJson}}{(character) A JSON string representing an AlgorithmLaunch}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-toJSONString"></a>}}
 \if{latex}{\out{\hypertarget{method-toJSONString}{}}}
 \subsection{Method \code{toJSONString()}}{
+Convert an instance of AlgorithmLaunch to a JSON string
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AlgorithmLaunch$toJSONString()}\if{html}{\out{</div>}}
 }
@@ -72,10 +96,18 @@ AlgorithmLaunch Class
 \if{html}{\out{<a id="method-fromJSONString"></a>}}
 \if{latex}{\out{\hypertarget{method-fromJSONString}{}}}
 \subsection{Method \code{fromJSONString()}}{
+Create an instance of AlgorithmLaunch from a JSON string
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AlgorithmLaunch$fromJSONString(AlgorithmLaunchJson)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{AlgorithmLaunchJson}}{(character) A JSON string representing an AlgorithmLaunch}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

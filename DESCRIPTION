@@ -13,4 +13,8 @@ Imports:
   R6,
   caTools,
   httr,
-  jsonlite
+  jsonlite,
+  optparse,
+  logging
+Suggests: 
+    testthat
