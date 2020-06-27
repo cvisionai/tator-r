@@ -5,3 +5,4 @@
 .Rapp.history
 *.tar.gz
 library/*
+.Rproj.user
