@@ -8,7 +8,6 @@
 library(tator)
 library(optparse)
 library(logging)
-library(stringr)
 
 basicConfig()
 logger <- getLogger()
@@ -70,4 +69,4 @@ state_ids <- c()
 for (response in chunked_create(tator::CreateStateList, video_type&project, states)) {
   state_ids <- c(state_ids, response$id)
 }
-loginfo(str_interp("Created ${len(state_ids)} activity changes!"))
+loginfo(paste("Created", length(state_ids), "activity changes!"))
