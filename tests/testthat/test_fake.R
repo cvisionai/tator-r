@@ -1,6 +1,15 @@
+host <- "https://xxx.tator.dev"
+token <- "xxx"
 test_that("project creates", {
-  project_id <- project_fixture(host="https://xxx.tator.dev", token="xxx")
+  project_id <- project_fixture(host, token)
+  on.exit(project_cleanup(host, token, project_id), add = TRUE)
   expect_true(is.numeric(project_id))
+  
+  image_type_id <- image_type_fixture(host, token, project_id)
+  expect_true(is.numeric(image_type_id))
+  
+  image_path <- image_file_fixture()
+  on.exit(image_file_cleanup(image_path))
+  expect_true(file.exists(image_path))
   Sys.sleep(10)
-  project_cleanup(host="https://xxx.tator.dev", token="xxx", project_id)
 })
