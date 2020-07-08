@@ -37,3 +37,8 @@ image_file_fixture <- function() {
 image_file_cleanup <- function(out_path) {
   file.remove(out_path)
 }
+
+image_fixture <- function(host, token, project_id, image_type_id, image_file_path) {
+  api <- get_api(host, token)
+  
+}

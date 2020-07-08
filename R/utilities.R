@@ -28,6 +28,6 @@ get_api <- function(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR
 chunked_create <- function(FUN, project, spec_list) {
   for (idx in range(0, length(spec_list), 500)) {
     response <- FUN(project, spec_list[idx:(idx+500)])
-    yield(response)
+    return(response) # THIS SHOULD BE A YIELD
   }
 }

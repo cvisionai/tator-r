@@ -1,5 +1,5 @@
-host <- "https://xxx.tator.dev"
-token <- "xxx"
+host <- Sys.getenv("TATOR_HOST")
+token <- Sys.getenv("TATOR_TOKEN")
 test_that("project creates", {
   project_id <- project_fixture(host, token)
   on.exit(project_cleanup(host, token, project_id), add = TRUE)
