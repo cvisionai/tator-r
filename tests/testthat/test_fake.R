@@ -11,5 +11,8 @@ test_that("project creates", {
   image_path <- image_file_fixture()
   on.exit(image_file_cleanup(image_path))
   expect_true(file.exists(image_path))
-  Sys.sleep(10)
+
+  root_image_path <- unlist(strsplit(tools::file_path_as_absolute(image_path), ":"))[[2]]
+  image_fixture(host, token, project_id, image_type_id, root_image_path)
+  #Sys.sleep(30)
 })

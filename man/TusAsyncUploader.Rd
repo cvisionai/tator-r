@@ -7,12 +7,32 @@
 \description{
 TusAsyncUploader Class
 }
+\section{Super class}{
+\code{\link[tator:TusBaseUploader]{tator::TusBaseUploader}} -> \code{TusUploader}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TusAsyncUploader$new()}}
 \item \href{#method-clone}{\code{TusAsyncUploader$clone()}}
 }
+}
+\if{html}{
+\out{<details ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="ChecksumAlgorithm">}\href{../../tator/html/TusBaseUploader.html#method-ChecksumAlgorithm}{\code{tator::TusBaseUploader$ChecksumAlgorithm()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="ChecksumAlgorithmName">}\href{../../tator/html/TusBaseUploader.html#method-ChecksumAlgorithmName}{\code{tator::TusBaseUploader$ChecksumAlgorithmName()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="EncodeMetadata">}\href{../../tator/html/TusBaseUploader.html#method-EncodeMetadata}{\code{tator::TusBaseUploader$EncodeMetadata()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetFileSize">}\href{../../tator/html/TusBaseUploader.html#method-GetFileSize}{\code{tator::TusBaseUploader$GetFileSize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetFileStream">}\href{../../tator/html/TusBaseUploader.html#method-GetFileStream}{\code{tator::TusBaseUploader$GetFileStream()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetHeaders">}\href{../../tator/html/TusBaseUploader.html#method-GetHeaders}{\code{tator::TusBaseUploader$GetHeaders()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetOffset">}\href{../../tator/html/TusBaseUploader.html#method-GetOffset}{\code{tator::TusBaseUploader$GetOffset()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetRequestLength">}\href{../../tator/html/TusBaseUploader.html#method-GetRequestLength}{\code{tator::TusBaseUploader$GetRequestLength()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetURLCreationHeaders">}\href{../../tator/html/TusBaseUploader.html#method-GetURLCreationHeaders}{\code{tator::TusBaseUploader$GetURLCreationHeaders()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="InitURLAndOffset">}\href{../../tator/html/TusBaseUploader.html#method-InitURLAndOffset}{\code{tator::TusBaseUploader$InitURLAndOffset()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="SetURL">}\href{../../tator/html/TusBaseUploader.html#method-SetURL}{\code{tator::TusBaseUploader$SetURL()}}\out{</span>}
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}

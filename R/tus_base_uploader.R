@@ -16,13 +16,16 @@ TusBaseUploader <- R6::R6Class(
     stop_at = NULL,
     request = NULL,
     retries = NULL,
+    retried = 0,
     retry_delay = NULL,
     store_url = FALSE,
     url_storage = NULL,
     fingerprinter = NULL,
     log_func = NULL,
     upload_checksum = NULL,
-    initializer = function(file_path = NULL, file_stream = NULL, url = NULL, client = NULL,
+    checksum_algorithm_name = NULL,
+    checksum_algorithm = NULL,
+    initialize = function(file_path = NULL, file_stream = NULL, url = NULL, client = NULL,
                           chunk_size = NULL, metadata = NULL, retries = 0, retry_delay = 30,
                           store_url = FALSE, url_storage = NULL, fingerprinter = NULL, 
                           upload_checksum = FALSE) {
@@ -52,29 +55,29 @@ TusBaseUploader <- R6::R6Class(
       self$chunk_size <- chunk_size
       self$retries <- retries
       self$request <- NULL
-      # self._retried = 0
+      self$retried <- 0
       self$retry_delay <- retry_delay
       self$upload_checksum <- upload_checksum
       self$checksum_algorithm_name <- "sha1"
       self$checksum_algorithm <- "sha1"
     },
-    GetHeaders <- function() {
+    GetHeaders = function() {
       client_headers <- self$client$headers
       return(c(self$default_headers, client_headers))
     },
-    GetURLCreationHeaders <- function() {
+    GetURLCreationHeaders = function() {
       headers <- self$GetHeaders()
       headers <- c(headers, "upload-length" = toString(self$GetFileSize()))
-      headers <- c(headers, "upload-metadata" = paste(self$EndcodeMetadata(), collapse = ","))
+      headers <- c(headers, "upload-metadata" = paste(self$EncodeMetadata(), collapse = ","))
       return(headers)
     },
-    ChecksumAlgorithm <- function() {
+    ChecksumAlgorithm = function() {
       return(self$checksum_algorithm)
     },
-    ChecksumAlgorithmName <- function() {
+    ChecksumAlgorithmName = function() {
       return(self$checksum_algorithm_name)
     },
-    GetOffset <- function() {
+    GetOffset = function() {
       resp <- HEAD(self$url, add_headers(self$GetHeaders()))
       offset <- resp$headers["upload-offset"]
       if (is.null(offset)) {
@@ -82,12 +85,12 @@ TusBaseUploader <- R6::R6Class(
       }
       return(strtoi(offset))
     },
-    EncodeMetadata <- function() {
+    EncodeMetadata = function() {
       encoded_list <- list()
       for (key in names(self$metadata)) {
         key_str <- toString(key)
         
-        if (str_detect(key_str, regex("^$|[\s,]+"))) {
+        if (str_detect(key_str, regex("^$|[\\s,]+"))) {
           stop(paste("upload-metadata key", key_str, "cannot be empty or contain spaces or commas."))
         }
         
@@ -96,7 +99,7 @@ TusBaseUploader <- R6::R6Class(
       }
       return(encoded_list)
     },
-    InitURLAndOffset <- function(url = NULL) {
+    InitURLAndOffset = function(url = NULL) {
       if (!is.null(url)) {
         self$SetURL(url)
       }
@@ -110,7 +113,7 @@ TusBaseUploader <- R6::R6Class(
         self$offset <- self$GetOffset()
       }
     },
-    SetURL <- function(url) {
+    SetURL = function(url) {
       self$url <- url
       
       if (self$store_url && !is.null(self$url_storage)) {
@@ -118,7 +121,7 @@ TusBaseUploader <- R6::R6Class(
         self$SetURL(self$url_storage[key])
       }
     },
-    GetRequestLength <- function() {
+    GetRequestLength = function() {
       remainder <- self$stop_at - self$offset
       if (remainder > self$chunk_size) {
         return(self$chunk_size)
@@ -126,7 +129,7 @@ TusBaseUploader <- R6::R6Class(
         return(remainder)
       }
     },
-    GetFileStream <- function() {
+    GetFileStream = function() {
       if (!is.null(self$file_stream)) {
         seek(self$file_stream, where = 0, origin = "start")
         return(self$file_stream)
@@ -138,7 +141,7 @@ TusBaseUploader <- R6::R6Class(
       
       stop(paste("invalid file", self$file_path))
     },
-    GetFileSize <- function() {
+    GetFileSize = function() {
       return(file.info(self$file_path)$size)
     }
   )

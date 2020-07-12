@@ -16,6 +16,8 @@ Imports:
   jsonlite,
   optparse,
   logging,
-  stringr
+  stringr,
+  uuid,
+  mime
 Suggests: 
     testthat
