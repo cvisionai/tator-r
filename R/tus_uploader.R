@@ -16,18 +16,18 @@ TusUploader <- R6::R6Class(
       self$offset <- strtoi(self$request$response_headers["upload-offset"])
     },
     CreateURL = function() {
-      resp <- httr::POST(self$client$url, add_headers(unlist(self$GetURLCreationHeaders())))
+      resp <- httr::POST(self$client$url, config = c(add_headers(unlist(self$GetURLCreationHeaders()))))
       url <- resp$headers["location"]
       if (is.null(url)) {
         stop(paste("Could not request create file url, response status", resp$status_code))
       }
-      return(paste(self$client$url, url, sep = "/"))
+      return(paste(url))
     },
     DoRequest = function() {
       self$request <- TusRequest$new(self)
       self$request$Perform()
       if (self$request$status_code != 204) {
-        Retry()
+        self$Retry()
       }
     },
     Retry = function() {

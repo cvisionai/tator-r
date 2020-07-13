@@ -43,7 +43,7 @@ TusBaseUploader <- R6::R6Class(
       
       self$file_path <- file_path
       self$file_stream <- file_stream
-      self$stop_at <- NULL # self$get_file_size()
+      self$stop_at <- self$GetFileSize()
       self$client <- client
       self$metadata <- metadata
       self$store_url <- store_url
@@ -78,7 +78,7 @@ TusBaseUploader <- R6::R6Class(
       return(self$checksum_algorithm_name)
     },
     GetOffset = function() {
-      resp <- HEAD(self$url, add_headers(self$GetHeaders()))
+      resp <- httr::HEAD(self$url, add_headers(unlist(self$GetHeaders())))
       offset <- resp$headers["upload-offset"]
       if (is.null(offset)) {
         stop(paste("Could not get offset, response status code", resp$status_code))
@@ -136,7 +136,7 @@ TusBaseUploader <- R6::R6Class(
       }
       
       if (file.exists(self$file_path)) {
-        return(open(file(self$file_path)))
+        return(file(self$file_path, open = "rb"))
       }
       
       stop(paste("invalid file", self$file_path))

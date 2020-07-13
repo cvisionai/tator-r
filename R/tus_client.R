@@ -21,7 +21,7 @@ TusClient <- R6::R6Class(
     },
     Uploader = function(file_path = NULL, chunk_size = NULL, retries = 10, retry_delay = 15) {
       return(TusUploader$new(
-        client = self, 
+        client = self,
         file_path = file_path, 
         chunk_size = chunk_size, 
         retries = retries, 

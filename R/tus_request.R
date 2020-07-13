@@ -5,9 +5,9 @@ TusRequest <- R6::R6Class(
   public = list(
     Perform = function() {
       tryCatch({
-        chunk <- readChar(self$file, self$content_length)
+        chunk <- readChar(self$file, self$content_length, useBytes = TRUE)
         self$AddChecksum(chunk)
-        resp <- PATCH(self$url, config = c(add_headers(self$request_headers)), body = chunk)
+        resp <- httr::PATCH(self$url, config = c(add_headers(unlist(self$request_headers))), body = chunk)
         self$status_code <- resp$status_code
         self$response_content <- resp$content
         self$response_headers <- resp$headers
