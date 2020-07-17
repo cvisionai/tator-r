@@ -6,3 +6,4 @@
 *.tar.gz
 library/*
 .Rproj.user
+tmp

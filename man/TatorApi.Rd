@@ -4595,6 +4595,8 @@ result <- api.instance$Whoami()
 \item \href{#method-CreateLocalizationListWithHttpInfo}{\code{TatorApi$CreateLocalizationListWithHttpInfo()}}
 \item \href{#method-CreateLocalizationType}{\code{TatorApi$CreateLocalizationType()}}
 \item \href{#method-CreateLocalizationTypeWithHttpInfo}{\code{TatorApi$CreateLocalizationTypeWithHttpInfo()}}
+\item \href{#method-CreateMedia}{\code{TatorApi$CreateMedia()}}
+\item \href{#method-CreateMediaWithHttpInfo}{\code{TatorApi$CreateMediaWithHttpInfo()}}
 \item \href{#method-CreateMediaType}{\code{TatorApi$CreateMediaType()}}
 \item \href{#method-CreateMediaTypeWithHttpInfo}{\code{TatorApi$CreateMediaTypeWithHttpInfo()}}
 \item \href{#method-CreateMembership}{\code{TatorApi$CreateMembership()}}
@@ -4896,6 +4898,24 @@ result <- api.instance$Whoami()
   localization.type.spec = NULL,
   ...
 )}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-CreateMedia"></a>}}
+\if{latex}{\out{\hypertarget{method-CreateMedia}{}}}
+\subsection{Method \code{CreateMedia()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TatorApi$CreateMedia(project, media.spec, ...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-CreateMediaWithHttpInfo"></a>}}
+\if{latex}{\out{\hypertarget{method-CreateMediaWithHttpInfo}{}}}
+\subsection{Method \code{CreateMediaWithHttpInfo()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TatorApi$CreateMediaWithHttpInfo(project, media.spec, ...)}\if{html}{\out{</div>}}
 }
 
 }

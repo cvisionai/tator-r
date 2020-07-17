@@ -12,7 +12,7 @@ test_that("project creates", {
   on.exit(image_file_cleanup(image_path))
   expect_true(file.exists(image_path))
 
-  root_image_path <- unlist(strsplit(tools::file_path_as_absolute(image_path), ":"))[[2]]
-  image_fixture(host, token, project_id, image_type_id, root_image_path)
-  #Sys.sleep(30)
+  root_image_path <- unlist(strsplit(tools::file_path_as_absolute(image_path), ":"))[[1]]
+  resp <- image_fixture(host, token, project_id, image_type_id, root_image_path)
+  expect_equal(resp$message, "Image saved successfully!")
 })

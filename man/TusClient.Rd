@@ -40,7 +40,12 @@ TusClient Class
 \if{latex}{\out{\hypertarget{method-Uploader}{}}}
 \subsection{Method \code{Uploader()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TusClient$Uploader()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TusClient$Uploader(
+  file_path = NULL,
+  chunk_size = NULL,
+  retries = 10,
+  retry_delay = 15
+)}\if{html}{\out{</div>}}
 }
 
 }

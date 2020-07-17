@@ -78,8 +78,25 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
   project_id <- response$project
   
   if (mime_type == "video") {
-    stop("Video upload not yet implemented.")
+    response <- api$CreateMedia(project_id, TranscodeSpec$new(
+      type = type_id,
+      uid = upload_uid,
+      gid = upload_gid,
+      url = uploader$url,
+      name = fname,
+      section = section,
+      md5 = md5
+    ))
   } else {
-    print(project_id) # FIXME: Needs to be api$CreateMedia()
+    response <- api$CreateMedia(project_id, MediaSpec$new(
+      type = type_id,
+      uid = upload_uid,
+      gid = upload_gid,
+      url = uploader$url,
+      name = fname,
+      section = section,
+      md5 = md5
+    ))
   }
+  return(response)
 }

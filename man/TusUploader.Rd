@@ -13,7 +13,6 @@ TusUploader Class
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{TusUploader$new()}}
 \item \href{#method-UploadChunk}{\code{TusUploader$UploadChunk()}}
 \item \href{#method-CreateURL}{\code{TusUploader$CreateURL()}}
 \item \href{#method-DoRequest}{\code{TusUploader$DoRequest()}}
@@ -33,19 +32,11 @@ TusUploader Class
 \item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetOffset">}\href{../../tator/html/TusBaseUploader.html#method-GetOffset}{\code{tator::TusBaseUploader$GetOffset()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetRequestLength">}\href{../../tator/html/TusBaseUploader.html#method-GetRequestLength}{\code{tator::TusBaseUploader$GetRequestLength()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="GetURLCreationHeaders">}\href{../../tator/html/TusBaseUploader.html#method-GetURLCreationHeaders}{\code{tator::TusBaseUploader$GetURLCreationHeaders()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="initialize">}\href{../../tator/html/TusBaseUploader.html#method-initialize}{\code{tator::TusBaseUploader$initialize()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="InitURLAndOffset">}\href{../../tator/html/TusBaseUploader.html#method-InitURLAndOffset}{\code{tator::TusBaseUploader$InitURLAndOffset()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="tator" data-topic="TusBaseUploader" data-id="SetURL">}\href{../../tator/html/TusBaseUploader.html#method-SetURL}{\code{tator::TusBaseUploader$SetURL()}}\out{</span>}
 }
 \out{</details>}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TusUploader$new(client = NULL)}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-UploadChunk"></a>}}
