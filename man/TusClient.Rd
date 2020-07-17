@@ -13,7 +13,6 @@ TusClient Class
 \item \href{#method-new}{\code{TusClient$new()}}
 \item \href{#method-SetHeaders}{\code{TusClient$SetHeaders()}}
 \item \href{#method-Uploader}{\code{TusClient$Uploader()}}
-\item \href{#method-AsyncUploader}{\code{TusClient$AsyncUploader()}}
 \item \href{#method-clone}{\code{TusClient$clone()}}
 }
 }
@@ -46,15 +45,6 @@ TusClient Class
   retries = 10,
   retry_delay = 15
 )}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AsyncUploader"></a>}}
-\if{latex}{\out{\hypertarget{method-AsyncUploader}{}}}
-\subsection{Method \code{AsyncUploader()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TusClient$AsyncUploader()}\if{html}{\out{</div>}}
 }
 
 }

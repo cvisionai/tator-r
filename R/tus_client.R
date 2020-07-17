@@ -27,9 +27,6 @@ TusClient <- R6::R6Class(
         retries = retries, 
         retry_delay = retry_delay)
       )
-    },
-    AsyncUploader = function() {
-      return(TusAsyncUploader$new(client=self))
     }
   )
 )
