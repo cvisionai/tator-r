@@ -7,3 +7,4 @@
 library/*
 .Rproj.user
 tmp
+R/generated_*

@@ -13,3 +13,7 @@ r-bindings:
 		-i /pwd/tator-openapi-schema.yaml \
 		-g r -o /out/tator-r-new-bindings
 	rm tator-openapi-schema.yaml
+	rm -f R/generated_*
+	cd $(shell pwd)/tmp/tator-r-new-bindings/R && \
+	  for f in $$(ls -l | awk -F':[0-9]* ' '/:/{print $$2}'); do cp -- "$$f" "../../../R/generated_$$f"; done
+	Rscript -e "devtools::document()"
