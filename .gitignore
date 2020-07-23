@@ -9,3 +9,5 @@ library/*
 tmp
 R/generated_*
 templates/.travis.yml
+man/
+NAMESPACE
