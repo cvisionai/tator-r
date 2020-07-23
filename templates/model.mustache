@@ -155,12 +155,7 @@
         {{/isPrimitiveType}}
        {{/isListContainer}}
        {{#isMapContainer}}
-       {{#isPrimitiveType}}
-          self$`{{baseName}}`
-       {{/isPrimitiveType}}
-       {{^isPrimitiveType}}
           jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
-       {{/isPrimitiveType}}
        {{/isMapContainer}}
        {{/isContainer}}
        {{^isContainer}}
@@ -211,12 +206,7 @@
         {{^isPrimitiveType}}[%s]
         {{/isPrimitiveType}}
         {{/isListContainer}}
-        {{#isMapContainer}}
-        {{#isPrimitiveType}}
-          {{#isNumeric}}%d{{/isNumeric}}{{^isNumeric}}"%s"{{/isNumeric}}
-        {{/isPrimitiveType}}
-        {{^isPrimitiveType}}%s
-        {{/isPrimitiveType}}
+        {{#isMapContainer}}%s
         {{/isMapContainer}}
         {{/isContainer}}
         {{^isContainer}}
@@ -240,12 +230,7 @@
         {{/isPrimitiveType}}
         {{/isListContainer}}
         {{#isMapContainer}}
-        {{#isPrimitiveType}}
         jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
-        {{/isPrimitiveType}}
-        {{^isPrimitiveType}}
-        jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
-        {{/isPrimitiveType}}
         {{/isMapContainer}}
         {{/isContainer}}
         {{^isContainer}}
