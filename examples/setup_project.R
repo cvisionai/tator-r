@@ -36,7 +36,7 @@ result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
   name = "Test Images",
   description = "A test image type.",
   dtype = "image",
-  attribute_types = c(
+  attribute_types = list(
     AttributeType$new(
       name = "Test Bool",
       dtype = "bool",
@@ -68,8 +68,8 @@ result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
       name = "Test Enum",
       dtype = "enum",
       order = 4,
-      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
-      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      choices = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
       default = "Test Choice 1"
     ),
     AttributeType$new(
@@ -82,7 +82,7 @@ result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
       name = "Test Geoposition",
       dtype = "geopos",
       order = 6,
-      default = c(-71.05674, 42.35866)
+      default = list(-71.05674, 42.35866)
     )
   )
 ))
@@ -128,8 +128,8 @@ result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
       name = "Test Enum",
       dtype = "enum",
       order = 4,
-      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
-      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      choices = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
       default = "Test Choice 1"
     ),
     AttributeType$new(
@@ -142,7 +142,7 @@ result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
       name = "Test Geoposition",
       dtype = "geopos",
       order = 6,
-      default = c(-71.05674, 42.35866)
+      default = list(-71.05674, 42.35866)
     )
   )
 ))
@@ -167,16 +167,16 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
   name = "Test Boxes",
   description = "A test box type.",
   dtype = "box",
-  media_types = c(image_type, video_type),
+  media_types = list(image_type, video_type),
   colorMap = ColorMap$new(
-    default = c(255, 0, 0),
+    default = list(255, 0, 0),
     key = "Test Enum",
     map = list(
-        "Test Choice 1" = c(0, 255, 0),
-        "Test Choice 2" = c(0, 0, 255)
+        "Test Choice 1" = list(0, 255, 0),
+        "Test Choice 2" = list(0, 0, 255)
     )
   ),
-  attribute_types = c(
+  attribute_types = list(
     AttributeType$new(
       name = "Test Bool",
       dtype = "bool",
@@ -208,8 +208,8 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
       name = "Test Enum",
       dtype = "enum",
       order = 4,
-      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
-      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      choices = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
       default = "Test Choice 1"
     ),
     AttributeType$new(
@@ -222,7 +222,7 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
       name = "Test Geoposition",
       dtype = "geopos",
       order = 6,
-      default = c(-71.05674, 42.35866)
+      default = list(-71.05674, 42.35866)
     )
   )
 ))
@@ -267,8 +267,8 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
       name = "Test Enum",
       dtype = "enum",
       order = 4,
-      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
-      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      choices = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
       default = "Test Choice 1"
     ),
     AttributeType$new(
@@ -281,7 +281,7 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
       name = "Test Geoposition",
       dtype = "geopos",
       order = 6,
-      default = c(-71.05674, 42.35866)
+      default = list(-71.05674, 42.35866)
     )
   )
 ))
@@ -295,7 +295,7 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
   dtype = "dot",
   media_types = c(image_type, video_type),
   colorMap = ColorMap$new(
-    default = c(255, 0, 0),
+    default = list(255, 0, 0),
     version = list(
         baseline_version = c(0, 255, 0),
         version = c(0, 0, 255)
@@ -333,8 +333,8 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
       name = "Test Enum",
       dtype = "enum",
       order = 4,
-      choices = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
-      labels = c("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      choices = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
+      labels = list("Test Choice 1", "Test Choice 2", "Test Choice 3"),
       default = "Test Choice 1"
     ),
     AttributeType$new(
@@ -347,7 +347,7 @@ result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
       name = "Test Geoposition",
       dtype = "geopos",
       order = 6,
-      default = c(-71.05674, 42.35866)
+      default = list(-71.05674, 42.35866)
     )
   )
 ))

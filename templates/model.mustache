@@ -63,11 +63,33 @@
         {{#isContainer}}
         {{#isPrimitiveType}}
         stopifnot(is.vector(`{{baseName}}`), length(`{{baseName}}`) != 0)
-        sapply(`{{baseName}}`, function(x) stopifnot(is.character(x)))
+        {{#isInteger}}
+        stopifnot(is.numeric(`{{baseName}}`), length(`{{baseName}}`) == 1)
+        {{/isInteger}}
+        {{#isLong}}
+        stopifnot(is.numeric(`{{baseName}}`), length(`{{baseName}}`) == 1)
+        {{/isLong}}
+        {{#isFloat}}
+        stopifnot(is.numeric(`{{baseName}}`), length(`{{baseName}}`) == 1)
+        {{/isFloat}}
+        {{#isDouble}}
+        stopifnot(is.numeric(`{{baseName}}`), length(`{{baseName}}`) == 1)
+        {{/isDouble}}
+        {{#isString}}
+        stopifnot(is.character(`{{baseName}}`), length(`{{baseName}}`) == 1)
+        {{/isString}}
+        {{#isBoolean}}
+        stopifnot(is.logical(`{{baseName}}`))
+        {{/isBoolean}}
+        {{#isDate}}
+        stopifnot(is.character(`{{baseName}}`), length(`{{baseName}}`) == 1)
+        {{/isDate}}
+        {{#isDateTime}}
+        stopifnot(is.character(`{{baseName}}`), length(`{{baseName}}`) == 1)
+        {{/isDateTime}}
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}
         stopifnot(is.vector(`{{baseName}}`), length(`{{baseName}}`) != 0)
-        sapply(`{{baseName}}`, function(x) stopifnot(R6::is.R6(x)))
         {{/isPrimitiveType}}
         {{/isContainer}}
         self$`{{baseName}}` <- `{{baseName}}`
@@ -101,7 +123,7 @@
         stopifnot(is.character(`{{baseName}}`), length(`{{baseName}}`) == 1)
         {{/isDateTime}}
         {{^isPrimitiveType}}
-        allowed <- (is.logical(`{{baseName}}`)||is.numeric(`{{baseName}}`)||is.character(`{{baseName}}`)||is.vector(`{{baseName}}`))
+        allowed <- (is.logical(`{{baseName}}`)||is.numeric(`{{baseName}}`)||is.character(`{{baseName}}`)||is.vector(`{{baseName}}`)||R6::is.R6(`{{baseName}}`))
         stopifnot(allowed)
         {{/isPrimitiveType}}
         {{/isContainer}}
@@ -112,7 +134,6 @@
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}
         stopifnot(is.vector(`{{baseName}}`), length(`{{baseName}}`) != 0)
-        sapply(`{{baseName}}`, function(x) stopifnot(R6::is.R6(x)))
         {{/isPrimitiveType}}
         {{/isContainer}}
         self$`{{baseName}}` <- `{{baseName}}`
@@ -130,7 +151,7 @@
           self$`{{baseName}}`
        {{/isPrimitiveType}}
        {{^isPrimitiveType}}
-          lapply(self$`{{baseName}}`, function(x) x$toJSON())
+          lapply(self$`{{baseName}}`, function(x){ x$toJSON() })
         {{/isPrimitiveType}}
        {{/isListContainer}}
        {{#isMapContainer}}
@@ -138,7 +159,7 @@
           self$`{{baseName}}`
        {{/isPrimitiveType}}
        {{^isPrimitiveType}}
-          lapply(self$`{{baseName}}`, function(x) x$toJSON())
+          jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
        {{/isPrimitiveType}}
        {{/isMapContainer}}
        {{/isContainer}}
@@ -147,7 +168,7 @@
           self$`{{baseName}}`
        {{/isPrimitiveType}}
        {{^isPrimitiveType}}
-          self$`{{baseName}}`$toJSON()
+          self$`{{baseName}}`
        {{/isPrimitiveType}}
        {{/isContainer}}
       }
@@ -220,10 +241,10 @@
         {{/isListContainer}}
         {{#isMapContainer}}
         {{#isPrimitiveType}}
-        jsonlite::toJSON(lapply(self$`{{{baseName}}}`, function(x){ x }), auto_unbox = TRUE, digits=NA)
+        jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}
-        jsonlite::toJSON(lapply(self$`{{{baseName}}}`, function(x){ x$toJSON() }), auto_unbox = TRUE, digits=NA)
+        jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
         {{/isPrimitiveType}}
         {{/isMapContainer}}
         {{/isContainer}}

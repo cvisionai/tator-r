@@ -21,7 +21,7 @@ image_type_fixture <- function(host, token, project_id) {
     description = "Test image type",
     dtype = "image"
   ))
-  return(response)
+  return(response$id)
 }
 
 image_file_fixture <- function() {

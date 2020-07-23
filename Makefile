@@ -2,6 +2,7 @@
 
 .PHONY: r-bindings
 r-bindings:
+	rm -rf tmp
 	mkdir -p tmp
 	rm -f tator-openapi-schema.yaml
 	curl -s -L https://www.tatorapp.com/schema > tator-openapi-schema.yaml
@@ -20,9 +21,10 @@ r-bindings:
 
 .PHONY: r-templates
 r-templates:
+	mkdir -p new-templates
 	docker run -it --rm \
 		-v $(shell pwd):/pwd \
-		-v $(shell pwd)/templates:/out \
+		-v $(shell pwd)/new-templates:/out \
 		openapitools/openapi-generator-cli:latest \
 		author template \
 		-g r --library webclient -o /out
