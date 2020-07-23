@@ -1,257 +1,351 @@
-# coding: utf-8
-
 {{>partial_header}}
-
-from __future__ import absolute_import
-
-import re  # noqa: F401
-
-# python 2 and python 3 compatibility library
-import six
-
-from {{packageName}}.api_client import ApiClient
-from {{packageName}}.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
-
-
 {{#operations}}
-class {{classname}}(object):
-    def __init__(self, api_client=None):
-        if api_client is None:
-            api_client = ApiClient()
-        self.api_client = api_client
+#' @docType class
+#' @title {{baseName}} operations
+#' @description {{importPath}}
+#' @format An \code{R6Class} generator object
+#' @field apiClient Handles the client-server communication.
+#'
+#' @section Methods:
+{{! Adding the below changes for generating documentation for the api methods. }}
+#' \describe{
 {{#operation}}
-
-    def {{operationId}}(self, {{#sortParamsByRequiredFlag}}{{#allParams}}{{#required}}{{paramName}}, {{/required}}{{/allParams}}{{/sortParamsByRequiredFlag}}**kwargs):
-        """{{#summary}}{{{.}}}{{/summary}}{{^summary}}{{operationId}}{{/summary}}
-
-{{#notes}}
-        {{{notes}}}
-{{/notes}}
-
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-{{#sortParamsByRequiredFlag}}
-        >>> thread = api.{{operationId}}({{#allParams}}{{#required}}{{paramName}}, {{/required}}{{/allParams}}async_req=True)
-{{/sortParamsByRequiredFlag}}
-{{^sortParamsByRequiredFlag}}
-        >>> thread = api.{{operationId}}({{#allParams}}{{#required}}{{paramName}}={{paramName}}_value, {{/required}}{{/allParams}}async_req=True)
-{{/sortParamsByRequiredFlag}}
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
+#' \strong{ {{operationId}} } \emph{ {{summary}} }
+#' {{notes}}
+#'
+#' \itemize{
 {{#allParams}}
-        :param {{dataType}} {{paramName}}:{{#description}} {{{description}}}{{/description}}{{#required}} (required){{/required}}{{#optional}}(optional){{/optional}}
+{{#isEnum}}
+#' \item \emph{ @param } {{paramName}} Enum < {{#allowableValues}}{{values}}{{/allowableValues}} > 
+{{/isEnum}}
+{{^isEnum}}
+{{#isContainer}}
+{{#isListContainer}}
+{{#items}}
+{{#isPrimitiveType}}
+#' \item \emph{ @param } {{paramName}} list( {{dataType}} )
+{{/isPrimitiveType}}
+{{^isPrimitiveType}}
+#' \item \emph{ @param } {{paramName}} list( \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%> )
+{{/isPrimitiveType}}
+{{/items}}
+{{/isListContainer}}
+{{#isMapContainer}}
+{{#isPrimitiveType}}
+#' \item \emph{ @param } {{paramName}} named list( {{dataType}} )
+{{/isPrimitiveType}}
+{{^isPrimitiveType}}
+#' \item \emph{ @param } {{paramName}} named list( \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%> )
+{{/isPrimitiveType}}
+{{/isMapContainer}}
+{{/isContainer}}
+{{^isContainer}}
+{{#isPrimitiveType}}
+#' \item \emph{ @param } {{paramName}} {{dataType}}
+{{/isPrimitiveType}}
+{{^isPrimitiveType}}
+#' \item \emph{ @param } {{paramName}} \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%>
+{{/isPrimitiveType}}
+{{/isContainer}}
+{{/isEnum}}
 {{/allParams}}
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: {{#returnType}}:class:`tator.models.{{returnType}}`{{/returnType}}{{^returnType}}None{{/returnType}}
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs['_return_http_data_only'] = True
-        return self.{{operationId}}_with_http_info({{#sortParamsByRequiredFlag}}{{#allParams}}{{#required}}{{paramName}}, {{/required}}{{/allParams}}{{/sortParamsByRequiredFlag}}**kwargs)  # noqa: E501
-
-    def {{operationId}}_with_http_info(self, {{#sortParamsByRequiredFlag}}{{#allParams}}{{#required}}{{paramName}}, {{/required}}{{/allParams}}{{/sortParamsByRequiredFlag}}**kwargs):  # noqa: E501
-        """
-{{#notes}}
-        {{{notes}}}  # noqa: E501
-{{/notes}}
-
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-
-{{#sortParamsByRequiredFlag}}
-        >>> thread = api.{{operationId}}_with_http_info({{#allParams}}{{#required}}{{paramName}}, {{/required}}{{/allParams}}async_req=True)
-{{/sortParamsByRequiredFlag}}
-{{^sortParamsByRequiredFlag}}
-        >>> thread = api.{{operationId}}_with_http_info({{#allParams}}{{#required}}{{paramName}}={{paramName}}_value, {{/required}}{{/allParams}}async_req=True)
-{{/sortParamsByRequiredFlag}}
-        >>> result = thread.get()
-
-        :param async_req bool: execute request asynchronously
-{{#allParams}}
-        :param {{dataType}} {{paramName}}:{{#description}} {{{description}}}{{/description}}{{#required}} (required){{/required}}{{#optional}}(optional{{#defaultValue}}, default to {{{.}}}{{/defaultValue}}){{/optional}}
-{{/allParams}}
-        :param _return_http_data_only: response data without head status code
-                                       and headers
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: {{#returnType}}tuple(:class:`tator.models.{{returnType}}`, status_code(int), headers(HTTPHeaderDict)){{/returnType}}{{^returnType}}None{{/returnType}}
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-
-        {{#servers.0}}
-        local_var_hosts = [
-{{#servers}}
-            '{{{url}}}'{{^-last}},{{/-last}}
-{{/servers}}
-        ]
-        local_var_host = local_var_hosts[0]
-        if kwargs.get('_host_index'):
-            _host_index = int(kwargs.get('_host_index'))
-            if _host_index < 0 or _host_index >= len(local_var_hosts):
-                raise ApiValueError(
-                    "Invalid host index. Must be 0 <= index < %s"
-                    % len(local_var_host)
-                )
-            local_var_host = local_var_hosts[_host_index]
-        {{/servers.0}}
-        local_var_params = locals()
-
-        all_params = [
-{{#allParams}}
-            '{{paramName}}'{{#hasMore}},{{/hasMore}}
-{{/allParams}}
-        ]
-        all_params.extend(
-            [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
-            ]
-        )
-
-        for key, val in six.iteritems(local_var_params['kwargs']):
-            if key not in all_params{{#servers.0}} and key != "_host_index"{{/servers.0}}:
-                raise ApiTypeError(
-                    "Got an unexpected keyword argument '%s'"
-                    " to method {{operationId}}" % key
-                )
-            local_var_params[key] = val
-        del local_var_params['kwargs']
-{{#allParams}}
-{{^isNullable}}
-{{#required}}
-        # verify the required parameter '{{paramName}}' is set
-        if self.api_client.client_side_validation and ('{{paramName}}' not in local_var_params or  # noqa: E501
-                                                        local_var_params['{{paramName}}'] is None):  # noqa: E501
-            raise ApiValueError("Missing the required parameter `{{paramName}}` when calling `{{operationId}}`")  # noqa: E501
-{{/required}}
-{{/isNullable}}
-{{/allParams}}
-
-{{#allParams}}
-{{#hasValidation}}
-    {{#maxLength}}
-        if self.api_client.client_side_validation and ('{{paramName}}' in local_var_params and  # noqa: E501
-                                                        len(local_var_params['{{paramName}}']) > {{maxLength}}):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `{{paramName}}` when calling `{{operationId}}`, length must be less than or equal to `{{maxLength}}`")  # noqa: E501
-    {{/maxLength}}
-    {{#minLength}}
-        if self.api_client.client_side_validation and ('{{paramName}}' in local_var_params and  # noqa: E501
-                                                        len(local_var_params['{{paramName}}']) < {{minLength}}):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `{{paramName}}` when calling `{{operationId}}`, length must be greater than or equal to `{{minLength}}`")  # noqa: E501
-    {{/minLength}}
-    {{#maximum}}
-        if self.api_client.client_side_validation and '{{paramName}}' in local_var_params and local_var_params['{{paramName}}'] >{{#exclusiveMaximum}}={{/exclusiveMaximum}} {{maximum}}:  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `{{paramName}}` when calling `{{operationId}}`, must be a value less than {{^exclusiveMaximum}}or equal to {{/exclusiveMaximum}}`{{maximum}}`")  # noqa: E501
-    {{/maximum}}
-    {{#minimum}}
-        if self.api_client.client_side_validation and '{{paramName}}' in local_var_params and local_var_params['{{paramName}}'] <{{#exclusiveMinimum}}={{/exclusiveMinimum}} {{minimum}}:  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `{{paramName}}` when calling `{{operationId}}`, must be a value greater than {{^exclusiveMinimum}}or equal to {{/exclusiveMinimum}}`{{minimum}}`")  # noqa: E501
-    {{/minimum}}
-    {{#pattern}}
-        if self.api_client.client_side_validation and '{{paramName}}' in local_var_params and not re.search(r'{{{vendorExtensions.x-regex}}}', local_var_params['{{paramName}}']{{#vendorExtensions.x-modifiers}}{{#-first}}, flags={{/-first}}re.{{.}}{{^-last}} | {{/-last}}{{/vendorExtensions.x-modifiers}}):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `{{paramName}}` when calling `{{operationId}}`, must conform to the pattern `{{{pattern}}}`")  # noqa: E501
-    {{/pattern}}
-    {{#maxItems}}
-        if self.api_client.client_side_validation and ('{{paramName}}' in local_var_params and  # noqa: E501
-                                                        len(local_var_params['{{paramName}}']) > {{maxItems}}):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `{{paramName}}` when calling `{{operationId}}`, number of items must be less than or equal to `{{maxItems}}`")  # noqa: E501
-    {{/maxItems}}
-    {{#minItems}}
-        if self.api_client.client_side_validation and ('{{paramName}}' in local_var_params and  # noqa: E501
-                                                        len(local_var_params['{{paramName}}']) < {{minItems}}):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `{{paramName}}` when calling `{{operationId}}`, number of items must be greater than or equal to `{{minItems}}`")  # noqa: E501
-    {{/minItems}}
-{{/hasValidation}}
-{{#-last}}
-{{/-last}}
-{{/allParams}}
-        collection_formats = {}
-
-        path_params = {}
-{{#pathParams}}
-        if '{{paramName}}' in local_var_params:
-            path_params['{{baseName}}'] = local_var_params['{{paramName}}']{{#isListContainer}}  # noqa: E501
-            collection_formats['{{baseName}}'] = '{{collectionFormat}}'{{/isListContainer}}  # noqa: E501
-{{/pathParams}}
-
-        query_params = []
-{{#queryParams}}
-        if '{{paramName}}' in local_var_params and local_var_params['{{paramName}}'] is not None:  # noqa: E501
-            query_params.append(('{{baseName}}', local_var_params['{{paramName}}'])){{#isListContainer}}  # noqa: E501
-            collection_formats['{{baseName}}'] = '{{collectionFormat}}'{{/isListContainer}}  # noqa: E501
-{{/queryParams}}
-
-        header_params = {}
-{{#headerParams}}
-        if '{{paramName}}' in local_var_params:
-            header_params['{{baseName}}'] = local_var_params['{{paramName}}']{{#isListContainer}}  # noqa: E501
-            collection_formats['{{baseName}}'] = '{{collectionFormat}}'{{/isListContainer}}  # noqa: E501
-{{/headerParams}}
-
-        form_params = []
-        local_var_files = {}
-{{#formParams}}
-        if '{{paramName}}' in local_var_params:
-            {{^isFile}}form_params.append(('{{baseName}}', local_var_params['{{paramName}}'])){{/isFile}}{{#isFile}}local_var_files['{{baseName}}'] = local_var_params['{{paramName}}']{{/isFile}}{{#isListContainer}}  # noqa: E501
-            collection_formats['{{baseName}}'] = '{{collectionFormat}}'{{/isListContainer}}  # noqa: E501
-{{/formParams}}
-
-        body_params = None
-{{#bodyParam}}
-        if '{{paramName}}' in local_var_params:
-            body_params = local_var_params['{{paramName}}']
-{{/bodyParam}}
-        {{#hasProduces}}
-        # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            [{{#produces}}'{{{mediaType}}}'{{#hasMore}}, {{/hasMore}}{{/produces}}])  # noqa: E501
-
-        {{/hasProduces}}
-        {{#hasConsumes}}
-        # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            [{{#consumes}}'{{{mediaType}}}'{{#hasMore}}, {{/hasMore}}{{/consumes}}])  # noqa: E501
-
-        {{/hasConsumes}}
-        # Authentication setting
-        auth_settings = [{{#authMethods}}'{{name}}'{{#hasMore}}, {{/hasMore}}{{/authMethods}}]  # noqa: E501
-
-        return self.api_client.call_api(
-            '{{{path}}}', '{{httpMethod}}',
-            path_params,
-            query_params,
-            header_params,
-            body=body_params,
-            post_params=form_params,
-            files=local_var_files,
-            response_type={{#returnType}}'{{returnType}}'{{/returnType}}{{^returnType}}None{{/returnType}},  # noqa: E501
-            auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            {{#servers.0}}
-            _host=local_var_host,
-            {{/servers.0}}
-            collection_formats=collection_formats)
+{{#returnType}}
+{{^returnTypeIsPrimitive}}
+#' \item \emph{ @returnType } {{#returnContainer}}{{#isListContainer}}list( {{/isListContainer}}{{#isMapContainer}}named list( {{/isMapContainer}}{{/returnContainer}}\link{{=<% %>=}}{<%#returnContainer%><%={{ }}=%>{{returnBaseType}}{{/returnContainer}}{{^returnContainer}}{{returnType}}{{=<% %>=}}<%/returnContainer%>}<%={{ }}=%>{{#returnContainer}}{{#isListContainer}} ){{/isListContainer}}{{#isMapContainer}} ){{/isMapContainer}}{{/returnContainer}} \cr
+{{/returnTypeIsPrimitive}}
+{{/returnType}}
+#'
+{{#useRlangExceptionHandling}}
+#' \item On encountering errors, an error of subclass ApiException will be thrown.
+{{/useRlangExceptionHandling}}
+#'
+{{#responses}}
+#' \item status code : {{code}} | {{message}}
+#'
+#'{{#dataType}} \item return type : {{dataType}} {{/dataType}}
+#' \item response headers :
+#'
+#' \tabular{ll}{
+{{#headers}}
+#' {{name}} \tab {{description}} \cr
+{{/headers}}
+#' }
+{{/responses}}
+#' }
+#'
 {{/operation}}
+#' }
+#'
+#'
+#' @examples
+#' \dontrun{
+{{#operation}}
+#' ####################  {{operationId}}  ####################
+#'
+#' library({{{packageName}}})
+{{#allParams}}
+#' var.{{{paramName}}} <- {{{example}}} # {{{dataType}}} | {{{description}}}
+{{/allParams}}
+#'
+{{#summary}}
+#' #{{{.}}}
+{{/summary}}
+#' api.instance <- {{{classname}}}$new()
+{{#hasAuthMethods}}
+{{#authMethods}}
+#'
+{{#isBasic}}
+#' #Configure HTTP basic authorization: {{{name}}}
+#' # provide your username in the user-serial format
+#' api.instance$apiClient$username <- '<user-serial>'; 
+#' # provide your api key generated using the developer portal
+#' api.instance$apiClient$password <- '<api_key>';
+{{/isBasic}}
+{{#isApiKey}}
+#' #Configure API key authorization: {{{name}}}
+#' api.instance$apiClient$apiKeys['{{{keyParamName}}}'] <- 'TODO_YOUR_API_KEY';
+{{/isApiKey}}
+{{#isOAuth}}
+#' # Configure OAuth2 access token for authorization: {{{name}}}
+#' api.instance$apiClient$accessToken <- 'TODO_YOUR_ACCESS_TOKEN';
+{{/isOAuth}}
+{{/authMethods}}
+{{/hasAuthMethods}}
+#'
+{{#returnExceptionOnFailure}}
+{{#useRlangExceptionHandling}}
+#'result <- tryCatch(
+#'             api.instance${{{operationId}}}({{#requiredParams}}var.{{{paramName}}}{{^-last}}, {{/-last}}{{/requiredParams}}{{#optionalParams}}{{#-first}}{{#requiredParams.0}}, {{/requiredParams.0}}{{/-first}}{{{paramName}}}=var.{{{paramName}}}{{^-last}}, {{/-last}}{{/optionalParams}}),
+#'             ApiException = function(ex) ex 
+#'          )
+#' # In case of error, print the error object 
+#' if(!is.null(result$ApiException)) {
+#'   cat(result$ApiException$toString())
+#' } else {
+{{#returnType}}
+#' # deserialized response object
+#' response.object <- result$content
+{{/returnType}}
+#' # response headers
+#' response.headers <- result$response$headers
+#' # response status code
+#' response.status.code <- result$response$status_code
+#' }
+{{/useRlangExceptionHandling}}
+{{/returnExceptionOnFailure}}
+{{^useRlangExceptionHandling}}
+#' result <- api.instance${{{operationId}}}({{#requiredParams}}var.{{{paramName}}}{{^-last}}, {{/-last}}{{/requiredParams}}{{#optionalParams}}{{#-first}}{{#requiredParams.0}}, {{/requiredParams.0}}{{/-first}}{{{paramName}}}=var.{{{paramName}}}{{^-last}}, {{/-last}}{{/optionalParams}})
+{{/useRlangExceptionHandling}}
+#'
+#'
+{{/operation}}
+#' }
+#' @importFrom R6 R6Class
+#' @importFrom base64enc base64encode
+{{#useRlangExceptionHandling}}
+#' @importFrom rlang abort
+{{/useRlangExceptionHandling}}
+#' @export
+{{classname}} <- R6::R6Class(
+  '{{classname}}',
+  public = list(
+    apiClient = NULL,
+    initialize = function(apiClient){
+      if (!missing(apiClient)) {
+        self$apiClient <- apiClient
+      }
+      else {
+        self$apiClient <- ApiClient$new()
+      }
+    },
+    {{#operation}}
+    {{{operationId}}} = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
+      apiResponse <- self${{{operationId}}}WithHttpInfo({{#allParams}}{{paramName}}, {{/allParams}}...)
+      resp <- apiResponse$response
+      if (httr::status_code(resp) >= 200 && httr::status_code(resp) <= 299) {
+        apiResponse$content
+      } else if (httr::status_code(resp) >= 300 && httr::status_code(resp) <= 399) {
+        apiResponse
+      } else if (httr::status_code(resp) >= 400 && httr::status_code(resp) <= 499) {
+        apiResponse
+      } else if (httr::status_code(resp) >= 500 && httr::status_code(resp) <= 599) {
+        apiResponse
+      }
+    },
+
+    {{{operationId}}}WithHttpInfo = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
+      args <- list(...)
+      queryParams <- list()
+      headerParams <- c()
+
+      {{#requiredParams}}
+      if (missing(`{{paramName}}`)) {
+      {{#useDefaultExceptionHandling}}
+        stop("Missing required parameter `{{{paramName}}}`.")
+      {{/useDefaultExceptionHandling}}
+      {{#useRlangExceptionHandling}}
+        rlang::abort(message = "Missing required parameter `{{{paramName}}}`.", .subclass = "ApiException", ApiException = ApiException$new(status = 0, reason = "Missing required parameter `{{{paramName}}}`."))
+      {{/useRlangExceptionHandling}}
+      }
+
+      {{/requiredParams}}
+      {{#headerParams}}
+      headerParams['{{baseName}}'] <- `{{paramName}}`
+
+      {{/headerParams}}
+      {{#queryParams}}
+      queryParams['{{baseName}}'] <- {{paramName}}
+
+      {{/queryParams}}
+      {{#hasFormParams}}
+      body <- list(
+        {{#formParams}}
+        {{^isFile}}
+        "{{baseName}}" = {{paramName}}{{#hasMore}},{{/hasMore}}
+        {{/isFile}}
+        {{#isFile}}
+        "{{baseName}}" = httr::upload_file({{paramName}}){{#hasMore}},{{/hasMore}}
+        {{/isFile}}
+        {{/formParams}}
+      )
+
+      {{/hasFormParams}}
+      {{#hasBodyParam}}
+      {{#bodyParams}}
+      if (!missing(`{{paramName}}`)) {
+        {{#isListContainer}}
+        body.items = paste(unlist(lapply({{paramName}}, function(param){param$toJSONString()})), collapse = ",")
+        body <- paste0('[', body.items, ']')
+        {{/isListContainer}}
+        {{^isListContainer}}
+        body <- `{{paramName}}`$toJSONString()
+        {{/isListContainer}}
+      } else {
+        body <- NULL
+      }
+
+      {{/bodyParams}}
+      {{/hasBodyParam}}
+      urlPath <- "{{path}}"
+      {{#hasPathParams}}
+      {{#pathParams}}
+      if (!missing(`{{paramName}}`)) {
+        urlPath <- gsub(paste0("\\{", "{{baseName}}", "\\}"), URLencode(as.character(`{{paramName}}`), reserved = TRUE), urlPath)
+      }
+
+      {{/pathParams}}
+      {{/hasPathParams}}
+      {{#authMethods}}
+      {{#isBasic}}
+      {{#isBasicBasic}}
+      # HTTP basic auth
+      headerParams['Authorization'] <- paste("Basic", base64enc::base64encode(charToRaw(paste(self$apiClient$username, self$apiClient$password, sep=":"))))
+      {{/isBasicBasic}}
+      {{/isBasic}}
+      {{#isApiKey}}
+      # API key authentication
+      {{#isKeyInHeader}}
+      if ("{{{keyParamName}}}" %in% names(self$apiClient$apiKeys) && nchar(self$apiClient$apiKeys["{{{keyParamName}}}"]) > 0) {
+        headerParams['{{keyParamName}}'] <- paste(unlist(self$apiClient$apiKeys["{{keyParamName}}"]), collapse='')
+      }
+      {{/isKeyInHeader}}
+      {{#isKeyInQuery}}
+      if ("{{{keyParamName}}}" %in% names(self$apiClient$apiKeys) && nchar(self$apiClient$apiKeys["{{{keyParamName}}}"]) > 0) {
+        queryParams['{{keyParamName}}'] <- paste(unlist(self$apiClient$apiKeys["{{keyParamName}}"]), collapse='')
+      }
+      {{/isKeyInQuery}}
+      {{/isApiKey}}
+      {{#isOAuth}}
+      # OAuth token
+      headerParams['Authorization'] <- paste("Bearer", self$apiClient$accessToken, sep=" ")
+      {{/isOAuth}}
+      {{/authMethods}}
+
+      resp <- self$apiClient$CallApi(url = paste0(self$apiClient$basePath, urlPath),
+                                 method = "{{httpMethod}}",
+                                 queryParams = queryParams,
+                                 headerParams = headerParams,
+                                 body = body,
+                                 ...)
+
+      if (httr::status_code(resp) >= 200 && httr::status_code(resp) <= 299) {
+        {{#returnType}}
+        {{#isPrimitiveType}}
+        content <- httr::content(
+            resp, "text", encoding = "UTF-8", simplifyVector = FALSE
+        )
+        ApiResponse$new(content,resp)
+        {{/isPrimitiveType}}
+        {{^isPrimitiveType}}
+        deserializedRespObj <- tryCatch(
+          self$apiClient$deserialize(resp, "{{returnType}}", loadNamespace("{{packageName}}")),
+          error = function(e){
+           {{#useDefaultExceptionHandling}}
+             stop("Failed to deserialize response")
+           {{/useDefaultExceptionHandling}}
+           {{#useRlangExceptionHandling}}
+             rlang::abort(message = "Failed to deserialize response", .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
+           {{/useRlangExceptionHandling}}
+          }
+        )
+        ApiResponse$new(deserializedRespObj, resp)
+        {{/isPrimitiveType}}
+        {{/returnType}}
+        {{^returnType}}
+        {{! Returning the ApiResponse object with NULL object when the endpoint doesn't return anything}}
+        ApiResponse$new(NULL, resp)
+        {{/returnType}}
+      } else if (httr::status_code(resp) >= 300 && httr::status_code(resp) <= 399) {
+      {{#returnExceptionOnFailure}}
+        errorMsg <- toString(content(resp))
+        if(errorMsg == ""){
+          errorMsg <- paste("Server returned " , httr::status_code(resp) , " response status code.")
+        }
+        {{#useDefaultExceptionHandling}}
+        stop(errorMsg)
+        {{/useDefaultExceptionHandling}}
+        {{#useRlangExceptionHandling}}
+        rlang::abort(message = errorMsg, .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
+        {{/useRlangExceptionHandling}}
+      {{/returnExceptionOnFailure}}
+      {{^returnExceptionOnFailure}}
+        ApiResponse$new(paste("Server returned " , httr::status_code(resp) , " response status code."), resp)
+      {{/returnExceptionOnFailure}}
+      } else if (httr::status_code(resp) >= 400 && httr::status_code(resp) <= 499) {
+      {{#returnExceptionOnFailure}}
+        errorMsg <- toString(content(resp))
+        if(errorMsg == ""){
+          errorMsg <- "Api client exception encountered."
+        }
+        {{#useDefaultExceptionHandling}}
+        stop(errorMsg)
+        {{/useDefaultExceptionHandling}}
+        {{#useRlangExceptionHandling}}
+        rlang::abort(message = errorMsg, .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
+        {{/useRlangExceptionHandling}}
+      {{/returnExceptionOnFailure}}
+      {{^returnExceptionOnFailure}}
+        ApiResponse$new("API client error", resp)
+      {{/returnExceptionOnFailure}}
+      } else if (httr::status_code(resp) >= 500 && httr::status_code(resp) <= 599) {
+      {{#returnExceptionOnFailure}}
+        errorMsg <- toString(content(resp))
+        if(errorMsg == ""){
+          errorMsg <- "Api server exception encountered."
+        }
+        {{#useDefaultExceptionHandling}}
+        stop(errorMsg)
+        {{/useDefaultExceptionHandling}}
+        {{#useRlangExceptionHandling}}
+        rlang::abort(message = errorMsg, .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
+        {{/useRlangExceptionHandling}}
+      {{/returnExceptionOnFailure}}
+      {{^returnExceptionOnFailure}}
+        ApiResponse$new("API server error", resp)
+      {{/returnExceptionOnFailure}}
+      }
+    }{{#hasMore}},{{/hasMore}}
+    {{/operation}}
+  )
+)
 {{/operations}}

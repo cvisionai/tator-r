@@ -15,6 +15,9 @@ Imports:
   httr,
   jsonlite,
   optparse,
-  logging
+  logging,
+  stringr,
+  uuid,
+  mime
 Suggests: 
     testthat

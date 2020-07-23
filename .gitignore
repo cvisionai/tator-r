@@ -6,3 +6,9 @@
 *.tar.gz
 library/*
 .Rproj.user
+tmp
+R/generated_*
+templates/.travis.yml
+man/
+NAMESPACE
+new-templates
