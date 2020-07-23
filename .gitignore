@@ -8,3 +8,4 @@ library/*
 .Rproj.user
 tmp
 R/generated_*
+templates/.travis.yml
