@@ -26,10 +26,12 @@ get_api = function(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_
 #'  @return Generator that yields a response.
 #' @export
 chunked_create = function(FUN, project, spec_list) {
+  ret <- list()
   for (idx in range(0, length(spec_list), 500)) {
     response <- FUN(project, spec_list[idx:(idx+500)])
-    return(response) # THIS SHOULD BE A YIELD
+    ret <- c(ret, response)
   }
+  return(ret)
 }
 
 #' @export

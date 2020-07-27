@@ -25,10 +25,11 @@
     {{#vars}}
     `{{{baseName}}}` = NULL,
     {{/vars}}
+    `opts` = NULL,
     initialize = function(
         {{#requiredVars}}`{{baseName}}`, {{/requiredVars}}{{#optionalVars}}`{{baseName}}`={{#defaultValue}}{{{.}}}{{/defaultValue}}{{^defaultValue}}NULL{{/defaultValue}}, {{/optionalVars}}...
     ) {
-      local.optional.var <- list(...)
+      self$`opts` <- list(...)
       {{#requiredVars}}
       if (!missing(`{{baseName}}`)) {
         {{^isContainer}}
@@ -169,6 +170,10 @@
       }
       {{/vars}}
 
+      for (name in names(self$`opts`)) {
+        StateSpecObject[[name]] <- self$`opts`[[name]]
+      }
+
       {{classname}}Object
     },
     fromJSON = function({{classname}}Json) {
@@ -249,6 +254,18 @@
         )}{{#hasMore}},{{/hasMore}}
       {{/vars}}
       )
+
+      for (name in names(self$`opts`)) {
+        val <- self$`opts`[[name]]
+        if (is.character(val)) {
+          jsoncontent <- c(jsoncontent, sprintf('"%s": "%s"', name, self$`opts`[[name]]))
+        } else if (is.logical(val)) {
+          jsoncontent <- c(jsoncontent, sprintf('"%s": %s', name, self$`opts`[[name]]))
+        } else if (is.numeric(val)) {
+          jsoncontent <- c(jsoncontent, sprintf('"%s": %d', name, self$`opts`[[name]]))
+        }
+      }
+
       jsoncontent <- paste(jsoncontent, collapse = ",")
       paste('{', jsoncontent, '}', sep = "")
     },
