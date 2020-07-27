@@ -90,10 +90,11 @@ video_file_cleanup <- function(out_path) {
   file.remove(out_path)
 }
 
-video_fixture <- function(host, token, project_id, video_type_id, video_file_path) {
+video_fixture <- function(host, token, video_type_id, video_file_path) {
   api <- get_api(host, token)
   response <- upload_media(api, video_type_id, video_file_path)
   return(response$id)
+  # ADD WAIT HERE
 }
 
 dot_type_fixture <- function(host, token, project_id, video_type_id, image_type_id) {

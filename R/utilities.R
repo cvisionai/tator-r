@@ -79,8 +79,8 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
   response <- api$GetMediaType(type_id)
   project_id <- response$project
   
-  if (mime_type == "video") {
-    response <- api$CreateMedia(project_id, TranscodeSpec$new(
+  if (grepl("video", mime_type)) {
+    response <- api$Transcode(project_id, TranscodeSpec$new(
       type = type_id,
       uid = upload_uid,
       gid = upload_gid,
