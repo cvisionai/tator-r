@@ -90,11 +90,27 @@ video_file_cleanup <- function(out_path) {
   file.remove(out_path)
 }
 
-video_fixture <- function(host, token, video_type_id, video_file_path) {
+video_fixture <- function(host, token, project_id, video_type_id, video_file_path) {
   api <- get_api(host, token)
-  response <- upload_media(api, video_type_id, video_file_path)
-  return(response$id)
-  # ADD WAIT HERE
+  upload_media(api, video_type_id, video_file_path)
+  while (TRUE) {
+    response <- api$GetMediaList(project_id, name = "ForBiggerEscapes.mp4")
+    if (length(response) == 0) {
+      Sys.sleep(2)
+      next
+    }
+    if (is.null(response[[1]]$media_files)) {
+      Sys.sleep(2)
+      next
+    }
+    have_streaming <- !is.null(response[[1]]$media_files$streaming)
+    have_archival <- !is.null(response[[1]]$media_files$archival)
+    if (have_streaming && have_archival) {
+      video_id <- response[[1]]$id
+      break
+    }
+  }
+  return(video_id)
 }
 
 dot_type_fixture <- function(host, token, project_id, video_type_id, image_type_id) {
