@@ -93,14 +93,15 @@ video_file_cleanup <- function(out_path) {
 video_fixture <- function(host, token, project_id, video_type_id, video_file_path) {
   api <- get_api(host, token)
   upload_media(api, video_type_id, video_file_path)
+  cat(noquote("Waiting for transcode..."))
   while (TRUE) {
     response <- api$GetMediaList(project_id, name = "ForBiggerEscapes.mp4")
     if (length(response) == 0) {
-      Sys.sleep(2)
+      Sys.sleep(3)
       next
     }
     if (is.null(response[[1]]$media_files)) {
-      Sys.sleep(2)
+      Sys.sleep(3)
       next
     }
     have_streaming <- !is.null(response[[1]]$media_files$streaming)
@@ -109,6 +110,7 @@ video_fixture <- function(host, token, project_id, video_type_id, video_file_pat
       video_id <- response[[1]]$id
       break
     }
+    Sys.sleep(3)
   }
   return(video_id)
 }
