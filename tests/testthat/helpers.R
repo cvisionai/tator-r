@@ -77,7 +77,7 @@ video_type_fixture <- function(host, token, project_id) {
 }
 
 video_file_fixture <- function() {
-  out_path <- "../../tmp/ForBiggerEscapes.mp4"
+  out_path <- "/tmp/ForBiggerEscapes.mp4"
   if (!file.exists(out_path)) {
     file.create(out_path)
     url <- "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"

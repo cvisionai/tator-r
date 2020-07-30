@@ -228,7 +228,14 @@
         {{#isContainer}}
         {{#isListContainer}}
         {{#isPrimitiveType}}
-        paste(unlist(lapply(self$`{{{baseName}}}`, function(x) paste0('"', x, '"'))), collapse=",")
+          {{#items}}
+              {{#isNumeric}}
+                paste(unlist(lapply(self$`{{{baseName}}}`, function(x) paste0(x))), collapse=",")
+              {{/isNumeric}}
+              {{^isNumeric}}
+                paste(unlist(lapply(self$`{{{baseName}}}`, function(x) paste0('"', x, '"'))), collapse=",")
+              {{/isNumeric}}
+          {{/items}}
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}
         paste(sapply(self$`{{{baseName}}}`, function(x) jsonlite::toJSON(x$toJSON(), auto_unbox=TRUE, digits = NA)), collapse=",")

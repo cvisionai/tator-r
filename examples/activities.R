@@ -48,7 +48,6 @@ response <- tator_api$CreateStateType(video_type$project, StateTypeSpec$new(
   )
 ))
 
-stop(response$message)
 state_type_id <- response$id
 loginfo(state_type_id)
 
