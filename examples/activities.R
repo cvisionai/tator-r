@@ -55,7 +55,7 @@ loginfo(state_type_id)
 # switching between true and false.
 
 states <- list()
-for (frame in range(0, video$num_frames, 10)) {
+for (frame in seq(0, video$num_frames, 10)) {
   states <- c(states,
     StateSpec$new(
       type = state_type_id,
@@ -66,7 +66,8 @@ for (frame in range(0, video$num_frames, 10)) {
   )
 }
 state_ids <- c()
-for (response in chunked_create(tator_api$CreateStateList, video_type&project, states)) {
+responses <- chunked_create(tator_api$CreateStateList, video_type$project, states)
+for (response in responses) {
   state_ids <- c(state_ids, response$id)
 }
 loginfo(paste("Created", length(state_ids), "activity changes!"))

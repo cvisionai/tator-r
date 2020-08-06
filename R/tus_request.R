@@ -8,6 +8,7 @@ TusRequest <- R6::R6Class(
         chunk <- readBin(self$file, 
                          what = "raw", 
                          n = self$content_length)
+        close(self$file)
         self$AddChecksum(chunk)
         resp <- httr::PATCH(self$url, config = c(add_headers(unlist(self$request_headers))), body = chunk)
         self$status_code <- resp$status_code

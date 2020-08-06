@@ -18,6 +18,7 @@ Imports:
   logging,
   stringr,
   uuid,
-  mime
+  mime,
+  purrr
 Suggests: 
     testthat

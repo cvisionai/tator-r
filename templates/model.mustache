@@ -267,7 +267,7 @@
         if (is.character(val)) {
           jsoncontent <- c(jsoncontent, sprintf('"%s": "%s"', name, self$`opts`[[name]]))
         } else if (is.logical(val)) {
-          jsoncontent <- c(jsoncontent, sprintf('"%s": %s', name, self$`opts`[[name]]))
+          jsoncontent <- c(jsoncontent, sprintf('"%s": %s', name, jsonlite::toJSON(self$`opts`[[name]], auto_unbox = TRUE)))
         } else if (is.numeric(val)) {
           jsoncontent <- c(jsoncontent, sprintf('"%s": %d', name, self$`opts`[[name]]))
         }
