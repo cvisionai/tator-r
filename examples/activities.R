@@ -3,7 +3,7 @@
 #' This example shows how to create activities.
 
 # ./build.sh
-# Rscript examples/activities.R --host="https://xxx.tator.dev" --token="xxx"
+# Rscript examples/activities.R --host="https://xxx.tator.dev" --token="xxx" --video_type_id 123 --video_id 456
 
 library(tator)
 library(optparse)
