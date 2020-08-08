@@ -51,5 +51,5 @@ loginfo(sprintf("Found %d media matching name %s.", length(media_list), opt$medi
 for (media in media_list) {
   loginfo(sprintf("Downloading %s...", media$name))
   file_path <- file.path(opt$save_path, media$name)
-  loginfo(file_path) #TODO: download_media()!
+  download_media(tator_api, media, file_path)
 }
