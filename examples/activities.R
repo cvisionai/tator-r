@@ -3,7 +3,7 @@
 #' This example shows how to create activities.
 
 # ./build.sh
-# Rscript examples/activities.R --host="https://xxx.tator.dev" --token="xxx"
+# Rscript examples/activities.R --host="https://xxx.tator.dev" --token="xxx" --video_type_id 123 --video_id 456
 
 library(tator)
 library(optparse)
@@ -49,24 +49,25 @@ response <- tator_api$CreateStateType(video_type$project, StateTypeSpec$new(
 ))
 
 state_type_id <- response$id
-loginfo(response$message)
+loginfo(state_type_id)
 
 # Create activity change every 10 frames with "Something in view" indicator
 # switching between true and false.
 
 states <- list()
-for (frame in range(0, video.num_frames, 10)) {
+for (frame in seq(0, video$num_frames, 10)) {
   states <- c(states,
-    list(
+    StateSpec$new(
       type = state_type_id,
       frame = frame,
-      media_ids = c(opt$video_id),
+      media_ids = list(opt$video_id),
       "Something in view" = (frame %% 20) == 0
     )
   )
 }
 state_ids <- c()
-for (response in chunked_create(tator::CreateStateList, video_type&project, states)) {
+responses <- chunked_create(tator_api$CreateStateList, video_type$project, states)
+for (response in responses) {
   state_ids <- c(state_ids, response$id)
 }
 loginfo(paste("Created", length(state_ids), "activity changes!"))

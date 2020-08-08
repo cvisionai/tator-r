@@ -26,10 +26,12 @@ get_api = function(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_
 #'  @return Generator that yields a response.
 #' @export
 chunked_create = function(FUN, project, spec_list) {
-  for (idx in range(0, length(spec_list), 500)) {
-    response <- FUN(project, spec_list[idx:(idx+500)])
-    return(response) # THIS SHOULD BE A YIELD
+  ret <- list()
+  for (idx in seq(0, length(spec_list), 500)) {
+    response <- FUN(project, purrr::compact(spec_list[idx:(idx+500)]))
+    ret <- c(ret, response)
   }
+  return(ret)
 }
 
 #' @export
@@ -77,8 +79,8 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
   response <- api$GetMediaType(type_id)
   project_id <- response$project
   
-  if (mime_type == "video") {
-    response <- api$CreateMedia(project_id, TranscodeSpec$new(
+  if (grepl("video", mime_type)) {
+    response <- api$Transcode(project_id, TranscodeSpec$new(
       type = type_id,
       uid = upload_uid,
       gid = upload_gid,
@@ -99,4 +101,42 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
     ))
   }
   return(response)
+}
+
+#' @export
+download_media = function(api, media, out_path) {
+  auth_value <- api$apiClient$apiKeys['Authorization']
+  host <- api$apiClient$basePath
+  if (!is.null(media$media_files)) {
+    archival <- media$media_files$archival
+    streaming <- media$media_files$streaming
+    if (length(archival) > 0) {
+      url <- paste(host, archival[[1]][[1]]$path, sep = "")
+    } else if (length(streaming) > 0) {
+      print("Streaming")
+      url <- paste(host, streaming[[1]][[1]]$path, sep = "")
+    }
+  } else {
+    # Legacy way of using streaming prior to streaming
+    # and images
+    uri <- paste("media", media$file, sep = "/")
+    if (media$original) {
+      uri <- paste("data/raw", media$original, sep = "/")
+    }
+    url <- paste(host, uri, sep = "/")
+  }
+  
+  # Supply token here for eventual media authorization
+  headerParams <- c()
+  headerParams['Authorization'] <- auth_value
+  headerParams['Content-Type'] <- "application/json"
+  headerParams['Accept-Encoding'] <- "gzip"
+
+  resp <- httr::GET(url, config = c(add_headers(unlist(headerParams))))
+  if (resp$status_code != 200) {
+    stop(paste("Download request returned", resp$status_code, sep = " "))
+  }
+  f <- file(out_path)
+  write(resp$content, file = f)
+  close(f)
 }
