@@ -3,7 +3,7 @@
 #' This example shows how to download media.
 
 # ./build.sh
-# Rscript examples/activities.R --host="https://xxx.tator.dev" --token="xxx" --video_type_id 123 --video_id 456
+# Rscript examples/download_media.R --host="https://xxx.tator.dev" --token="xxx" --media_name MyFile.mp4 --project_name 'My Project' --save_path '/tmp'
 
 library(tator)
 library(optparse)
