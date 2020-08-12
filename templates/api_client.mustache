@@ -94,17 +94,17 @@ ApiClient  <- R6::R6Class(
       }
 
       if (method == "GET") {
-        httr::GET(url, query = queryParams, headers, httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::GET(url, query = queryParams, headers, httpTimeout, httr::user_agent(self$`userAgent`), httr::config(http_version=1), ...)
       } else if (method == "POST") {
-        httr::POST(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::POST(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httr::user_agent(self$`userAgent`), httr::config(http_version=1), ...)
       } else if (method == "PUT") {
-        httr::PUT(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::PUT(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), httr::config(http_version=1), ...)
       } else if (method == "PATCH") {
-        httr::PATCH(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::PATCH(url, query = queryParams, headers, body = body, httr::content_type("application/json"), httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), httr::config(http_version=1), ...)
       } else if (method == "HEAD") {
-        httr::HEAD(url, query = queryParams, headers, httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::HEAD(url, query = queryParams, headers, httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), httr::config(http_version=1), ...)
       } else if (method == "DELETE") {
-        httr::DELETE(url, query = queryParams, headers, httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), ...)
+        httr::DELETE(url, query = queryParams, headers, httpTimeout, httpTimeout, httr::user_agent(self$`userAgent`), httr::config(http_version=1), ...)
       } else {
         errMsg <- "Http method must be `GET`, `HEAD`, `OPTIONS`, `POST`, `PATCH`, `PUT` or `DELETE`."
         {{#useDefaultExceptionHandling}}
