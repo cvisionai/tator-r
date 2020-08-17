@@ -4,7 +4,7 @@
 #' file may be an output from an algorithm or similar.
 
 # ./build.sh
-# Rscript examples/download_media.R --host="https://xxx.tator.dev" --token="xxx" --temporary_file_id 123 --file_path '/tmp'
+# Rscript examples/download_temporary_file.R --host="https://xxx.tator.dev" --token="xxx" --temporary_file_id 123 --file_path '/tmp'
 
 library(tator)
 library(optparse)
