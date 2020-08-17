@@ -140,3 +140,61 @@ download_media = function(api, media, out_path) {
   write(resp$content, file = f)
   close(f)
 }
+
+#' @export
+download_temporary_file = function(api, temporary_file, out_path) {
+  auth_value <- api$apiClient$apiKeys['Authorization']
+  host <- api$apiClient$basePath
+  url <- temporary_file$path
+  
+  # Supply token here for eventual media authorization
+  headerParams <- c()
+  headerParams['Authorization'] <- auth_value
+  headerParams['Content-Type'] <- "application/json"
+  headerParams['Accept-Encoding'] <- "gzip"
+  
+  resp <- httr::GET(url, config = c(add_headers(unlist(headerParams))))
+  if (resp$status_code != 200) {
+    stop(paste("Download request returned", resp$status_code, sep = " "))
+  }
+  f <- file(out_path)
+  write(resp$content, file = f)
+  close(f)
+}
+
+#' @export
+upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, name = NULL, chunk_size = 100*1024*1024) {
+  if (is.null(name)) {
+    name <- basename(path)
+  }
+  
+  if (is.null(lookup)) {
+    lookup <- name
+  }
+  
+  host <- api$apiClient$basePath
+  tusURL <- paste(host, "files/", sep = "/")
+  tus <- TusClient$new(tusURL)
+  uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  
+  last_progress <- 0
+  print(last_progress) # THIS SHOULD BE A YIELD
+  
+  for (chunk_count in range(num_chunks)) {
+    uploader$UploadChunk()
+    this_progress <- round((chunk_count/num_chunks)*100, 1)
+    if (this_progress != last_progress) {
+      print(this_progress) # THIS SHOULD BE A YIELD
+      last_progress <- this_progress
+    }
+  }
+  
+  response <- api$CreateTemporaryFile(project, TemporaryFileSpec$new(
+    url = uploader$url,
+    name = name,
+    lookup = lookup,
+    hours: 24
+  ))
+  return(response)
+}

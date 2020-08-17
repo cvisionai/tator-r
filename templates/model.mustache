@@ -206,7 +206,7 @@
         {{#isContainer}}
         {{#isListContainer}}
         {{#isPrimitiveType}}
-           {{#isNumeric}}[%d]{{/isNumeric}}{{^isNumeric}}[%s]{{/isNumeric}}
+           {{#isNumeric}}[%g]{{/isNumeric}}{{^isNumeric}}[%s]{{/isNumeric}}
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}[%s]
         {{/isPrimitiveType}}
@@ -219,7 +219,7 @@
           {{#isBoolean}}%s
           {{/isBoolean}}
           {{^isBoolean}}
-            {{#isNumeric}}%d{{/isNumeric}}{{^isNumeric}}"%s"{{/isNumeric}}
+            {{#isNumeric}}%g{{/isNumeric}}{{^isNumeric}}"%s"{{/isNumeric}}
           {{/isBoolean}}
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}%s
@@ -269,7 +269,7 @@
         } else if (is.logical(val)) {
           jsoncontent <- c(jsoncontent, sprintf('"%s": %s', name, jsonlite::toJSON(self$`opts`[[name]], auto_unbox = TRUE)))
         } else if (is.numeric(val)) {
-          jsoncontent <- c(jsoncontent, sprintf('"%s": %d', name, self$`opts`[[name]]))
+          jsoncontent <- c(jsoncontent, sprintf('"%s": %g', name, self$`opts`[[name]]))
         }
       }
 

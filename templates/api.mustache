@@ -151,6 +151,7 @@
   public = list(
     apiClient = NULL,
     initialize = function(apiClient){
+      httr::set_config(httr::config(http_version = 0))
       if (!missing(apiClient)) {
         self$apiClient <- apiClient
       }
