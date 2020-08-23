@@ -28,4 +28,18 @@ tator_api <- get_api(opt$host, opt$token)
 
 # Get some video frames. The path to a local image that contains the tiled
 # frames.
+# TODO: Currently api does not return a tempfile like the python generated code does.
+# FIXME
 image_path <- tator_api$GetFrame(opt$video_id, frames = "0,50,100,150")
+
+# The get_images utility can be used to retrieve individual frames from
+# the tiled output image. The returned value is a list of PIL.Image via R keras
+video <- tator_api$GetMedia(opt$video_id)
+images <- get_images(image_path, video)
+
+# Region of interest can also be specified. This will retrieve the 100x100 
+# square in the top left of the frame (format is w:h:x:y).
+# TODO: Currently api does not return a tempfile like the python generated code does.
+# FIXME
+image_path <- tator_api$GetFrame(opt$video_id, frames = "0,50,100,150", roi = "100:100:0:0")
+roi_images <- get_images(image_path, video, width = 100, height = 100)
