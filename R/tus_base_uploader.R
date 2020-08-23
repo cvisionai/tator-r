@@ -142,7 +142,17 @@ TusBaseUploader <- R6::R6Class(
       stop(paste("invalid file", self$file_path))
     },
     GetFileSize = function() {
-      return(file.info(self$file_path)$size)
+      stream <- self$GetFileStream()
+      count <- 0
+      while (TRUE) {
+        old_count <- count
+        count <- count + length(readBin(stream, raw(), n = 1000))
+        if (old_count >= count) {
+          break
+        }
+      }
+      seek(stream, where = 0, origin = "start")
+      return(count)
     }
   )
 )

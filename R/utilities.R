@@ -104,6 +104,51 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
 }
 
 #' @export
+upload_media_archive = function(api, project_id, paths, section = "Test Section", chunk_size = 2*1024*1024) {
+  upload_uid <- uuid::UUIDgenerate()
+  upload_gid <- uuid::UUIDgenerate()
+
+  host <- api$apiClient$basePath
+  tusURL <- paste(host, "files/", sep = "/")
+  tus <- TusClient$new(tusURL)
+
+  if (is.list(paths)) {
+    in_mem_buf <- file(open = "w+b")
+    tar(in_mem_buf, paths, compression = "gzip")
+    uploader <- tus$Uploader(file_stream = in_mem_buf, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  } else {
+    file_buf <- file(paths, open = "w+b")
+    uploader <- tus$Uploader(file_stream = file_buf, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  }
+
+  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  
+  last_progress <- 0
+  print(last_progress) # THIS SHOULD BE A YIELD
+  
+  for (chunk_count in range(num_chunks)) {
+    uploader$UploadChunk()
+    this_progress <- round((chunk_count/num_chunks)*100, 1)
+    if (this_progress != last_progress) {
+      print(this_progress) # THIS SHOULD BE A YIELD
+      last_progress <- this_progress
+    }
+  }
+  
+  # Initiate transcode.
+  response <- api$Transcode(project_id, TranscodeSpec$new(
+    type = -1, #Tar-based inport
+    uid = upload_uid,
+    gid = upload_gid,
+    url = uploader$url,
+    name = "archive.tar",
+    section = section,
+    md5 = "N/A"
+  ))
+  return(response)
+}
+
+#' @export
 download_media = function(api, media, out_path) {
   auth_value <- api$apiClient$apiKeys['Authorization']
   host <- api$apiClient$basePath

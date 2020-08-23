@@ -63,7 +63,7 @@ image_set_fixture <- function() {
 }
 
 image_set_cleanup <- function(image_path) {
-  file.remove(image_path)
+  unlink(image_path, recursive = TRUE)
 }
 
 video_type_fixture <- function(host, token, project_id) {
