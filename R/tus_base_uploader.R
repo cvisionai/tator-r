@@ -151,7 +151,7 @@ TusBaseUploader <- R6::R6Class(
           break
         }
       }
-      seek(stream, where = 0, origin = "start")
+      close(stream)
       return(count)
     }
   )

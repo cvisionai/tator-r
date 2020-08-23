@@ -30,7 +30,7 @@ tator_api <- get_api(opt$host, opt$token)
 
 # Construct list of files.
 paths <- dir(opt$media_dir)
-paths <- lapply(paths, function(p) { file.path(opt$media_dir, p) })
+paths <- sapply(paths, function(p) { file.path(opt$media_dir, p) })
 paths <- paths[1:1000] # Only upload the first 1000 files.
 
 # Upload the media.

@@ -112,13 +112,12 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
 
-  if (is.list(paths)) {
-    in_mem_buf <- file(open = "w+b")
-    tar(in_mem_buf, paths, compression = "gzip")
-    uploader <- tus$Uploader(file_stream = in_mem_buf, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  if (is.vector(paths)) {
+    fn <- tempfile()
+    tar(fn, paths, compression = "gzip")
+    uploader <- tus$Uploader(file_path = fn, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   } else {
-    file_buf <- file(paths, open = "w+b")
-    uploader <- tus$Uploader(file_stream = file_buf, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+    uploader <- tus$Uploader(file_path = paths, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   }
 
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
