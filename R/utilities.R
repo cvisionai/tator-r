@@ -104,6 +104,50 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
 }
 
 #' @export
+upload_media_archive = function(api, project_id, paths, section = "Test Section", chunk_size = 2*1024*1024) {
+  upload_uid <- uuid::UUIDgenerate()
+  upload_gid <- uuid::UUIDgenerate()
+
+  host <- api$apiClient$basePath
+  tusURL <- paste(host, "files/", sep = "/")
+  tus <- TusClient$new(tusURL)
+
+  if (is.vector(paths)) {
+    fn <- tempfile()
+    tar(fn, paths, compression = "gzip")
+    uploader <- tus$Uploader(file_path = fn, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  } else {
+    uploader <- tus$Uploader(file_path = paths, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  }
+
+  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  
+  last_progress <- 0
+  print(last_progress) # THIS SHOULD BE A YIELD
+  
+  for (chunk_count in range(num_chunks)) {
+    uploader$UploadChunk()
+    this_progress <- round((chunk_count/num_chunks)*100, 1)
+    if (this_progress != last_progress) {
+      print(this_progress) # THIS SHOULD BE A YIELD
+      last_progress <- this_progress
+    }
+  }
+  
+  # Initiate transcode.
+  response <- api$Transcode(project_id, TranscodeSpec$new(
+    type = -1, #Tar-based inport
+    uid = upload_uid,
+    gid = upload_gid,
+    url = uploader$url,
+    name = "archive.tar",
+    section = section,
+    md5 = "N/A"
+  ))
+  return(response)
+}
+
+#' @export
 download_media = function(api, media, out_path) {
   auth_value <- api$apiClient$apiKeys['Authorization']
   host <- api$apiClient$basePath
@@ -197,4 +241,49 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
     hours: 24
   ))
   return(response)
+}
+
+#' @export
+get_images = function(file_path, media_or_state, num_images = NULL, width = NULL, height = NULL) {
+  tryCatch(
+    keras::implementation(),
+    error = function() { 
+      stop("Utility get_images requires some python libraries to be installed: `pip3 install tensorflow`")
+    }
+  )
+
+  # Read in raw image.
+  img <- keras::image_load(file_path)
+  klass <- class(media_or_state)[1]
+  
+  if (klass == "State") {
+    if (!is.null(num_images)) {
+      num_localizations <- num_images
+    } else {
+      num_localizations <- length(media_or_state$localizations)
+    }
+    width <- img$width / num_localizations
+    height <- img$height
+  } else if (klass == "Media") {
+    if (is.null(width)) {
+      width <- media_or_state$width
+    }
+    if (is.null(height)) {
+      height <- media_or_state$height
+    }
+  }
+  
+  # Make list of crops.
+  images <- c()
+  for (top in seq(0, img$height, height)) {
+    for (left in seq(0, img$width, width)) {
+      image <- img$crop(c(left, top, (left+width), (top+height)))
+      images <- c(images, image)
+    }
+  }
+  if (!is.null(num_images)) {
+    images <- images[1:num_images]
+  }
+  
+  return(images)
 }

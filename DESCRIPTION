@@ -19,6 +19,7 @@ Imports:
   stringr,
   uuid,
   mime,
-  purrr
+  purrr,
+  keras
 Suggests: 
     testthat

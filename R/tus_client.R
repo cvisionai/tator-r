@@ -19,9 +19,10 @@ TusClient <- R6::R6Class(
     SetHeaders = function(headers = list()) {
       self$headers <- c(self$headers, headers)
     },
-    Uploader = function(file_path = NULL, chunk_size = NULL, retries = 10, retry_delay = 15) {
+    Uploader = function(file_stream = NULL, file_path = NULL, chunk_size = NULL, retries = 10, retry_delay = 15) {
       return(TusUploader$new(
         client = self,
+        file_stream = file_stream,
         file_path = file_path, 
         chunk_size = chunk_size, 
         retries = retries, 
