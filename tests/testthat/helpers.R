@@ -63,7 +63,10 @@ image_set_fixture <- function() {
 }
 
 image_set_cleanup <- function(image_path) {
-  file.remove(image_path)
+  out_path <- "../../tmp/lfw.tgz"
+  extract_path <- "../../tmp/lfw"
+  file.remove(out_path)
+  unlink(extract_path, recursive = TRUE)
 }
 
 video_type_fixture <- function(host, token, project_id) {

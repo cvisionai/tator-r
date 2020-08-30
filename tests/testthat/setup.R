@@ -14,3 +14,5 @@ video_id <- video_fixture(host, token, project_id, video_type_id, video_file_pat
 image_type_id <- image_type_fixture(host, token, project_id)
 
 box_type_id <- box_type_fixture(host, token, project_id, video_type_id, image_type_id)
+
+image_set_path <- image_set_fixture()
