@@ -163,6 +163,26 @@ download_temporary_file = function(api, temporary_file, out_path) {
 }
 
 #' @export
+upload_file = function(path, host) {
+  tusURL <- paste(host, "files/", sep = "/")
+  tus <- TusClient$new(tusURL)
+  chunk_size <- 1*1024*1024 # 1 Mb
+  uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  last_progress <- 0
+  print(last_progress) # THIS SHOULD BE A YIELD
+  for (chunk_count in range(num_chunks)) {
+    uploader$UploadChunk()
+    this_progress <- round((chunk_count/num_chunks)*100, 1)
+    if (this_progress != last_progress) {
+      print(this_progress) # THIS SHOULD BE A YIELD
+      last_progress <- this_progress
+    }
+  }
+  return(uploader$url)
+}
+
+#' @export
 upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, name = NULL, chunk_size = 100*1024*1024) {
   if (is.null(name)) {
     name <- basename(path)
