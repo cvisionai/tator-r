@@ -20,6 +20,6 @@ Imports:
   uuid,
   mime,
   purrr,
-  keras
+  readbitmap
 Suggests: 
     testthat

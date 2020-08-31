@@ -265,15 +265,11 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
 
 #' @export
 get_images = function(file_path, media_or_state, num_images = NULL, width = NULL, height = NULL) {
-  tryCatch(
-    keras::implementation(),
-    error = function() { 
-      stop("Utility get_images requires some python libraries to be installed: `pip3 install tensorflow`")
-    }
-  )
-
   # Read in raw image.
-  img <- keras::image_load(file_path)
+  img <- readbitmap::read.bitmap(file_path)
+  dims <- dim(img)
+  img.width <- dims[1]
+  img.height <- dims[2]
   klass <- class(media_or_state)[1]
   
   if (klass == "State") {
@@ -282,8 +278,8 @@ get_images = function(file_path, media_or_state, num_images = NULL, width = NULL
     } else {
       num_localizations <- length(media_or_state$localizations)
     }
-    width <- img$width / num_localizations
-    height <- img$height
+    width <- img.width / num_localizations
+    height <- img.height
   } else if (klass == "Media") {
     if (is.null(width)) {
       width <- media_or_state$width
@@ -295,9 +291,10 @@ get_images = function(file_path, media_or_state, num_images = NULL, width = NULL
   
   # Make list of crops.
   images <- c()
-  for (top in seq(0, img$height, height)) {
-    for (left in seq(0, img$width, width)) {
-      image <- img$crop(c(left, top, (left+width), (top+height)))
+  for (top in seq(0, img.height, height)) {
+    for (left in seq(0, img.width, width)) {
+      # TODO: CROP IMAGE
+      # image <- img$crop(c(left, top, (left+width), (top+height)))
       images <- c(images, image)
     }
   }

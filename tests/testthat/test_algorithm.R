@@ -198,16 +198,20 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
   }, error = function(e) {
     expect_null(e$message)
   })
+
+  expect_true(caught_exception)
   
   # Create a normal algorithm workflow
   response <- upload_test_algorithm_manifest(
     host = host, token = token, project_id = project_id, manifest_name = "test.yaml")
   
+  manifest_url <- response$url
+  
   spec <- tator::AlgorithmSpec$new(
     name = algo_name,
     user = user_id,
     description = "test_description",
-    manifest = response$url,
+    manifest = manifest_url,
     cluster = NULL,
     files_per_job = 1
   )
@@ -216,12 +220,190 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
   
   # Get the algorithm info
   algorithm_id <- response$id
-  algorithm_info <- tator_api$GetAlgorithm(id)
+  algorithm_info <- tator_api$GetAlgorithm(algorithm_id)
   expect_equal(spec$name, algorithm_info$name)
   expect_equal(spec$user, algorithm_info$user)
   expect_equal(spec$description, algorithm_info$description)
+  expect_equal(spec$manifest, algorithm_info$manifest)
   
   # Attempt to patch the algorithm info and make sure it has been updated
   # Note: the cluster field is ignored in the patch operation
-  # TODO: TBC
+  spec <- tator::AlgorithmSpec$new(
+    name = uuid::UUIDgenerate(),
+    user = user_id,
+    description = "new_test_description",
+    manifest = "coolfile.yaml",
+    files_per_job = 2
+  )
+  
+  response <- tator_api$UpdateAlgorithm(id = algorithm_id, algorithm.spec = spec)
+  algorithm_info <- tator_api$GetAlgorithm(algorithm_id)
+  expect_equal(spec$name, algorithm_info$name)
+  expect_equal(spec$user, algorithm_info$user)
+  expect_equal(spec$description, algorithm_info$description)
+  expect_equal(spec$manifest, algorithm_info$manifest)
+  
+  # Create another algorithm workflow and verify retrieving both algorithm objects
+  # using the get list method
+  algorithm_ids <- c(algorithm_id)
+  
+  new_spec <- tator::AlgorithmSpec$new(
+    name = uuid::UUIDgenerate(),
+    user = user_id,
+    description = "test_description",
+    manifest = manifest_url,
+    cluster = NULL,
+    files_per_job = 1
+  )
+  
+  response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = new_spec)
+
+  algorithm_ids <- c(algorithm_ids, response$id)
+  spec_list <- c(spec, new_spec)
+  algorithm_list <- tator_api$GetAlgorithmList(project = project_id)
+  
+  for (alg in algorithm_list) {
+    found_match <- FALSE
+    for (spec in spec_list) {
+      if (spec$name == alg$name &&
+          spec$user == alg$user &&
+          spec$description == alg$description &&
+          spec$manifest == alg$manifest
+      ) {
+        found_match <- TRUE
+        break
+      }
+    }
+    expect_true(found_match)
+  }
+  
+  # Finally delete all the algorithms
+  current_number_of_algs <- length(algorithm_ids)
+  for (alg_id in algorithm_ids) {
+    tator_api$DeleteAlgorithm(id = alg_id)
+    algorithm_list <- tator_api$GetAlgorithmList(project = project_id)
+    
+    current_number_of_algs <- current_number_of_algs - 1
+    expect_equal(length(algorithm_list), current_number_of_algs)
+  }
+})
+
+#' @details Unit test for the RegisterAlgorithm endpoint focused on missing request body fields
+#' 
+#' Request bodies are created with missing required fields and a workflow tries
+#' to be registered with these incorrect request bodies.
+test_that("Unit test for the RegisterAlgorithm endpoint focused on missing request body fields", {
+  name <- uuid::UUIDgenerate()
+  description <- "description"
+  cluster <- 1
+  files_per_job <- 1
+  
+  # Setup the interface to tator and get the user ID
+  tator_api <- get_api(host, token)
+  user <- tator_api$Whoami()
+  user_id <- user$id
+  
+  # Upload a manifest file
+  response <- upload_test_algorithm_manifest(host = host, token = token, project_id = project_id, manifest_name = "test.yaml")
+  manifest_url <- response$url
+  
+  # Missing name field
+  caught_exception <- FALSE
+  tryCatch({
+    spec <- tator::AlgorithmSpec$new(
+      user = user_id,
+      description = description,
+      manifest = manifest_url,
+      cluster = cluster,
+      files_per_job = files_per_job
+    )
+    
+    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    if (response$content == "API client error") {
+      caught_exception <- TRUE
+    }
+  }, error = function(e) {
+    expect_null(e$message)
+  })
+  expect_true(caught_exception)
+  
+  # Missing user field
+  caught_exception <- FALSE
+  tryCatch({
+    spec <- tator::AlgorithmSpec$new(
+      name = name,
+      description = description,
+      manifest = manifest_url,
+      cluster = cluster,
+      files_per_job = files_per_job
+    )
+    
+    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    if (response$content == "API client error") {
+      caught_exception <- TRUE
+    }
+  }, error = function(e) {
+    expect_null(e$message)
+  })
+  expect_true(caught_exception)
+  
+  # Missing description field
+  caught_exception <- FALSE
+  tryCatch({
+    spec <- tator::AlgorithmSpec$new(
+      name = name,
+      user = user_id,
+      manifest = manifest_url,
+      cluster = cluster,
+      files_per_job = files_per_job
+    )
+    
+    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    if (response$content == "API client error") {
+      caught_exception <- TRUE
+    }
+  }, error = function(e) {
+    expect_null(e$message)
+  })
+  expect_true(caught_exception)
+  
+  # Missing manifest
+  caught_exception <- FALSE
+  tryCatch({
+    spec <- tator::AlgorithmSpec$new(
+      name = name,
+      description = description,
+      user = user_id,
+      cluster = cluster,
+      files_per_job = files_per_job
+    )
+    
+    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    if (response$content == "API client error") {
+      caught_exception <- TRUE
+    }
+  }, error = function(e) {
+    expect_null(e$message)
+  })
+  expect_true(caught_exception)
+  
+  # Missing files per job
+  caught_exception <- FALSE
+  tryCatch({
+    spec <- tator::AlgorithmSpec$new(
+      name = name,
+      description = description,
+      user = user_id,
+      manifest = manifest_url,
+      cluster = cluster
+    )
+    
+    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    if (response$content == "API client error") {
+      caught_exception <- TRUE
+    }
+  }, error = function(e) {
+    expect_null(e$message)
+  })
+  expect_true(caught_exception)
 })
