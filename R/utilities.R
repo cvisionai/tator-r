@@ -155,10 +155,9 @@ download_media = function(api, media, out_path) {
     archival <- media$media_files$archival
     streaming <- media$media_files$streaming
     if (length(archival) > 0) {
-      url <- paste(host, archival[[1]][[1]]$path, sep = "")
+      url <- paste(host, archival[[1]]$path, sep = "")
     } else if (length(streaming) > 0) {
-      print("Streaming")
-      url <- paste(host, streaming[[1]][[1]]$path, sep = "")
+      url <- paste(host, streaming[[1]]$path, sep = "")
     }
   } else {
     # Legacy way of using streaming prior to streaming
@@ -174,14 +173,14 @@ download_media = function(api, media, out_path) {
   headerParams <- c()
   headerParams['Authorization'] <- auth_value
   headerParams['Content-Type'] <- "application/json"
-  headerParams['Accept-Encoding'] <- "gzip"
-
+  headerParams['Accept-Encoding'] <- "application/gzip"
+  
   resp <- httr::GET(url, config = c(add_headers(unlist(headerParams))))
   if (resp$status_code != 200) {
     stop(paste("Download request returned", resp$status_code, sep = " "))
   }
-  f <- file(out_path)
-  write(resp$content, file = f)
+  f <- file(out_path, open = "wb")
+  writeBin(resp$content, f)
   close(f)
 }
 
