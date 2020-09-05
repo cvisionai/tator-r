@@ -194,14 +194,14 @@ download_temporary_file = function(api, temporary_file, out_path) {
   headerParams <- c()
   headerParams['Authorization'] <- auth_value
   headerParams['Content-Type'] <- "application/json"
-  headerParams['Accept-Encoding'] <- "gzip"
+  headerParams['Accept-Encoding'] <- "application/gzip"
   
-  resp <- httr::GET(url, config = c(add_headers(unlist(headerParams))))
+  resp <- httr::GET(url, config = c(httr::add_headers(unlist(headerParams))))
   if (resp$status_code != 200) {
     stop(paste("Download request returned", resp$status_code, sep = " "))
   }
-  f <- file(out_path)
-  write(resp$content, file = f)
+  f <- file(out_path, open = "wb")
+  writeBin(resp$content, f)
   close(f)
 }
 
