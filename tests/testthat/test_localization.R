@@ -10,7 +10,7 @@ random_localization = function(box_type_id, video_obj, post = FALSE) {
     "test_enum" =  sample(c("a", "b", "c")),
     "test_string" = uuid::UUIDgenerate(),
     "test_datetime" = strftime(as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%d %H:%M:%OS6"),
-    "test_geopos" = c(runif(1, -180.0, 180.0), runif(1, -90.0, 90.0))
+    "test_geopos" = paste(runif(1, -90.0, 90.0), runif(1, -180.0, 180.0), sep = "_")
   )
   if (post) {
     return(do.call(LocalizationSpec$new, as.list(c(
@@ -50,9 +50,19 @@ test_that("Localization CRUD", {
   for (i in 1:num_localizations) {
     boxes <- c(boxes, random_localization(box_type_id, video_obj, post = TRUE))
   }
-  box_ids <- chunked_create(tator_api$CreateLocalizationList, project_id, spec_list = boxes)
+  box_ids <- c()
+  responses <- chunked_create(tator_api$CreateLocalizationList, project_id, spec_list = boxes)
+  for (response in responses) {
+    box_ids <- c(box_ids, response$id)
+  }
   expect_equal(length(box_ids), length(boxes))
   print(paste("Created", length(box_ids), "boxes!"))
   
   # Test single create.
+  box <- random_localization(box_type_id, video_obj, post = TRUE)
+  response <- tator_api$CreateLocalizationList(project_id, localization.spec = list(box))
+  expect_equal(class(response)[1], "CreateListResponse")
+  box_id <- response$id[[1]]
+  
+  # Patch single box.
 })
