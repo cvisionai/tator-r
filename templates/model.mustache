@@ -171,7 +171,7 @@
       {{/vars}}
 
       for (name in names(self$`opts`)) {
-        StateSpecObject[[name]] <- self$`opts`[[name]]
+        {{classname}}Object[[name]] <- self$`opts`[[name]]
       }
 
       {{classname}}Object

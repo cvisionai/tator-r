@@ -18,7 +18,7 @@ TusUploader <- R6::R6Class(
     CreateURL = function() {
       resp <- httr::POST(self$client$url, config = c(add_headers(unlist(self$GetURLCreationHeaders()))))
       url <- resp$headers["location"]
-      if (is.null(url)) {
+      if (is.null(url) || url == "NULL") {
         stop(paste("Could not request create file url, response status", resp$status_code))
       }
       return(paste(url))

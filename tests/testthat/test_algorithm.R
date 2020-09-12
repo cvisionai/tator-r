@@ -112,7 +112,7 @@ upload_test_algorithm_manifest = function(
     
     # Upload the manifest file with tus first
     print(paste0("Created temporary manifest file: ", local_yaml_file))
-    url <- upload_file(local_yaml_file, host)
+    url <- upload_file(local_yaml_file, tator_api)
     
     # Save the uploaded file using the save algorithm manifest endpoint
     spec <- tator::AlgorithmManifestSpec$new(name = manifest_name, upload_url = url)

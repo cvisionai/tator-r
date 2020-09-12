@@ -60,6 +60,8 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
   host <- api$apiClient$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
   uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   
@@ -111,6 +113,8 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   host <- api$apiClient$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
 
   if (is.vector(paths)) {
     fn <- tempfile()
@@ -136,7 +140,7 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   
   # Initiate transcode.
   response <- api$Transcode(project_id, TranscodeSpec$new(
-    type = -1, #Tar-based inport
+    type = -1, #Tar-based import
     uid = upload_uid,
     gid = upload_gid,
     url = uploader$url,
@@ -206,9 +210,11 @@ download_temporary_file = function(api, temporary_file, out_path) {
 }
 
 #' @export
-upload_file = function(path, host) {
+upload_file = function(path, api) {
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
   chunk_size <- 1*1024*1024 # 1 Mb
   uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
@@ -238,6 +244,8 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
   host <- api$apiClient$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
   uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   

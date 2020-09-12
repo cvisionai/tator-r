@@ -65,4 +65,18 @@ test_that("Localization CRUD", {
   box_id <- response$id[[1]]
   
   # Patch single box.
+  patch <- random_localization(box_type_id, video_obj)
+  response <- tator_api$UpdateLocalization(box_id, localization.update = patch)
+  expect_equal(class(response)[1], "ApiResponse")
+  print(response$message)
+  
+  # Get single box.
+  updated_box <- tator_api$GetLocalization(box_id)
+  expect_close_enough(patch, updated_box, exclude)
+  
+  # Delete single box.
+  response <- tator_api$DeleteLocalization(box_id)
+  expect_equal(class(response)[1], "ApiResponse")
+  print(response$message)
+  
 })
