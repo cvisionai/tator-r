@@ -133,11 +133,11 @@ test_that("Unit test for the SaveAlgorithManifest endpoint", {
 
   response_1 <- upload_test_algorithm_manifest(
     host = host, token = token, project_id = project_id, manifest_name = "test.yaml")
-  expect_equal(basename(response_1$url), "test.yaml")
+  expect_equal(basename(response_1$url), "test_0.yaml")
 
   response_2 <- upload_test_algorithm_manifest(
     host = host, token = token, project_id = project_id, manifest_name = "test.yaml")
-  expect_equal(basename(response_2$url), "test_0.yaml")
+  expect_equal(basename(response_2$url), "test_1.yaml")
 })
 
 #' @details Unit test for the RegisterAlgorithm endpoint

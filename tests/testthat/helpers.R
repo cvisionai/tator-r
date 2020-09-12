@@ -224,3 +224,33 @@ make_attribute_types <- function() {
   return(attribute_types)
 }
 
+print_fail <- function(key, a, b) {
+  paste("Failed on key: ", key, "\na: ", a, "\nb: ", b)
+}
+
+expect_close_enough <- function(a, b, exclude) {
+  if (!is.list(a)) {
+    a <- a$toJSON()
+  }
+  if (!is.list(b)) {
+    b <- b$toJSON()
+  }
+  for (key in names(a)) {
+    if (key %in% exclude) {
+      next
+    }
+    if (!(key %in% b)) {
+      fail(print_fail(key, a, b))
+    }
+    if (is.numeric(a[key])) {
+      diff <- abs(a[key] - b[key])
+      if (diff > 0.0001) {
+        fail(print_fail(key, a, b))
+      }
+    } else {
+      if (a[key] != b[key]) {
+        fail(print_fail(key, a, b))
+      }
+    }
+  }
+}

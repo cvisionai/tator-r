@@ -211,6 +211,8 @@ download_temporary_file = function(api, temporary_file, out_path) {
 
 #' @export
 upload_file = function(path, api) {
+  host <- api$apiClient$basePath
+  upload_uid <- uuid::UUIDgenerate()
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
   tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
@@ -240,6 +242,8 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
   if (is.null(lookup)) {
     lookup <- name
   }
+  
+  upload_uid <- uuid::UUIDgenerate()
   
   host <- api$apiClient$basePath
   tusURL <- paste(host, "files/", sep = "/")
