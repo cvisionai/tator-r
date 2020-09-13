@@ -7,7 +7,7 @@ random_localization = function(box_type_id, video_obj, post = FALSE) {
     "test_bool" = sample(c(FALSE, TRUE), 1),
     "test_int" = sample(-1000:1000, 1),
     "test_float" = runif(1, -1000.0, 1000.0),
-    "test_enum" =  sample(c("a", "b", "c")),
+    "test_enum" =  sample(c("a", "b", "c"), 1),
     "test_string" = uuid::UUIDgenerate(),
     "test_datetime" = strftime(as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%d %H:%M:%OS6"),
     "test_geopos" = paste(runif(1, -90.0, 90.0), runif(1, -180.0, 180.0), sep = "_")
@@ -63,7 +63,7 @@ test_that("Localization CRUD", {
   response <- tator_api$CreateLocalizationList(project_id, localization.spec = list(box))
   expect_equal(class(response)[1], "CreateListResponse")
   box_id <- response$id[[1]]
-  
+
   # Patch single box.
   patch <- random_localization(box_type_id, video_obj)
   response <- tator_api$UpdateLocalization(box_id, localization.update = patch)
