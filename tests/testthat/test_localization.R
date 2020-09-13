@@ -9,8 +9,8 @@ random_localization = function(box_type_id, video_obj, post = FALSE) {
     "test_float" = runif(1, -1000.0, 1000.0),
     "test_enum" =  sample(c("a", "b", "c"), 1),
     "test_string" = uuid::UUIDgenerate(),
-    "test_datetime" = strftime(as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%d %H:%M:%OS6"),
-    "test_geopos" = paste(runif(1, -90.0, 90.0), runif(1, -180.0, 180.0), sep = "_")
+    "test_datetime" = strftime(as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%dT%H:%M:%OS6"),
+    "test_geopos" = list(runif(1, -180.0, 180.0), runif(1, -90.0, 90.0))
   )
   if (post) {
     return(do.call(LocalizationSpec$new, as.list(c(
@@ -67,16 +67,18 @@ test_that("Localization CRUD", {
   # Patch single box.
   patch <- random_localization(box_type_id, video_obj)
   response <- tator_api$UpdateLocalization(box_id, localization.update = patch)
-  expect_equal(class(response)[1], "ApiResponse")
+  expect_equal(class(response)[1], "MessageResponse")
   print(response$message)
   
   # Get single box.
   updated_box <- tator_api$GetLocalization(box_id)
+  print(patch)
+  print(updated_box)
   expect_close_enough(patch, updated_box, exclude)
   
   # Delete single box.
   response <- tator_api$DeleteLocalization(box_id)
-  expect_equal(class(response)[1], "ApiResponse")
+  expect_equal(class(response)[1], "MessageResponse")
   print(response$message)
   
 })
