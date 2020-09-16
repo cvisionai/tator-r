@@ -4,13 +4,13 @@ random_localization = function(box_type_id, video_obj, post = FALSE) {
   w <- runif(1, 0.0, 1.0 - x)
   h <- runif(1, 0.0, 1.0 - y)
   attributes <- list(
-    "test_bool" = sample(c(FALSE, TRUE), 1),
-    "test_int" = sample(-1000:1000, 1),
-    "test_float" = runif(1, -1000.0, 1000.0),
-    "test_enum" =  sample(c("a", "b", "c"), 1),
-    "test_string" = uuid::UUIDgenerate(),
-    "test_datetime" = strftime(as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%dT%H:%M:%OS6"),
-    "test_geopos" = list(runif(1, -180.0, 180.0), runif(1, -90.0, 90.0))
+    "test_bool" = AttributeValue$new(attributeValue = sample(c(FALSE, TRUE), 1)),
+    "test_int" = AttributeValue$new(attributeValue = sample(-1000:1000, 1)),
+    "test_float" = AttributeValue$new(attributeValue = runif(1, -1000.0, 1000.0)),
+    "test_enum" =  AttributeValue$new(attributeValue = sample(c("a", "b", "c"), 1)),
+    "test_string" = AttributeValue$new(attributeValue = uuid::UUIDgenerate()),
+    "test_datetime" = AttributeValue$new(attributeValue = strftime(as.POSIXlt(Sys.time(), "UTC", "%Y-%m-%dT%H:%M:%S"), "%Y-%m-%dT%H:%M:%OS6")),
+    "test_geopos" = AttributeValue$new(attributeValue = list(runif(1, -180.0, 180.0), runif(1, -90.0, 90.0)))
   )
   if (post) {
     return(do.call(LocalizationSpec$new, as.list(c(
@@ -73,6 +73,7 @@ test_that("Localization CRUD", {
   # Get single box.
   updated_box <- tator_api$GetLocalization(box_id)
   print(patch)
+  print(patch$attributes)
   print(updated_box)
   expect_close_enough(patch, updated_box, exclude)
   

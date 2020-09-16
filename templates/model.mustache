@@ -153,10 +153,15 @@
        {{/isPrimitiveType}}
        {{^isPrimitiveType}}
           lapply(self$`{{baseName}}`, function(x){ x$toJSON() })
-        {{/isPrimitiveType}}
+       {{/isPrimitiveType}}
        {{/isListContainer}}
        {{#isMapContainer}}
-          jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
+       {{#isPrimitiveType}}
+          self$`{{baseName}}`
+       {{/isPrimitiveType}}
+       {{^isPrimitiveType}}
+          lapply(self$`{{baseName}}`, function(x) x$toJSON())
+       {{/isPrimitiveType}}
        {{/isMapContainer}}
        {{/isContainer}}
        {{^isContainer}}
@@ -171,6 +176,10 @@
       {{/vars}}
 
       for (name in names(self$`opts`)) {
+        if (name == "attributeValue") {
+          {{classname}}Object <- self$`opts`[[name]]
+          break
+        }
         {{classname}}Object[[name]] <- self$`opts`[[name]]
       }
 
@@ -242,7 +251,12 @@
         {{/isPrimitiveType}}
         {{/isListContainer}}
         {{#isMapContainer}}
-        jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
+        {{#isPrimitiveType}}
+        jsonlite::toJSON(lapply(self$`{{{baseName}}}`, function(x){ x }), auto_unbox = TRUE, digits=NA)
+        {{/isPrimitiveType}}
+        {{^isPrimitiveType}}
+        jsonlite::toJSON(lapply(self$`{{{baseName}}}`, function(x){ x$toJSON() }), auto_unbox = TRUE, digits=NA)
+        {{/isPrimitiveType}}
         {{/isMapContainer}}
         {{/isContainer}}
         {{^isContainer}}
@@ -264,6 +278,13 @@
 
       for (name in names(self$`opts`)) {
         val <- self$`opts`[[name]]
+        if (name == "attributeValue") {
+          if (is.logical(val)) {
+            return(jsonlite::toJSON(val, auto_unbox = TRUE))
+          } else {
+            return(val)
+          }
+        }
         if (is.character(val)) {
           jsoncontent <- c(jsoncontent, sprintf('"%s": "%s"', name, self$`opts`[[name]]))
         } else if (is.logical(val)) {
