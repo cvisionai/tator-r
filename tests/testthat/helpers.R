@@ -245,24 +245,20 @@ expect_close_enough <- function(a, b, exclude) {
     }
     valA <- get(key, a)
     valB <- get(key, b)
-    if (is.numeric(valA)) {
+    if (is.numeric(valA) && length(valA) == 1) {
       diff <- abs(valA - valB)
       if (diff > 0.0001) {
         fail(print_fail(key, a, b))
         stop()
       }
     } else if (key == "attributes") {
-      return(expect_close_enough(jsonlite::fromJSON(paste0(valA)), jsonlite::fromJSON(paste0(valB)), c()))
-    } else if (length(valA) > 1) {
-      for (item in valA) {
-        if (!(item %in% valB)) {
-          fail(print_fail(key, a, b))
-          stop()
-        }
+      expect_close_enough(jsonlite::fromJSON(paste0(valA)), jsonlite::fromJSON(paste0(valB)), c())
+    } else {
+      result <- ifelse(valA == valB, yes = 1, no = 0)
+      if (sum(result) != length(valA)) {
+        fail(print_fail(key, a, b))
+        stop()
       }
-    } else if (valA != valB) {
-      fail(print_fail(key, a, b))
-      stop()
     }
   }
 }

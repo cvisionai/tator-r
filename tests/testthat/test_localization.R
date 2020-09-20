@@ -79,4 +79,49 @@ test_that("Localization CRUD", {
   expect_equal(class(response)[1], "MessageResponse")
   print(response$message)
   
+  # ES can be slow at indexing so wait for a bit.
+  Sys.sleep(5)
+  
+  # Bulk update box attributes.
+  bulk_patch <- random_localization(box_type_id, video_obj)
+  bulk_patch <- AttributeBulkUpdate$new(attributes = bulk_patch$attributes)
+  response <- tator_api$UpdateLocalizationList(
+    project = project_id,
+    attribute.bulk.update = bulk_patch,
+    media.id = c(video_id),
+    type = box_type_id
+  )
+  expect_equal(class(response)[1], "MessageResponse")
+  print(response$message)
+  
+  # Verify all boxes have been updated.
+  boxes <- tator_api$GetLocalizationList(
+    project = project_id,
+    media.id = c(video_id),
+    type = box_type_id
+  )
+  dataframe <- data.frame(matrix(unlist(boxes), nrow = length(boxes), byrow = TRUE))
+  expect_equal(length(boxes), nrow(dataframe))
+  for (box in boxes) {
+    expect_close_enough(bulk_patch, box, exclude)
+  }
+  
+  # Delete all boxes.
+  response <- tator_api$DeleteLocalizationList(
+    project = project_id,
+    media.id = c(video_id),
+    type = box_type_id
+  )
+  expect_equal(class(response)[1], "MessageResponse")
+  print(response$message)
+  
+  Sys.sleep(1)
+  
+  # Verify all boxes are gone.
+  boxes <- tator_api$GetLocalizationList(
+    project = project_id,
+    media.id = c(video_id),
+    type = box_type_id
+  )
+  expect_equal(length(boxes), 0)
 })
