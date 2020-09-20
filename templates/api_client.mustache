@@ -129,7 +129,7 @@ ApiClient  <- R6::R6Class(
 
     deserializeObj = function(obj, returnType, pkgEnv) {
       returnObj <- NULL
-      primitiveTypes <- c("character", "numeric", "integer", "logical", "complex", "VideoDefinition", "AudioDefinition")
+      primitiveTypes <- c("character", "numeric", "integer", "logical", "complex", "VideoDefinition", "AudioDefinition", "AnyType")
 
       # To handle the "map" type 
       if (startsWith(returnType, "map(")) {
@@ -151,11 +151,11 @@ ApiClient  <- R6::R6Class(
             }
           }
         } else {
-          if(!is.null(NROW(obj))){
-            returnObj <- vector("list", length = NROW(obj))
-            if (NROW(obj) > 0) {
-              for (row in 1:NROW(obj)) {
-                returnObj[[row]] <- self$deserializeObj(obj[row, ,], innerReturnType, pkgEnv)
+          if(!is.null(nrow(obj))){
+            returnObj <- vector("list", length = nrow(obj))
+            if (nrow(obj) > 0) {
+              for (row in 1:nrow(obj)) {
+                returnObj[[row]] <- self$deserializeObj(obj[row, , drop = FALSE], innerReturnType, pkgEnv)
               }
             }
           }

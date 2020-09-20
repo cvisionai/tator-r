@@ -156,12 +156,7 @@
        {{/isPrimitiveType}}
        {{/isListContainer}}
        {{#isMapContainer}}
-       {{#isPrimitiveType}}
-          self$`{{baseName}}`
-       {{/isPrimitiveType}}
-       {{^isPrimitiveType}}
-          lapply(self$`{{baseName}}`, function(x) x$toJSON())
-       {{/isPrimitiveType}}
+          jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
        {{/isMapContainer}}
        {{/isContainer}}
        {{^isContainer}}
@@ -176,10 +171,6 @@
       {{/vars}}
 
       for (name in names(self$`opts`)) {
-        if (name == "attributeValue") {
-          {{classname}}Object <- self$`opts`[[name]]
-          break
-        }
         {{classname}}Object[[name]] <- self$`opts`[[name]]
       }
 
@@ -197,9 +188,14 @@
         self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}
+        {{#isAnyType}}
+        self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
+        {{/isAnyType}}
+        {{^isAnyType}}
         {{baseName}}Object <- {{dataType}}$new()
         {{baseName}}Object$fromJSON(jsonlite::toJSON({{classname}}Object${{baseName}}, auto_unbox = TRUE, digits = NA))
         self$`{{baseName}}` <- {{baseName}}Object
+        {{/isAnyType}}
         {{/isPrimitiveType}}
         {{/isContainer}}
       }
@@ -251,12 +247,7 @@
         {{/isPrimitiveType}}
         {{/isListContainer}}
         {{#isMapContainer}}
-        {{#isPrimitiveType}}
-        jsonlite::toJSON(lapply(self$`{{{baseName}}}`, function(x){ x }), auto_unbox = TRUE, digits=NA)
-        {{/isPrimitiveType}}
-        {{^isPrimitiveType}}
-        jsonlite::toJSON(lapply(self$`{{{baseName}}}`, function(x){ x$toJSON() }), auto_unbox = TRUE, digits=NA)
-        {{/isPrimitiveType}}
+            jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
         {{/isMapContainer}}
         {{/isContainer}}
         {{^isContainer}}
@@ -278,13 +269,6 @@
 
       for (name in names(self$`opts`)) {
         val <- self$`opts`[[name]]
-        if (name == "attributeValue") {
-          if (is.logical(val)) {
-            return(jsonlite::toJSON(val, auto_unbox = TRUE))
-          } else {
-            return(val)
-          }
-        }
         if (is.character(val)) {
           jsoncontent <- c(jsoncontent, sprintf('"%s": "%s"', name, self$`opts`[[name]]))
         } else if (is.logical(val)) {
@@ -309,7 +293,12 @@
       self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
       {{/isPrimitiveType}}
       {{^isPrimitiveType}}
+      {{#isAnyType}}
+      self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
+      {{/isAnyType}}
+      {{^isAnyType}}
       self$`{{baseName}}` <- {{dataType}}$new()$fromJSON(jsonlite::toJSON({{classname}}Object${{baseName}}, auto_unbox = TRUE, digits = NA))
+      {{/isAnyType}}
       {{/isPrimitiveType}}
       {{/isContainer}}
       {{/vars}}

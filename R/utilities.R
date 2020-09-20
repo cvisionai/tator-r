@@ -315,8 +315,3 @@ get_images = function(file_path, media_or_state, num_images = NULL, width = NULL
   
   return(images)
 }
-
-#' @export
-new_attribute_value = function(value) {
-  return(AttributeValue$new(attributeValue = value))
-}

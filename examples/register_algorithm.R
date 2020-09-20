@@ -49,6 +49,8 @@ user_id <- user$id
 tus_url <- paste(opt$host, '/files/', sep = "")
 loginfo(sprintf("Uploading file %s...", opt$manifest))
 tus <- TusClient$new(tus_url)
+tus$SetHeaders(tator_api$apiClient$apiKeys['Authorization'])
+tus$SetHeaders(list("Upload-Uid" = uuid::UUIDgenerate()))
 chunk_size <- 1 * 1024 * 1024
 uploader <- tus$Uploader(file_path = opt$manifest, chunk_size = chunk_size)
 num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)

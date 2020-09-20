@@ -225,7 +225,7 @@ make_attribute_types <- function() {
 }
 
 print_fail <- function(key, a, b) {
-  paste("Failed on key: ", key, "\na: ", a, "\nb: ", b)
+  paste("Failed on key: ", key, "\na: ", get(key, a), "\nb: ", get(key, b))
 }
 
 expect_close_enough <- function(a, b, exclude) {
@@ -239,18 +239,30 @@ expect_close_enough <- function(a, b, exclude) {
     if (key %in% exclude) {
       next
     }
-    if (!(key %in% b)) {
+    if (!(key %in% names(b))) {
       fail(print_fail(key, a, b))
+      stop()
     }
-    if (is.numeric(a[key])) {
-      diff <- abs(a[key] - b[key])
+    valA <- get(key, a)
+    valB <- get(key, b)
+    if (is.numeric(valA)) {
+      diff <- abs(valA - valB)
       if (diff > 0.0001) {
         fail(print_fail(key, a, b))
+        stop()
       }
-    } else {
-      if (a[key] != b[key]) {
-        fail(print_fail(key, a, b))
+    } else if (key == "attributes") {
+      return(expect_close_enough(jsonlite::fromJSON(paste0(valA)), jsonlite::fromJSON(paste0(valB)), c()))
+    } else if (length(valA) > 1) {
+      for (item in valA) {
+        if (!(item %in% valB)) {
+          fail(print_fail(key, a, b))
+          stop()
+        }
       }
+    } else if (valA != valB) {
+      fail(print_fail(key, a, b))
+      stop()
     }
   }
 }
