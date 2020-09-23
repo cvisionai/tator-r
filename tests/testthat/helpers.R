@@ -80,7 +80,7 @@ video_type_fixture <- function(host, token, project_id) {
 }
 
 video_file_fixture <- function() {
-  out_path <- "/tmp/ForBiggerEscapes.mp4"
+  out_path <- "../../tmp/ForBiggerEscapes.mp4"
   if (!file.exists(out_path)) {
     file.create(out_path)
     url <- "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
@@ -224,3 +224,41 @@ make_attribute_types <- function() {
   return(attribute_types)
 }
 
+print_fail <- function(key, a, b) {
+  paste("Failed on key: ", key, "\na: ", get(key, a), "\nb: ", get(key, b))
+}
+
+expect_close_enough <- function(a, b, exclude) {
+  if (!is.list(a)) {
+    a <- a$toJSON()
+  }
+  if (!is.list(b)) {
+    b <- b$toJSON()
+  }
+  for (key in names(a)) {
+    if (key %in% exclude) {
+      next
+    }
+    if (!(key %in% names(b))) {
+      fail(print_fail(key, a, b))
+      stop()
+    }
+    valA <- get(key, a)
+    valB <- get(key, b)
+    if (is.numeric(valA) && length(valA) == 1) {
+      diff <- abs(valA - valB)
+      if (diff > 0.0001) {
+        fail(print_fail(key, a, b))
+        stop()
+      }
+    } else if (key == "attributes") {
+      expect_close_enough(jsonlite::fromJSON(paste0(valA)), jsonlite::fromJSON(paste0(valB)), c())
+    } else {
+      result <- ifelse(valA == valB, yes = 1, no = 0)
+      if (sum(result) != length(valA)) {
+        fail(print_fail(key, a, b))
+        stop()
+      }
+    }
+  }
+}

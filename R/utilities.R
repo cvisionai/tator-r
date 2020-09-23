@@ -27,8 +27,8 @@ get_api = function(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_
 #' @export
 chunked_create = function(FUN, project, spec_list) {
   ret <- list()
-  for (idx in seq(0, length(spec_list), 500)) {
-    response <- FUN(project, purrr::compact(spec_list[idx:(idx+500)]))
+  for (idx in seq(1, length(spec_list), 500)) {
+    response <- FUN(project, purrr::compact(spec_list[idx:(idx+499)]))
     ret <- c(ret, response)
   }
   return(ret)
@@ -60,6 +60,8 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
   host <- api$apiClient$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
   uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   
@@ -111,6 +113,8 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   host <- api$apiClient$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
 
   if (is.vector(paths)) {
     fn <- tempfile()
@@ -136,7 +140,7 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   
   # Initiate transcode.
   response <- api$Transcode(project_id, TranscodeSpec$new(
-    type = -1, #Tar-based inport
+    type = -1, #Tar-based import
     uid = upload_uid,
     gid = upload_gid,
     url = uploader$url,
@@ -155,10 +159,9 @@ download_media = function(api, media, out_path) {
     archival <- media$media_files$archival
     streaming <- media$media_files$streaming
     if (length(archival) > 0) {
-      url <- paste(host, archival[[1]][[1]]$path, sep = "")
+      url <- paste(host, archival[[1]]$path, sep = "")
     } else if (length(streaming) > 0) {
-      print("Streaming")
-      url <- paste(host, streaming[[1]][[1]]$path, sep = "")
+      url <- paste(host, streaming[[1]]$path, sep = "")
     }
   } else {
     # Legacy way of using streaming prior to streaming
@@ -174,14 +177,14 @@ download_media = function(api, media, out_path) {
   headerParams <- c()
   headerParams['Authorization'] <- auth_value
   headerParams['Content-Type'] <- "application/json"
-  headerParams['Accept-Encoding'] <- "gzip"
-
+  headerParams['Accept-Encoding'] <- "application/gzip"
+  
   resp <- httr::GET(url, config = c(add_headers(unlist(headerParams))))
   if (resp$status_code != 200) {
     stop(paste("Download request returned", resp$status_code, sep = " "))
   }
-  f <- file(out_path)
-  write(resp$content, file = f)
+  f <- file(out_path, open = "wb")
+  writeBin(resp$content, f)
   close(f)
 }
 
@@ -195,15 +198,39 @@ download_temporary_file = function(api, temporary_file, out_path) {
   headerParams <- c()
   headerParams['Authorization'] <- auth_value
   headerParams['Content-Type'] <- "application/json"
-  headerParams['Accept-Encoding'] <- "gzip"
+  headerParams['Accept-Encoding'] <- "application/gzip"
   
-  resp <- httr::GET(url, config = c(add_headers(unlist(headerParams))))
+  resp <- httr::GET(url, config = c(httr::add_headers(unlist(headerParams))))
   if (resp$status_code != 200) {
     stop(paste("Download request returned", resp$status_code, sep = " "))
   }
-  f <- file(out_path)
-  write(resp$content, file = f)
+  f <- file(out_path, open = "wb")
+  writeBin(resp$content, f)
   close(f)
+}
+
+#' @export
+upload_file = function(path, api) {
+  host <- api$apiClient$basePath
+  upload_uid <- uuid::UUIDgenerate()
+  tusURL <- paste(host, "files/", sep = "/")
+  tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
+  chunk_size <- 1*1024*1024 # 1 Mb
+  uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  last_progress <- 0
+  print(last_progress) # THIS SHOULD BE A YIELD
+  for (chunk_count in range(num_chunks)) {
+    uploader$UploadChunk()
+    this_progress <- round((chunk_count/num_chunks)*100, 1)
+    if (this_progress != last_progress) {
+      print(this_progress) # THIS SHOULD BE A YIELD
+      last_progress <- this_progress
+    }
+  }
+  return(uploader$url)
 }
 
 #' @export
@@ -216,9 +243,13 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
     lookup <- name
   }
   
+  upload_uid <- uuid::UUIDgenerate()
+  
   host <- api$apiClient$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
+  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
+  tus$SetHeaders(list("Upload-Uid" = upload_uid))
   uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   
@@ -245,15 +276,11 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
 
 #' @export
 get_images = function(file_path, media_or_state, num_images = NULL, width = NULL, height = NULL) {
-  tryCatch(
-    keras::implementation(),
-    error = function() { 
-      stop("Utility get_images requires some python libraries to be installed: `pip3 install tensorflow`")
-    }
-  )
-
   # Read in raw image.
-  img <- keras::image_load(file_path)
+  img <- readbitmap::read.bitmap(file_path)
+  dims <- dim(img)
+  img.width <- dims[1]
+  img.height <- dims[2]
   klass <- class(media_or_state)[1]
   
   if (klass == "State") {
@@ -262,8 +289,8 @@ get_images = function(file_path, media_or_state, num_images = NULL, width = NULL
     } else {
       num_localizations <- length(media_or_state$localizations)
     }
-    width <- img$width / num_localizations
-    height <- img$height
+    width <- img.width / num_localizations
+    height <- img.height
   } else if (klass == "Media") {
     if (is.null(width)) {
       width <- media_or_state$width
@@ -275,9 +302,10 @@ get_images = function(file_path, media_or_state, num_images = NULL, width = NULL
   
   # Make list of crops.
   images <- c()
-  for (top in seq(0, img$height, height)) {
-    for (left in seq(0, img$width, width)) {
-      image <- img$crop(c(left, top, (left+width), (top+height)))
+  for (top in seq(0, img.height, height)) {
+    for (left in seq(0, img.width, width)) {
+      # TODO: CROP IMAGE
+      # image <- img$crop(c(left, top, (left+width), (top+height)))
       images <- c(images, image)
     }
   }

@@ -153,7 +153,7 @@
        {{/isPrimitiveType}}
        {{^isPrimitiveType}}
           lapply(self$`{{baseName}}`, function(x){ x$toJSON() })
-        {{/isPrimitiveType}}
+       {{/isPrimitiveType}}
        {{/isListContainer}}
        {{#isMapContainer}}
           jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
@@ -171,7 +171,7 @@
       {{/vars}}
 
       for (name in names(self$`opts`)) {
-        StateSpecObject[[name]] <- self$`opts`[[name]]
+        {{classname}}Object[[name]] <- self$`opts`[[name]]
       }
 
       {{classname}}Object
@@ -188,9 +188,14 @@
         self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}
+        {{#isAnyType}}
+        self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
+        {{/isAnyType}}
+        {{^isAnyType}}
         {{baseName}}Object <- {{dataType}}$new()
         {{baseName}}Object$fromJSON(jsonlite::toJSON({{classname}}Object${{baseName}}, auto_unbox = TRUE, digits = NA))
         self$`{{baseName}}` <- {{baseName}}Object
+        {{/isAnyType}}
         {{/isPrimitiveType}}
         {{/isContainer}}
       }
@@ -242,7 +247,7 @@
         {{/isPrimitiveType}}
         {{/isListContainer}}
         {{#isMapContainer}}
-        jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
+            jsonlite::toJSON(self$`{{{baseName}}}`, auto_unbox = TRUE, digits=NA)
         {{/isMapContainer}}
         {{/isContainer}}
         {{^isContainer}}
@@ -288,7 +293,12 @@
       self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
       {{/isPrimitiveType}}
       {{^isPrimitiveType}}
+      {{#isAnyType}}
+      self$`{{baseName}}` <- {{classname}}Object$`{{baseName}}`
+      {{/isAnyType}}
+      {{^isAnyType}}
       self$`{{baseName}}` <- {{dataType}}$new()$fromJSON(jsonlite::toJSON({{classname}}Object${{baseName}}, auto_unbox = TRUE, digits = NA))
+      {{/isAnyType}}
       {{/isPrimitiveType}}
       {{/isContainer}}
       {{/vars}}
