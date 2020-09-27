@@ -22,8 +22,22 @@ filepath = sys.argv[1]
 if not os.path.exists(filepath):
     print("No file")
 
+def remove_non_json_apis(data):
+    """ The R openapi generator does not handle non-json responses
+    """
+    blacklist = [
+        "/rest/GetFrame/{id}",
+        "/rest/StateGraphic/{id}"
+    ]
+    paths = data['paths']
+    for key in blacklist:
+        del paths[key]
+    return data
+
+
 with open(filepath, 'r') as f:
     schema = yaml.load(f, Loader=yaml.FullLoader)
     schema = remove_oneof(schema)
+    schema = remove_non_json_apis(schema)
 with open(filepath, 'w') as f:
     yaml.dump(schema, f, Dumper=NoAliasDumper)
