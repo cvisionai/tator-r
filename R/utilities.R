@@ -66,13 +66,13 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   
   last_progress <- 0
-  print(last_progress) # THIS SHOULD BE A YIELD
+  print(last_progress)
   
   for (chunk_count in range(num_chunks)) {
     uploader$UploadChunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
-      print(this_progress) # THIS SHOULD BE A YIELD
+      print(this_progress)
       last_progress <- this_progress
     }
   }
@@ -127,13 +127,13 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   
   last_progress <- 0
-  print(last_progress) # THIS SHOULD BE A YIELD
+  print(last_progress)
   
   for (chunk_count in range(num_chunks)) {
     uploader$UploadChunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
-      print(this_progress) # THIS SHOULD BE A YIELD
+      print(this_progress)
       last_progress <- this_progress
     }
   }
@@ -221,12 +221,12 @@ upload_file = function(path, api) {
   uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   last_progress <- 0
-  print(last_progress) # THIS SHOULD BE A YIELD
+  print(last_progress)
   for (chunk_count in range(num_chunks)) {
     uploader$UploadChunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
-      print(this_progress) # THIS SHOULD BE A YIELD
+      print(this_progress)
       last_progress <- this_progress
     }
   }
@@ -254,13 +254,13 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
   num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
   
   last_progress <- 0
-  print(last_progress) # THIS SHOULD BE A YIELD
+  print(last_progress)
   
   for (chunk_count in range(num_chunks)) {
     uploader$UploadChunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
-      print(this_progress) # THIS SHOULD BE A YIELD
+      print(this_progress)
       last_progress <- this_progress
     }
   }
@@ -272,46 +272,4 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
     hours: 24
   ))
   return(response)
-}
-
-#' @export
-get_images = function(file_path, media_or_state, num_images = NULL, width = NULL, height = NULL) {
-  # Read in raw image.
-  img <- readbitmap::read.bitmap(file_path)
-  dims <- dim(img)
-  img.width <- dims[1]
-  img.height <- dims[2]
-  klass <- class(media_or_state)[1]
-  
-  if (klass == "State") {
-    if (!is.null(num_images)) {
-      num_localizations <- num_images
-    } else {
-      num_localizations <- length(media_or_state$localizations)
-    }
-    width <- img.width / num_localizations
-    height <- img.height
-  } else if (klass == "Media") {
-    if (is.null(width)) {
-      width <- media_or_state$width
-    }
-    if (is.null(height)) {
-      height <- media_or_state$height
-    }
-  }
-  
-  # Make list of crops.
-  images <- c()
-  for (top in seq(0, img.height, height)) {
-    for (left in seq(0, img.width, width)) {
-      # TODO: CROP IMAGE
-      # image <- img$crop(c(left, top, (left+width), (top+height)))
-      images <- c(images, image)
-    }
-  }
-  if (!is.null(num_images)) {
-    images <- images[1:num_images]
-  }
-  
-  return(images)
 }
