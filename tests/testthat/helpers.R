@@ -45,8 +45,8 @@ image_fixture <- function(host, token, project_id, image_type_id, image_file_pat
 }
 
 image_set_fixture <- function() {
-  out_path <- "../../tmp/lfw.tgz"
-  extract_path <- "../../tmp/lfw"
+  out_path <- "testdownloads/lfw.tgz"
+  extract_path <- "testdownloads/lfw"
   
   if (!file.exists(out_path)) {
     file.create(out_path)
@@ -63,8 +63,8 @@ image_set_fixture <- function() {
 }
 
 image_set_cleanup <- function(image_path) {
-  out_path <- "../../tmp/lfw.tgz"
-  extract_path <- "../../tmp/lfw"
+  out_path <- "testdownloads/lfw.tgz"
+  extract_path <- "testdownloads/lfw"
   file.remove(out_path)
   unlink(extract_path, recursive = TRUE)
 }
@@ -80,7 +80,7 @@ video_type_fixture <- function(host, token, project_id) {
 }
 
 video_file_fixture <- function() {
-  out_path <- "../../tmp/ForBiggerEscapes.mp4"
+  out_path <- "testdownloads/ForBiggerEscapes.mp4"
   if (!file.exists(out_path)) {
     file.create(out_path)
     url <- "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"

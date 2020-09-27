@@ -1,2 +1,11 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.env
+^library
+^tmp
+^templates
+^new-templates
+\.o$
+\.so$
+\.dll$
+\.mp4$

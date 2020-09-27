@@ -5,7 +5,7 @@ test_that("download media", {
   project_obj = tator_api$GetProject(project_id)
 
   cmd <- paste(
-    "Rscript ../../examples/download_media.R",
+    "$R_HOME/bin/Rscript ../../examples/download_media.R",
     "--host", host,
     "--token", token,
     "--media_name", video_obj$name,
