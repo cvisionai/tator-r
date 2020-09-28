@@ -1,6 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.env
+^Makefile
+^codegen.py
+^build.sh
+^build.bat
 ^library
 ^tmp
 ^templates
