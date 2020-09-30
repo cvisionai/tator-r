@@ -74,7 +74,7 @@ spec:
   local_yaml_file <- tempfile(fileext = ".yaml")
   write(manifest_yaml, file = local_yaml_file)
   cmd <- paste(
-    "$R_HOME/bin/Rscript ../../examples/register_algorithm.R",
+    "$R_HOME/bin/Rscript ../examples/register_algorithm.R",
     "--host", host,
     "--token", token,
     "--project_id", project_id,

@@ -1,6 +1,6 @@
 test_that("media uploads", {
   cmd <- paste(
-    "$R_HOME/bin/Rscript ../../examples/upload_media.R",
+    "$R_HOME/bin/Rscript ../examples/upload_media.R",
     "--host", host,
     "--token", token,
     "--type_id", video_type_id,

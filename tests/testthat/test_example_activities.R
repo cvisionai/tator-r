@@ -1,6 +1,6 @@
 test_that("activities create", {
   cmd <- paste(
-    "$R_HOME/bin/Rscript ../../examples/activities.R",
+    "$R_HOME/bin/Rscript ../examples/activities.R",
     "--host", host,
     "--token", token,
     "--video_type_id", video_type_id,

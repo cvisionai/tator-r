@@ -1,6 +1,6 @@
 test_that("localizations", {
   cmd <- paste(
-    "$R_HOME/bin/Rscript ../../examples/localizations.R",
+    "$R_HOME/bin/Rscript ../examples/localizations.R",
     "--host", host,
     "--token", token,
     "--video_id", video_id,
