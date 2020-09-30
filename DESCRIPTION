@@ -3,8 +3,8 @@ Title: R client for Tator: https://github.com/cvisionai/tator
 Version: 0.0.1
 Authors@R: person("", "CVision AI", email = "info@cvisionai.com",
                   role = c("aut", "cre", "cph"))
-Description: R client for Tator: https://github.com/cvisionai/tator
-License: use_mit_license()
+Description: This is the R client for Tator from CVision AI.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -12,14 +12,14 @@ RoxygenNote: 7.1.0
 Depends:	R (>= 3.5.0)
 Imports:
   R6,
-  caTools,
   httr,
   jsonlite,
-  optparse,
-  logging,
   stringr,
   uuid,
   mime,
   purrr
 Suggests: 
-  testthat
+  testthat,
+  caTools,
+  optparse,
+  logging

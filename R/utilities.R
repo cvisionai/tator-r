@@ -118,7 +118,7 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
 
   if (is.vector(paths)) {
     fn <- tempfile()
-    tar(fn, paths, compression = "gzip")
+    utils::tar(fn, paths, compression = "gzip")
     uploader <- tus$Uploader(file_path = fn, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   } else {
     uploader <- tus$Uploader(file_path = paths, chunk_size = chunk_size, retries = 10, retry_delay = 15)
