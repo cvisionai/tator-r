@@ -11,7 +11,7 @@
 #' \describe{
 {{#operation}}
 #' \strong{ {{operationId}} } \emph{ {{summary}} }
-#' {{notes}}
+#' {{{notes}}}
 #'
 #' \itemize{
 {{#allParams}}
@@ -149,6 +149,8 @@
   '{{classname}}',
   public = list(
     apiClient = NULL,
+    #' @description initialization method
+    #' @param apiClient ApiClient class object
     initialize = function(apiClient){
       httr::set_config(httr::config(http_version = 0))
       if (!missing(apiClient)) {
@@ -159,6 +161,14 @@
       }
     },
     {{#operation}}
+    #' @description {{{operationId}}}
+    {{#requiredParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/requiredParams}}
+    {{#optionalParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/optionalParams}}
+    #' @param ... Optional params
     {{{operationId}}} = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
       apiResponse <- self${{{operationId}}}WithHttpInfo({{#allParams}}{{paramName}}, {{/allParams}}...)
       resp <- apiResponse$response
@@ -172,7 +182,14 @@
         apiResponse
       }
     },
-
+    #' @description {{{operationId}}}WithHttpInfo
+    {{#requiredParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/requiredParams}}
+    {{#optionalParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/optionalParams}}
+    #' @param ... Optional params
     {{{operationId}}}WithHttpInfo = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
       args <- list(...)
       queryParams <- list()
