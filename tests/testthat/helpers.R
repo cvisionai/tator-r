@@ -29,7 +29,7 @@ image_file_fixture <- function() {
   if (!file.exists(out_path)) {
     file.create(out_path)
     url <- "https://www.gstatic.com/webp/gallery/1.jpg"
-    download.file(url, out_path, "auto", quiet = TRUE)
+    download.file(url, out_path, "auto", quiet = TRUE, mode = "wb")
   }
   return(out_path)
 }
