@@ -18,11 +18,11 @@
 #' @format An \code{R6Class} generator object
 #' @field basePath Base url
 #' @field userAgent Default user agent
-#' @field defaultHeaders
+#' @field defaultHeaders Default headers
 #' @field username Username for HTTP basic authentication
 #' @field password Password for HTTP basic authentication
-#' @field apiKeys
-#' @field accessToken
+#' @field apiKeys API keys
+#' @field accessToken Access token
 #' @field timeout Default timeout in seconds
 #' @importFrom httr add_headers accept timeout content
 {{#useRlangExceptionHandling}}
@@ -32,23 +32,23 @@
 ApiClient  <- R6::R6Class(
   'ApiClient',
   public = list(
-    # base path of all requests
     basePath = "{{{basePath}}}",
-    # user agent in the HTTP request
     userAgent = "{{#httpUserAgent}}{{{.}}}{{/httpUserAgent}}{{^httpUserAgent}}OpenAPI-Generator/{{{packageVersion}}}/r{{/httpUserAgent}}",
-    # default headers in the HTTP request
     defaultHeaders = NULL,
-    # username (HTTP basic authentication)
     username = NULL,
-    # password (HTTP basic authentication)
     password = NULL,
-    # API keys
     apiKeys = NULL,
-    # Access token
     accessToken = NULL,
-    # Time Out (seconds)
     timeout = NULL,
-    # constructor
+    #' @description initialize method
+    #' @param basePath base path of all requests 
+    #' @param userAgent user agent in the HTTP request
+    #' @param defaultHeaders default headers in the HTTP request
+    #' @param username username (HTTP basic authentication)
+    #' @param password password (HTTP basic authentication)
+    #' @param apiKeys API keys
+    #' @param accessToken Access token
+    #' @param timeout Time Out (seconds)
     initialize = function(basePath=NULL, userAgent=NULL, defaultHeaders=NULL, username=NULL, password=NULL, apiKeys=NULL, accessToken=NULL, timeout=NULL){
       if (!is.null(basePath)) {
         self$basePath <- basePath
@@ -84,6 +84,13 @@ ApiClient  <- R6::R6Class(
         self$timeout <- timeout
       }
     },
+    #' @description CallApi method
+    #' @param url The URL to call.
+    #' @param method The HTTP method to use.
+    #' @param queryParams Query params
+    #' @param headerParams Header params
+    #' @param body Request body
+    #' @param ... Optional arguments
     CallApi = function(url, method, queryParams, headerParams, body, ...){
       headers <- httr::add_headers(c(headerParams, self$defaultHeaders))
 
@@ -116,17 +123,21 @@ ApiClient  <- R6::R6Class(
       }
     },
 
-    # Deserialize the content of api response to the given type.
+    #' @description Deserialize the content of api response to the given type.
+    #' @param resp The response object
+    #' @param returnType Return type
+    #' @param pkgEnv The tator environment
     deserialize = function(resp, returnType, pkgEnv) {
       respObj <- jsonlite::fromJSON(httr::content(resp, "text", encoding = "UTF-8"))
       self$deserializeObj(respObj, returnType, pkgEnv)
     },
 
-
-    # Deserialize the response from jsonlite object based on the given type
-    # by handling complex and nested types by iterating recursively
-    # Example returnTypes will be like "array[integer]", "map(Pet)", "array[map(Tag)]", etc.,
-
+    #' @description Deserialize the response from jsonlite object based on the given type
+    #' by handling complex and nested types by iterating recursively
+    #' Example returnTypes will be like "array\[integer\]", "map(Pet)", "array\[map(Tag)\]", etc.,
+    #' @param obj The response object
+    #' @param returnType Return type
+    #' @param pkgEnv The tator environment
     deserializeObj = function(obj, returnType, pkgEnv) {
       returnObj <- NULL
       primitiveTypes <- c("character", "numeric", "integer", "logical", "complex", "VideoDefinition", "AudioDefinition", "AnyType")

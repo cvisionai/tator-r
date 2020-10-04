@@ -1,2 +1,17 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.env
+^Makefile
+^codegen.py
+^config.json
+^build.sh
+^build.bat
+^library
+^tmp
+^templates
+^new-templates
+\.o$
+\.so$
+\.dll$
+\.mp4$
+\.gz$

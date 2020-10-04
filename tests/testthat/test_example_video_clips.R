@@ -1,6 +1,6 @@
 test_that("video clips download", {
   cmd <- paste(
-    "Rscript ../../examples/video_clips.R",
+    "$R_HOME/bin/Rscript ../examples/video_clips.R",
     "--host", host,
     "--token", token,
     "--video_id", video_id,

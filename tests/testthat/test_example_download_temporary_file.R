@@ -9,7 +9,7 @@ test_that("download temporary file", {
   temporary_file_id = response$id
   
   cmd <- paste(
-    "Rscript ../../examples/download_temporary_file.R",
+    "$R_HOME/bin/Rscript ../examples/download_temporary_file.R",
     "--host", host,
     "--token", token,
     "--temporary_file_id", temporary_file_id,

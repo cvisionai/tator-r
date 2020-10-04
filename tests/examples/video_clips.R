@@ -29,7 +29,8 @@ opt = parse_args(opt_parser)
 tator_api <- get_api(opt$host, opt$token)
 
 # Get the video clip.
-temporary_file <- tator_api$GetClip(opt$video_id, frame.ranges = "0:30,50:90")
+clip_info <- tator_api$GetClip(opt$video_id, frame.ranges = "0:30,50:90")
+temporary_file <- clip_info$file
 
 # Download the file.
 download_temporary_file(tator_api, temporary_file, opt$file_path)

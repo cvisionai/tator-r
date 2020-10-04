@@ -1,8 +1,12 @@
+#' @docType class
+#' @title TusRequest
+#' @description TusRequest Class
 #' @export
 TusRequest <- R6::R6Class(
   "TusRequest",
   inherit = TusBaseRequest,
   public = list(
+    #' @description Perform the tus request
     Perform = function() {
       tryCatch({
         chunk <- readBin(self$file, 

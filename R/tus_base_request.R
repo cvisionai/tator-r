@@ -1,3 +1,16 @@
+#' @docType class
+#' @title TusBaseRequest
+#' @description TusBaseRequest Class
+#' @field url The request URL
+#' @field response_headers Response headers
+#' @field status_code HTTP response status code
+#' @field response_content Response content
+#' @field file File to upload
+#' @field request_headers Request headers
+#' @field content_length Content length
+#' @field upload_checksum Upload checksum
+#' @field checksum_algorithm Checksum algorithm
+#' @field checksum_algorithm_name Checksum algorithm name 
 #' @export
 TusBaseRequest <- R6::R6Class(
  "TusBaseRequest",
@@ -12,6 +25,8 @@ TusBaseRequest <- R6::R6Class(
    upload_checksum = NULL,
    checksum_algorithm = NULL,
    checksum_algorithm_name = NULL,
+   #' @description initialization method
+   #' @param uploader The TusUploader instance
    initialize = function(uploader) {
      self$url <- uploader$url
      self$response_headers <- list()
@@ -27,6 +42,8 @@ TusBaseRequest <- R6::R6Class(
      self$checksum_algorithm <- uploader$checksum_algorithm
      self$checksum_algorithm_name <- uploader$checksum_algorithm_name
    },
+   #' @description AddChecksum Add the upload checksum header for the chunk
+   #' @param chunk The chunk to digest.
    AddChecksum = function(chunk) {
      if (!is.null(self$upload_checksum)) {
        self$request_headers["upload-checksum"] <- paste(

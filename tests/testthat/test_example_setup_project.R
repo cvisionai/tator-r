@@ -1,6 +1,6 @@
 test_that("project setup", {
   cmd <- paste(
-    "Rscript ../../examples/setup_project.R",
+    "$R_HOME/bin/Rscript ../examples/setup_project.R",
     "--host", host,
     "--token", token,
     sep = " ")

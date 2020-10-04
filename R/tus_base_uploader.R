@@ -1,6 +1,25 @@
 #' @docType class
 #' @title TusBaseUploader
 #' @description TusBaseUploader Class
+#' @field file_path File path
+#' @field file_stream File stream
+#' @field url URL
+#' @field client TusClient
+#' @field chunk_size Chunk size
+#' @field metadata Metadata
+#' @field retries Retry limit
+#' @field retried Boolean if the request was retried
+#' @field retry_delay Retry delay
+#' @field store_url Store URL
+#' @field url_storage URL storage
+#' @field fingerprinter Fingerprinter
+#' @field upload_checksum Upload checksum
+#' @field default_headers Default headers
+#' @field offset Offset
+#' @field stop_at Stop at
+#' @field request Request
+#' @field checksum_algorithm_name Checksum algorithm name
+#' @field checksum_algorithm Checksum algorithm
 #' @export
 TusBaseUploader <- R6::R6Class(
   "TusBaseUploader",
@@ -21,10 +40,22 @@ TusBaseUploader <- R6::R6Class(
     store_url = FALSE,
     url_storage = NULL,
     fingerprinter = NULL,
-    log_func = NULL,
     upload_checksum = NULL,
     checksum_algorithm_name = NULL,
     checksum_algorithm = NULL,
+    #' @description initialization method
+    #' @param file_path File path
+    #' @param file_stream File stream
+    #' @param url URL
+    #' @param client TusClient
+    #' @param chunk_size Chunk size
+    #' @param metadata Metadata
+    #' @param retries Retry limit
+    #' @param retry_delay Retry delay
+    #' @param store_url Store URL
+    #' @param url_storage URL storage
+    #' @param fingerprinter Fingerprinter
+    #' @param upload_checksum Upload checksum
     initialize = function(file_path = NULL, file_stream = NULL, url = NULL, client = NULL,
                           chunk_size = NULL, metadata = NULL, retries = 0, retry_delay = 30,
                           store_url = FALSE, url_storage = NULL, fingerprinter = NULL, 
@@ -61,22 +92,27 @@ TusBaseUploader <- R6::R6Class(
       self$checksum_algorithm_name <- "sha1"
       self$checksum_algorithm <- "sha1"
     },
+    #' @description Get headers
     GetHeaders = function() {
       client_headers <- self$client$headers
       return(c(self$default_headers, client_headers))
     },
+    #' @description Get URL creation headers
     GetURLCreationHeaders = function() {
       headers <- self$GetHeaders()
       headers <- c(headers, "upload-length" = toString(self$GetFileSize()))
       headers <- c(headers, "upload-metadata" = paste(self$EncodeMetadata(), collapse = ","))
       return(headers)
     },
+    #' @description Get checksum algorithm
     ChecksumAlgorithm = function() {
       return(self$checksum_algorithm)
     },
+    #' @description Get checksum algorithm name
     ChecksumAlgorithmName = function() {
       return(self$checksum_algorithm_name)
     },
+    #' @description Get tus upload offset header 
     GetOffset = function() {
       resp <- httr::HEAD(self$url, add_headers(unlist(self$GetHeaders())))
       offset <- resp$headers["upload-offset"]
@@ -85,6 +121,7 @@ TusBaseUploader <- R6::R6Class(
       }
       return(strtoi(offset))
     },
+    #' @description Encode metadata 
     EncodeMetadata = function() {
       encoded_list <- list()
       for (key in names(self$metadata)) {
@@ -99,6 +136,8 @@ TusBaseUploader <- R6::R6Class(
       }
       return(encoded_list)
     },
+    #' @description Init URL and offset
+    #' @param url URL
     InitURLAndOffset = function(url = NULL) {
       if (!is.null(url)) {
         self$SetURL(url)
@@ -113,6 +152,8 @@ TusBaseUploader <- R6::R6Class(
         self$offset <- self$GetOffset()
       }
     },
+    #' @description Set URL
+    #' @param url URL
     SetURL = function(url) {
       self$url <- url
       
@@ -121,6 +162,7 @@ TusBaseUploader <- R6::R6Class(
         self$SetURL(self$url_storage[key])
       }
     },
+    #' @description Get request length
     GetRequestLength = function() {
       remainder <- self$stop_at - self$offset
       if (remainder > self$chunk_size) {
@@ -129,6 +171,7 @@ TusBaseUploader <- R6::R6Class(
         return(remainder)
       }
     },
+    #' @description Get file stream 
     GetFileStream = function() {
       if (!is.null(self$file_stream)) {
         seek(self$file_stream, where = 0, origin = "start")
@@ -141,6 +184,7 @@ TusBaseUploader <- R6::R6Class(
       
       stop(paste("invalid file", self$file_path))
     },
+    #' @description Get file size 
     GetFileSize = function() {
       stream <- self$GetFileStream()
       count <- 0

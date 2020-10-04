@@ -11,12 +11,12 @@
 #' \describe{
 {{#operation}}
 #' \strong{ {{operationId}} } \emph{ {{summary}} }
-#' {{notes}}
+#' {{{notes}}}
 #'
 #' \itemize{
 {{#allParams}}
 {{#isEnum}}
-#' \item \emph{ @param } {{paramName}} Enum < {{#allowableValues}}{{values}}{{/allowableValues}} > 
+#' \item \emph{ @param } {{paramName}} Enum < count > 
 {{/isEnum}}
 {{^isEnum}}
 {{#isContainer}}
@@ -44,14 +44,14 @@
 #' \item \emph{ @param } {{paramName}} {{dataType}}
 {{/isPrimitiveType}}
 {{^isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%>
+#' \item \emph{ @param } {{paramName}} \code{{=<% %>=}}{<%dataType%>}<%={{ }}=%>
 {{/isPrimitiveType}}
 {{/isContainer}}
 {{/isEnum}}
 {{/allParams}}
 {{#returnType}}
 {{^returnTypeIsPrimitive}}
-#' \item \emph{ @returnType } {{#returnContainer}}{{#isListContainer}}list( {{/isListContainer}}{{#isMapContainer}}named list( {{/isMapContainer}}{{/returnContainer}}\link{{=<% %>=}}{<%#returnContainer%><%={{ }}=%>{{returnBaseType}}{{/returnContainer}}{{^returnContainer}}{{returnType}}{{=<% %>=}}<%/returnContainer%>}<%={{ }}=%>{{#returnContainer}}{{#isListContainer}} ){{/isListContainer}}{{#isMapContainer}} ){{/isMapContainer}}{{/returnContainer}} \cr
+#' \item \emph{ @returnType } {{#returnContainer}}{{#isListContainer}}list( {{/isListContainer}}{{#isMapContainer}}named list( {{/isMapContainer}}{{/returnContainer}}\code{{=<% %>=}}{<%#returnContainer%><%={{ }}=%>{{returnBaseType}}{{/returnContainer}}{{^returnContainer}}{{returnType}}{{=<% %>=}}<%/returnContainer%>}<%={{ }}=%>{{#returnContainer}}{{#isListContainer}} ){{/isListContainer}}{{#isMapContainer}} ){{/isMapContainer}}{{/returnContainer}} \cr
 {{/returnTypeIsPrimitive}}
 {{/returnType}}
 #'
@@ -149,6 +149,8 @@
   '{{classname}}',
   public = list(
     apiClient = NULL,
+    #' @description initialization method
+    #' @param apiClient ApiClient class object
     initialize = function(apiClient){
       httr::set_config(httr::config(http_version = 0))
       if (!missing(apiClient)) {
@@ -159,6 +161,14 @@
       }
     },
     {{#operation}}
+    #' @description {{{operationId}}}
+    {{#requiredParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/requiredParams}}
+    {{#optionalParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/optionalParams}}
+    #' @param ... Optional params
     {{{operationId}}} = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
       apiResponse <- self${{{operationId}}}WithHttpInfo({{#allParams}}{{paramName}}, {{/allParams}}...)
       resp <- apiResponse$response
@@ -172,7 +182,14 @@
         apiResponse
       }
     },
-
+    #' @description {{{operationId}}}WithHttpInfo
+    {{#requiredParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/requiredParams}}
+    {{#optionalParams}} 
+    #' @param {{paramName}} {{paramName}}
+    {{/optionalParams}}
+    #' @param ... Optional params
     {{{operationId}}}WithHttpInfo = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
       args <- list(...)
       queryParams <- list()
