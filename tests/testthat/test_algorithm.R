@@ -170,7 +170,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
     )
     
     response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
-    if (response$content == "API client error") {
+    if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
   }, error = function(e) {
@@ -192,7 +192,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
     )
     
     response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
-    if (response$content == "API client error") {
+    if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
   }, error = function(e) {
@@ -319,7 +319,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
     )
     
     response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
-    if (response$content == "API client error") {
+    if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
   }, error = function(e) {
@@ -339,7 +339,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
     )
     
     response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
-    if (response$content == "API client error") {
+    if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
   }, error = function(e) {
@@ -359,7 +359,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
     )
     
     response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
-    if (response$content == "API client error") {
+    if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
   }, error = function(e) {
@@ -379,7 +379,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
     )
     
     response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
-    if (response$content == "API client error") {
+    if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
   }, error = function(e) {
@@ -399,7 +399,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
     )
     
     response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
-    if (response$content == "API client error") {
+    if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
   }, error = function(e) {

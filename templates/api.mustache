@@ -329,21 +329,49 @@
         ApiResponse$new(paste("Server returned " , httr::status_code(resp) , " response status code."), resp)
       {{/returnExceptionOnFailure}}
       } else if (httr::status_code(resp) >= 400 && httr::status_code(resp) <= 499) {
-      {{#returnExceptionOnFailure}}
-        errorMsg <- toString(content(resp))
-        if(errorMsg == ""){
-          errorMsg <- "Api client exception encountered."
+        if (httr::status_code(resp) == 400) {
+          deserializedRespObj <- tryCatch(
+            self$apiClient$deserialize(resp, "BadRequestResponse", loadNamespace("{{packageName}}")),
+            error = function(e){
+            {{#useDefaultExceptionHandling}}
+              stop("Failed to deserialize response")
+            {{/useDefaultExceptionHandling}}
+            {{#useRlangExceptionHandling}}
+              rlang::abort(message = "Failed to deserialize response", .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
+            {{/useRlangExceptionHandling}}
+            }
+          )
+          ApiResponse$new(deserializedRespObj, resp) 
+        } else if (httr::status_code(resp) == 404) {
+          deserializedRespObj <- tryCatch(
+            self$apiClient$deserialize(resp, "NotFoundResponse", loadNamespace("{{packageName}}")),
+            error = function(e){
+            {{#useDefaultExceptionHandling}}
+              stop("Failed to deserialize response")
+            {{/useDefaultExceptionHandling}}
+            {{#useRlangExceptionHandling}}
+              rlang::abort(message = "Failed to deserialize response", .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
+            {{/useRlangExceptionHandling}}
+            }
+          )
+          ApiResponse$new(deserializedRespObj, resp) 
+        } else {
+        {{#returnExceptionOnFailure}}
+          errorMsg <- toString(content(resp))
+          if(errorMsg == ""){
+            errorMsg <- "Api client exception encountered."
+          }
+          {{#useDefaultExceptionHandling}}
+          stop(errorMsg)
+          {{/useDefaultExceptionHandling}}
+          {{#useRlangExceptionHandling}}
+          rlang::abort(message = errorMsg, .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
+          {{/useRlangExceptionHandling}}
+        {{/returnExceptionOnFailure}}
+        {{^returnExceptionOnFailure}}
+          ApiResponse$new("API client error", resp)
+        {{/returnExceptionOnFailure}}
         }
-        {{#useDefaultExceptionHandling}}
-        stop(errorMsg)
-        {{/useDefaultExceptionHandling}}
-        {{#useRlangExceptionHandling}}
-        rlang::abort(message = errorMsg, .subclass = "ApiException", ApiException = ApiException$new(http_response = resp))
-        {{/useRlangExceptionHandling}}
-      {{/returnExceptionOnFailure}}
-      {{^returnExceptionOnFailure}}
-        ApiResponse$new("API client error", resp)
-      {{/returnExceptionOnFailure}}
       } else if (httr::status_code(resp) >= 500 && httr::status_code(resp) <= 599) {
       {{#returnExceptionOnFailure}}
         errorMsg <- toString(content(resp))
