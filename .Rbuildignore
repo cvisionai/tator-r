@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^\.env
 ^Makefile
+^cran-comments.md
 ^codegen.py
 ^config.json
 ^build.sh
