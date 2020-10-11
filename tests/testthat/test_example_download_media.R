@@ -1,4 +1,5 @@
 test_that("download media", {
+  skip_on_cran()
   # Get project and video.
   tator_api = get_api(host, token)
   video_obj = tator_api$GetMedia(video_id)

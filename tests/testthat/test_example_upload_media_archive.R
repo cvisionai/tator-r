@@ -1,4 +1,5 @@
 test_that("media archive uploads", {
+  skip_on_cran()
   cmd <- paste(
     "$R_HOME/bin/Rscript ../examples/upload_media_archive.R",
     "--host", host,

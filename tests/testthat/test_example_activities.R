@@ -1,4 +1,5 @@
 test_that("activities create", {
+  skip_on_cran()
   cmd <- paste(
     "$R_HOME/bin/Rscript ../examples/activities.R",
     "--host", host,

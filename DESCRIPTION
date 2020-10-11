@@ -1,15 +1,17 @@
 Package: tator
-Title: R client for Tator: https://github.com/cvisionai/tator
+Title: R Client for Tator
 Version: 0.0.1
-Authors@R: person("", "CVision AI", email = "info@cvisionai.com",
-                  role = c("aut", "cre", "cph"))
+Authors@R: 
+    person(family = "CVision AI",
+           role = c("aut", "cre", "cph"),
+           email = "info@cvisionai.com")
 Description: This is the R client for Tator from CVision AI.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
-Depends:	R (>= 3.5.0)
+Depends: R (>= 3.5.0)
 Imports:
   R6,
   httr,

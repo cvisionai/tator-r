@@ -1,4 +1,5 @@
 test_that("project setup", {
+  skip_on_cran()
   cmd <- paste(
     "$R_HOME/bin/Rscript ../examples/setup_project.R",
     "--host", host,

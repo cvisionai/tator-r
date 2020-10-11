@@ -1,4 +1,5 @@
 test_that("Get file", {
+  skip_on_cran()
   tator_api <- get_api(host, token)
   video_obj <- tator_api$GetMedia(video_id)
   
@@ -9,6 +10,7 @@ test_that("Get file", {
 })
 
 test_that("Get audio", {
+  skip_on_cran()
   tator_api <- get_api(host, token)
   video_obj <- tator_api$GetMedia(video_id)
   

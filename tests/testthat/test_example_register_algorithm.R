@@ -1,4 +1,5 @@
 test_that("register algorithm", {
+  skip_on_cran()
   manifest_yaml <- "apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:

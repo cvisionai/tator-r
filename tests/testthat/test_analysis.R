@@ -5,6 +5,7 @@
 #' Delete the object
 #' Retrieve the set of analyses objects and make sure that object was deleted
 test_that("Create a set of analyses objects using the POST operation", {
+  skip_on_cran()
   # Setup the interface to tator
   tator_api <- get_api(host, token)
   

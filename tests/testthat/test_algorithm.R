@@ -129,6 +129,7 @@ upload_test_algorithm_manifest = function(
 #   - Provide something where the upload file doesn't exist
 #   - Upload two of the same files (have the same name, but will result in two separate files)
 test_that("Unit test for the SaveAlgorithManifest endpoint", {
+  skip_on_cran()
   missing_upload_file(host = host, token = token, project_id = project_id)
 
   response_1 <- upload_test_algorithm_manifest(
@@ -146,6 +147,7 @@ test_that("Unit test for the SaveAlgorithManifest endpoint", {
 #   - Create a request body for a .yaml file that doesn't exist
 #   - Normal request body
 test_that("Unit test for the RegisterAlgorithm endpoint", {
+  skip_on_cran()
   # Create a randomized unique algorithm name (that we'll end up deleting later anyway)
   algo_name <- uuid::UUIDgenerate()
   
@@ -293,6 +295,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
 #' Request bodies are created with missing required fields and a workflow tries
 #' to be registered with these incorrect request bodies.
 test_that("Unit test for the RegisterAlgorithm endpoint focused on missing request body fields", {
+  skip_on_cran()
   name <- uuid::UUIDgenerate()
   description <- "description"
   cluster <- 1

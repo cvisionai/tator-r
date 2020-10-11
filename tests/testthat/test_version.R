@@ -1,4 +1,5 @@
 test_that("Version CRUD", {
+  skip_on_cran()
   tator_api <- get_api(host, token)
   
   # Test single create.

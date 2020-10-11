@@ -38,6 +38,7 @@ random_localization = function(box_type_id, video_obj, post = FALSE) {
 }
 
 test_that("Localization CRUD", {
+  skip_on_cran()
   tator_api <- get_api(host, token)
   video_obj <- tator_api$GetMedia(video_id)
   

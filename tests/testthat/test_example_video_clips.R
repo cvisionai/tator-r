@@ -1,4 +1,5 @@
 test_that("video clips download", {
+  skip_on_cran()
   cmd <- paste(
     "$R_HOME/bin/Rscript ../examples/video_clips.R",
     "--host", host,

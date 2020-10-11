@@ -1,4 +1,5 @@
 test_that("Temporary file", {
+  skip_on_cran()
   tator_api <- get_api(host, token)
   
   all_temps <- tator_api$GetTemporaryFileList(project_id)

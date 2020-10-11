@@ -1,4 +1,5 @@
 test_that("download temporary file", {
+  skip_on_cran()
   # Get project and video.
   tator_api = get_api(host, token)
 

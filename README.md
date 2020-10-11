@@ -4,6 +4,16 @@ NOTE: This package is in development and not ready for use. It will be available
 
 [R](https://www.r-project.org) client for [Tator](https://github.com/cvisionai/tator).
 
+## Example usage
+```R
+library(tator)
+
+api <- get_api(host = 'https://www.tatorapp.com', token = 'MY_TOKEN')
+api$GetMediaList(1) # Pass a project ID
+```
+
+Visit the [examples](tests/examples) for more.
+
 ## Installation
 
 ### From CRAN
@@ -22,7 +32,7 @@ $ ./build.sh
 
 ## API documentation
 
-Documentation for all API functions and models can be found in the [OpenAPI documentation](docs/TatorApi.md).
+Documentation for all API functions and models can be found in the [OpenAPI documentation](https://www.tatorapp.com/docs/).
 
 ## Authors
 
