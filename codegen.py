@@ -2,6 +2,7 @@
 import sys
 import yaml
 import os
+import re
 
 class NoAliasDumper(yaml.Dumper):
     def ignore_aliases(self, data):
@@ -34,10 +35,22 @@ def remove_non_json_apis(data):
         del paths[key]
     return data
 
+def replace_description_newlines(data):
+    """ The way R docs and mustache templates interact
+        does not allow for newlines, it has to be html break tags
+    """
+    if 'description' in data:
+        if isinstance(data['description'], str):
+            data['description'] = re.sub("\\n|\n", "\n#' ", data['description'])
+    for key in data:
+        if isinstance(data[key], dict):
+            replace_description_newlines(data[key])
+    return data
 
 with open(filepath, 'r') as f:
     schema = yaml.load(f, Loader=yaml.FullLoader)
     schema = remove_oneof(schema)
     schema = remove_non_json_apis(schema)
+    schema = replace_description_newlines(schema)
 with open(filepath, 'w') as f:
     yaml.dump(schema, f, Dumper=NoAliasDumper)

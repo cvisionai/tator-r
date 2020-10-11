@@ -6,76 +6,6 @@
 #' @format An \code{R6Class} generator object
 #' @field apiClient Handles the client-server communication.
 #'
-#' @section Methods:
-{{! Adding the below changes for generating documentation for the api methods. }}
-#' \describe{
-{{#operation}}
-#' \strong{ {{operationId}} } \emph{ {{summary}} }
-#' {{{notes}}}
-#'
-#' \itemize{
-{{#allParams}}
-{{#isEnum}}
-#' \item \emph{ @param } {{paramName}} Enum < count > 
-{{/isEnum}}
-{{^isEnum}}
-{{#isContainer}}
-{{#isListContainer}}
-{{#items}}
-{{#isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} list( {{dataType}} )
-{{/isPrimitiveType}}
-{{^isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} list( \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%> )
-{{/isPrimitiveType}}
-{{/items}}
-{{/isListContainer}}
-{{#isMapContainer}}
-{{#isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} named list( {{dataType}} )
-{{/isPrimitiveType}}
-{{^isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} named list( \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%> )
-{{/isPrimitiveType}}
-{{/isMapContainer}}
-{{/isContainer}}
-{{^isContainer}}
-{{#isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} {{dataType}}
-{{/isPrimitiveType}}
-{{^isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} \code{{=<% %>=}}{<%dataType%>}<%={{ }}=%>
-{{/isPrimitiveType}}
-{{/isContainer}}
-{{/isEnum}}
-{{/allParams}}
-{{#returnType}}
-{{^returnTypeIsPrimitive}}
-#' \item \emph{ @returnType } {{#returnContainer}}{{#isListContainer}}list( {{/isListContainer}}{{#isMapContainer}}named list( {{/isMapContainer}}{{/returnContainer}}\code{{=<% %>=}}{<%#returnContainer%><%={{ }}=%>{{returnBaseType}}{{/returnContainer}}{{^returnContainer}}{{returnType}}{{=<% %>=}}<%/returnContainer%>}<%={{ }}=%>{{#returnContainer}}{{#isListContainer}} ){{/isListContainer}}{{#isMapContainer}} ){{/isMapContainer}}{{/returnContainer}} \cr
-{{/returnTypeIsPrimitive}}
-{{/returnType}}
-#'
-{{#useRlangExceptionHandling}}
-#' \item On encountering errors, an error of subclass ApiException will be thrown.
-{{/useRlangExceptionHandling}}
-#'
-{{#responses}}
-#' \item status code : {{code}} | {{message}}
-#'
-#'{{#dataType}} \item return type : {{dataType}} {{/dataType}}
-#' \item response headers :
-#'
-#' \tabular{ll}{
-{{#headers}}
-#' {{name}} \tab {{description}} \cr
-{{/headers}}
-#' }
-{{/responses}}
-#' }
-#'
-{{/operation}}
-#' }
-#'
 #' @importFrom R6 R6Class
 {{#useRlangExceptionHandling}}
 #' @importFrom rlang abort
@@ -98,6 +28,9 @@
     },
     {{#operation}}
     #' @description {{{operationId}}}
+    {{#notes}}
+    #' @details {{{unescapedNotes}}}
+    {{/notes}}
     {{#requiredParams}} 
     #' @param {{paramName}} {{paramName}}
     {{/requiredParams}}
