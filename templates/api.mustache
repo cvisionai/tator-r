@@ -6,140 +6,6 @@
 #' @format An \code{R6Class} generator object
 #' @field apiClient Handles the client-server communication.
 #'
-#' @section Methods:
-{{! Adding the below changes for generating documentation for the api methods. }}
-#' \describe{
-{{#operation}}
-#' \strong{ {{operationId}} } \emph{ {{summary}} }
-#' {{{notes}}}
-#'
-#' \itemize{
-{{#allParams}}
-{{#isEnum}}
-#' \item \emph{ @param } {{paramName}} Enum < count > 
-{{/isEnum}}
-{{^isEnum}}
-{{#isContainer}}
-{{#isListContainer}}
-{{#items}}
-{{#isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} list( {{dataType}} )
-{{/isPrimitiveType}}
-{{^isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} list( \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%> )
-{{/isPrimitiveType}}
-{{/items}}
-{{/isListContainer}}
-{{#isMapContainer}}
-{{#isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} named list( {{dataType}} )
-{{/isPrimitiveType}}
-{{^isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} named list( \link{{=<% %>=}}{<%dataType%>}<%={{ }}=%> )
-{{/isPrimitiveType}}
-{{/isMapContainer}}
-{{/isContainer}}
-{{^isContainer}}
-{{#isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} {{dataType}}
-{{/isPrimitiveType}}
-{{^isPrimitiveType}}
-#' \item \emph{ @param } {{paramName}} \code{{=<% %>=}}{<%dataType%>}<%={{ }}=%>
-{{/isPrimitiveType}}
-{{/isContainer}}
-{{/isEnum}}
-{{/allParams}}
-{{#returnType}}
-{{^returnTypeIsPrimitive}}
-#' \item \emph{ @returnType } {{#returnContainer}}{{#isListContainer}}list( {{/isListContainer}}{{#isMapContainer}}named list( {{/isMapContainer}}{{/returnContainer}}\code{{=<% %>=}}{<%#returnContainer%><%={{ }}=%>{{returnBaseType}}{{/returnContainer}}{{^returnContainer}}{{returnType}}{{=<% %>=}}<%/returnContainer%>}<%={{ }}=%>{{#returnContainer}}{{#isListContainer}} ){{/isListContainer}}{{#isMapContainer}} ){{/isMapContainer}}{{/returnContainer}} \cr
-{{/returnTypeIsPrimitive}}
-{{/returnType}}
-#'
-{{#useRlangExceptionHandling}}
-#' \item On encountering errors, an error of subclass ApiException will be thrown.
-{{/useRlangExceptionHandling}}
-#'
-{{#responses}}
-#' \item status code : {{code}} | {{message}}
-#'
-#'{{#dataType}} \item return type : {{dataType}} {{/dataType}}
-#' \item response headers :
-#'
-#' \tabular{ll}{
-{{#headers}}
-#' {{name}} \tab {{description}} \cr
-{{/headers}}
-#' }
-{{/responses}}
-#' }
-#'
-{{/operation}}
-#' }
-#'
-#'
-#' @examples
-#' \dontrun{
-{{#operation}}
-#' ####################  {{operationId}}  ####################
-#'
-#' library({{{packageName}}})
-{{#allParams}}
-#' var.{{{paramName}}} <- {{{example}}} # {{{dataType}}} | {{{description}}}
-{{/allParams}}
-#'
-{{#summary}}
-#' #{{{.}}}
-{{/summary}}
-#' api.instance <- {{{classname}}}$new()
-{{#hasAuthMethods}}
-{{#authMethods}}
-#'
-{{#isBasic}}
-#' #Configure HTTP basic authorization: {{{name}}}
-#' # provide your username in the user-serial format
-#' api.instance$apiClient$username <- '<user-serial>'; 
-#' # provide your api key generated using the developer portal
-#' api.instance$apiClient$password <- '<api_key>';
-{{/isBasic}}
-{{#isApiKey}}
-#' #Configure API key authorization: {{{name}}}
-#' api.instance$apiClient$apiKeys['{{{keyParamName}}}'] <- 'TODO_YOUR_API_KEY';
-{{/isApiKey}}
-{{#isOAuth}}
-#' # Configure OAuth2 access token for authorization: {{{name}}}
-#' api.instance$apiClient$accessToken <- 'TODO_YOUR_ACCESS_TOKEN';
-{{/isOAuth}}
-{{/authMethods}}
-{{/hasAuthMethods}}
-#'
-{{#returnExceptionOnFailure}}
-{{#useRlangExceptionHandling}}
-#'result <- tryCatch(
-#'             api.instance${{{operationId}}}({{#requiredParams}}var.{{{paramName}}}{{^-last}}, {{/-last}}{{/requiredParams}}{{#optionalParams}}{{#-first}}{{#requiredParams.0}}, {{/requiredParams.0}}{{/-first}}{{{paramName}}}=var.{{{paramName}}}{{^-last}}, {{/-last}}{{/optionalParams}}),
-#'             ApiException = function(ex) ex 
-#'          )
-#' # In case of error, print the error object 
-#' if(!is.null(result$ApiException)) {
-#'   cat(result$ApiException$toString())
-#' } else {
-{{#returnType}}
-#' # deserialized response object
-#' response.object <- result$content
-{{/returnType}}
-#' # response headers
-#' response.headers <- result$response$headers
-#' # response status code
-#' response.status.code <- result$response$status_code
-#' }
-{{/useRlangExceptionHandling}}
-{{/returnExceptionOnFailure}}
-{{^useRlangExceptionHandling}}
-#' result <- api.instance${{{operationId}}}({{#requiredParams}}var.{{{paramName}}}{{^-last}}, {{/-last}}{{/requiredParams}}{{#optionalParams}}{{#-first}}{{#requiredParams.0}}, {{/requiredParams.0}}{{/-first}}{{{paramName}}}=var.{{{paramName}}}{{^-last}}, {{/-last}}{{/optionalParams}})
-{{/useRlangExceptionHandling}}
-#'
-#'
-{{/operation}}
-#' }
 #' @importFrom R6 R6Class
 {{#useRlangExceptionHandling}}
 #' @importFrom rlang abort
@@ -162,6 +28,9 @@
     },
     {{#operation}}
     #' @description {{{operationId}}}
+    {{#notes}}
+    #' @details {{{unescapedNotes}}}
+    {{/notes}}
     {{#requiredParams}} 
     #' @param {{paramName}} {{paramName}}
     {{/requiredParams}}
@@ -170,7 +39,7 @@
     {{/optionalParams}}
     #' @param ... Optional params
     {{{operationId}}} = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
-      apiResponse <- self${{{operationId}}}WithHttpInfo({{#allParams}}{{paramName}}, {{/allParams}}...)
+      apiResponse <- private${{{operationId}}}WithHttpInfo({{#allParams}}{{paramName}}, {{/allParams}}...)
       resp <- apiResponse$response
       if (httr::status_code(resp) >= 200 && httr::status_code(resp) <= 299) {
         apiResponse$content
@@ -181,15 +50,11 @@
       } else if (httr::status_code(resp) >= 500 && httr::status_code(resp) <= 599) {
         apiResponse
       }
-    },
-    #' @description {{{operationId}}}WithHttpInfo
-    {{#requiredParams}} 
-    #' @param {{paramName}} {{paramName}}
-    {{/requiredParams}}
-    {{#optionalParams}} 
-    #' @param {{paramName}} {{paramName}}
-    {{/optionalParams}}
-    #' @param ... Optional params
+    }{{#hasMore}},{{/hasMore}}
+    {{/operation}}
+  ),
+  private = list(
+    {{#operation}}
     {{{operationId}}}WithHttpInfo = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
       args <- list(...)
       queryParams <- list()

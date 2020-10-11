@@ -12,3 +12,4 @@ templates/.travis.yml
 man/
 NAMESPACE
 new-templates
+docs

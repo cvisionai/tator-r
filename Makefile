@@ -18,6 +18,7 @@ r-bindings:
 	cd $(shell pwd)/tmp/tator-r-new-bindings/R && \
 	  for f in $$(ls -l | awk -F':[0-9]* ' '/:/{print $$2}'); do cp -- "$$f" "../../../R/generated_$$f"; done
 	Rscript -e "devtools::document()"
+	Rscript -e "pkgdown::build_site()"
 
 .PHONY: r-templates
 r-templates:
