@@ -1,6 +1,9 @@
 ## Test environments
-* MacOS 10.15.5, R version 4.0.2 
+* Local MacOS 10.15.5, R version 4.0.2
+* Local Windows 10, R version 4.0.2
 * win-builder (release)
+* Ubuntu Linux 16.04 LTS, R-release (via r-hub)
+* Fedora Linux, R-devel (via r-hub)
 
 ## R CMD check results
 ### Local MacOS: 
