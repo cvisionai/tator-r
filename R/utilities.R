@@ -267,7 +267,7 @@ upload_file = function(path, api) {
 #' @param project Unique integer identifying a project.
 #' @param path Path to the file.
 #' @param lookup md5hash of lookup parameters.
-#' @param hours Number of hourse file is kept alive. Default is 24.
+#' @param hours Number of hours file is kept alive. Default is 24.
 #' @param name Name of temporary file in database. Defaults to basename of path.
 #' @param chunk_size Chunk size in bytes. Default is 100MB.
 #' @returns Generator that yields tuple containing progress (0-100) and a
