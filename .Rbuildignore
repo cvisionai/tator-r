@@ -15,3 +15,6 @@
 \.dll$
 \.mp4$
 \.gz$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

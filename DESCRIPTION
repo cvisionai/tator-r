@@ -22,4 +22,5 @@ Suggests:
   testthat,
   caTools,
   optparse,
-  logging
+  logging,
+  pkgdown

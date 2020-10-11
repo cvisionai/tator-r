@@ -29,13 +29,13 @@
     `opts` = NULL,
     #' @description initialize method
     {{#requiredVars}} 
-    #' @param {{baseName}} {{baseName}}
+    #' @param {{baseName}} {{description}}
     {{/requiredVars}}
     {{#optionalVars}} 
-    #' @param {{baseName}} {{baseName}}
+    #' @param {{baseName}} {{description}}
     {{/optionalVars}}
     #' @param ... optional args
-    #' @returns New instance of {{classname}}.
+    #' @returns {{classname}}
     initialize = function(
         {{#requiredVars}}`{{baseName}}`, {{/requiredVars}}{{#optionalVars}}`{{baseName}}`={{#defaultValue}}{{{.}}}{{/defaultValue}}{{^defaultValue}}NULL{{/defaultValue}}, {{/optionalVars}}...
     ) {
@@ -151,7 +151,9 @@
       }
       {{/optionalVars}}
     },
-    #' @description toJSON method
+    #' @description Convert this instance of {{classname}} to a list of properties.
+    #' This does not return a JSON string. See \code{toJSONString()} for a string representation.
+    #' @returns list
     toJSON = function() {
       {{classname}}Object <- list()
       {{#vars}}
@@ -187,8 +189,9 @@
 
       {{classname}}Object
     },
-    #' @description fromJSON method
-    #' @param {{classname}}Json JSON to parse. 
+    #' @description Convert a list object (as from \code{toJSON()}) to an instance of {{classname}}
+    #' @param {{classname}}Json list object to parse. 
+    #' @returns {{classname}}
     fromJSON = function({{classname}}Json) {
       {{classname}}Object <- jsonlite::fromJSON({{classname}}Json)
       {{#vars}}
@@ -215,7 +218,8 @@
       {{/vars}}
       self
     },
-    #' @description toJSONString method
+    #' @description Convert this instance of {{classname}} to a JSON string.
+    #' @returns character
     toJSONString = function() {
       jsoncontent <- c(
       {{#vars}}
@@ -295,8 +299,9 @@
       jsoncontent <- paste(jsoncontent, collapse = ",")
       paste('{', jsoncontent, '}', sep = "")
     },
-    #' @description fromJSONString method
-    #' @param {{classname}}Json JSON string to parse. 
+    #' @description Convert a JSON string to an instance of {{classname}}
+    #' @param {{classname}}Json JSON string to parse.
+    #' @returns {{classname}}
     fromJSONString = function({{classname}}Json) {
       {{classname}}Object <- jsonlite::fromJSON({{classname}}Json)
       {{#vars}}
