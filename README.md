@@ -36,4 +36,4 @@ Documentation for all API functions and models can be found in the [OpenAPI docu
 
 ## Authors
 
-Tator and tator-r are developed by [CVision AI](https://www.cvisionai.com).
+Tator and tator-r are developed by [CVision AI](https://cvisionai.com).
