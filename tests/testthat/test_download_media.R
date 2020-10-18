@@ -1,7 +1,7 @@
 test_that("Download media", {
   skip_on_cran()
   tator_api <- get_api(host, token)
-  video_obj <- tator_api$GetMedia(video_id)
+  video_obj <- tator_api$get_media(video_id)
   video_path <- paste0("testdownloads/", video_obj$name)
   if (file.exists(video_path)) {
     if (file.remove(video_path)) {

@@ -30,21 +30,21 @@ TusBaseRequest <- R6::R6Class(
    initialize = function(uploader) {
      self$url <- uploader$url
      self$response_headers <- list()
-     self$file <- uploader$GetFileStream()
+     self$file <- uploader$get_file_stream()
      seek(self$file, where = uploader$offset, origin = "start")
      self$request_headers <- list(
        "upload-offset" = toString(uploader$offset),
        "Content-Type" = "application/offset+octet-stream",
-       uploader$GetHeaders()
+       uploader$get_headers()
      )
-     self$content_length <- uploader$GetRequestLength()
+     self$content_length <- uploader$get_request_length()
      self$upload_checksum <- uploader$upload_checksum
      self$checksum_algorithm <- uploader$checksum_algorithm
      self$checksum_algorithm_name <- uploader$checksum_algorithm_name
    },
-   #' @description AddChecksum Add the upload checksum header for the chunk
+   #' @description add_checksum Add the upload checksum header for the chunk
    #' @param chunk The chunk to digest.
-   AddChecksum = function(chunk) {
+   add_checksum = function(chunk) {
      if (!is.null(self$upload_checksum)) {
        self$request_headers["upload-checksum"] <- paste(
          self$checksum_algorithm_name, 

@@ -40,7 +40,7 @@ random_localization = function(box_type_id, video_obj, post = FALSE) {
 test_that("Localization CRUD", {
   skip_on_cran()
   tator_api <- get_api(host, token)
-  video_obj <- tator_api$GetMedia(video_id)
+  video_obj <- tator_api$get_media(video_id)
   
   # These fields will not be checked for object equivalence after patch.
   exclude <- c('project', 'type', 'media_id', 'id', 'meta', 'user')
@@ -52,7 +52,7 @@ test_that("Localization CRUD", {
     boxes <- c(boxes, random_localization(box_type_id, video_obj, post = TRUE))
   }
   box_ids <- c()
-  responses <- chunked_create(tator_api$CreateLocalizationList, project_id, spec_list = boxes)
+  responses <- chunked_create(tator_api$create_localization_list, project_id, spec_list = boxes)
   for (response in responses) {
     box_ids <- c(box_ids, response$id)
   }
@@ -61,22 +61,22 @@ test_that("Localization CRUD", {
   
   # Test single create.
   box <- random_localization(box_type_id, video_obj, post = TRUE)
-  response <- tator_api$CreateLocalizationList(project_id, localization.spec = list(box))
+  response <- tator_api$create_localization_list(project_id, localization.spec = list(box))
   expect_equal(class(response)[1], "CreateListResponse")
   box_id <- response$id[[1]]
 
   # Patch single box.
   patch <- random_localization(box_type_id, video_obj)
-  response <- tator_api$UpdateLocalization(box_id, localization.update = patch)
+  response <- tator_api$update_localization(box_id, localization.update = patch)
   expect_equal(class(response)[1], "MessageResponse")
   print(response$message)
   
   # Get single box.
-  updated_box <- tator_api$GetLocalization(box_id)
+  updated_box <- tator_api$get_localization(box_id)
   expect_close_enough(patch, updated_box, exclude)
   
   # Delete single box.
-  response <- tator_api$DeleteLocalization(box_id)
+  response <- tator_api$delete_localization(box_id)
   expect_equal(class(response)[1], "MessageResponse")
   print(response$message)
   
@@ -86,7 +86,7 @@ test_that("Localization CRUD", {
   # Bulk update box attributes.
   bulk_patch <- random_localization(box_type_id, video_obj)
   bulk_patch <- AttributeBulkUpdate$new(attributes = bulk_patch$attributes)
-  response <- tator_api$UpdateLocalizationList(
+  response <- tator_api$update_localization_list(
     project = project_id,
     attribute.bulk.update = bulk_patch,
     media.id = c(video_id),
@@ -96,7 +96,7 @@ test_that("Localization CRUD", {
   print(response$message)
   
   # Verify all boxes have been updated.
-  boxes <- tator_api$GetLocalizationList(
+  boxes <- tator_api$get_localization_list(
     project = project_id,
     media.id = c(video_id),
     type = box_type_id
@@ -108,7 +108,7 @@ test_that("Localization CRUD", {
   }
   
   # Delete all boxes.
-  response <- tator_api$DeleteLocalizationList(
+  response <- tator_api$delete_localization_list(
     project = project_id,
     media.id = c(video_id),
     type = box_type_id
@@ -119,7 +119,7 @@ test_that("Localization CRUD", {
   Sys.sleep(1)
   
   # Verify all boxes are gone.
-  boxes <- tator_api$GetLocalizationList(
+  boxes <- tator_api$get_localization_list(
     project = project_id,
     media.id = c(video_id),
     type = box_type_id

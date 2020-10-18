@@ -28,15 +28,15 @@ opt = parse_args(opt_parser);
 tator_api <- get_api(opt$host, opt$token)
 
 # Get the video object and video type object.
-video <- tator_api$GetMedia(opt$video_id)
-video_type <- tator_api$GetMediaType(opt$video_type_id)
+video <- tator_api$get_media(opt$video_id)
+video_type <- tator_api$get_media_type(opt$video_type_id)
 
 # Create a new state type for the project to represent activities. Activities will
 # have a user-defined attribute called "Something in view" to indicate whether
 # an object of interest is visible in the video during that frame. The interpolation
 # parameter indicates that the latest update to this value should be used for
 # visual indication in the UI.
-response <- tator_api$CreateStateType(video_type$project, StateTypeSpec$new(
+response <- tator_api$create_state_type(video_type$project, StateTypeSpec$new(
   name = "Activity Change",
   association = "Frame",
   media_types = c(video_type$id),
@@ -66,7 +66,7 @@ for (frame in seq(0, video$num_frames, 10)) {
   )
 }
 state_ids <- c()
-responses <- chunked_create(tator_api$CreateStateList, video_type$project, states)
+responses <- chunked_create(tator_api$create_state_list, video_type$project, states)
 for (response in responses) {
   state_ids <- c(state_ids, response$id)
 }

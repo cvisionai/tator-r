@@ -1,7 +1,7 @@
 test_that("Get file", {
   skip_on_cran()
   tator_api <- get_api(host, token)
-  video_obj <- tator_api$GetMedia(video_id)
+  video_obj <- tator_api$get_media(video_id)
   
   tempfile <- tempfile()
   out_path <- paste0(dirname(tempfile), "/video.mp4")
@@ -12,7 +12,7 @@ test_that("Get file", {
 test_that("Get audio", {
   skip_on_cran()
   tator_api <- get_api(host, token)
-  video_obj <- tator_api$GetMedia(video_id)
+  video_obj <- tator_api$get_media(video_id)
   
   audio <- video_obj$media_files$audio
   expect_true(length(audio) > 0)

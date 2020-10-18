@@ -2,8 +2,8 @@ test_that("download media", {
   skip_on_cran()
   # Get project and video.
   tator_api = get_api(host, token)
-  video_obj = tator_api$GetMedia(video_id)
-  project_obj = tator_api$GetProject(project_id)
+  video_obj = tator_api$get_media(video_id)
+  project_obj = tator_api$get_project(project_id)
 
   cmd <- paste(
     "$R_HOME/bin/Rscript ../examples/download_media.R",
