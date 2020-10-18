@@ -6,8 +6,8 @@
 #' @export
 get_api = function(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN")) {
   instance <- TatorApi$new()
-  instance$apiClient$apiKeys["Authorization"] <- stringr::str_interp("Token ${token}")
-  instance$apiClient$basePath <- host
+  instance$api_client$apiKeys["Authorization"] <- stringr::str_interp("Token ${token}")
+  instance$api_client$basePath <- host
   return(instance)
 }
 
@@ -61,19 +61,19 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
     section <- "New Files"
   }
   
-  host <- api$apiClient$basePath
+  host <- api$api_client$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
-  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
-  tus$SetHeaders(list("Upload-Uid" = upload_uid))
-  uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
-  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  tus$set_headers(api$api_client$apiKeys['Authorization'])
+  tus$set_headers(list("Upload-Uid" = upload_uid))
+  uploader <- tus$uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  num_chunks <- ceiling(uploader$get_file_size()/chunk_size)
   
   last_progress <- 0
   print(last_progress)
   
   for (chunk_count in range(num_chunks)) {
-    uploader$UploadChunk()
+    uploader$upload_chunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
       print(this_progress)
@@ -82,11 +82,11 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
   }
   
   mime_type <- mime::guess_type(fname)
-  response <- api$GetMediaType(type_id)
+  response <- api$get_media_type(type_id)
   project_id <- response$project
   
   if (grepl("video", mime_type)) {
-    response <- api$Transcode(project_id, TranscodeSpec$new(
+    response <- api$transcode(project_id, TranscodeSpec$new(
       type = type_id,
       uid = upload_uid,
       gid = upload_gid,
@@ -96,7 +96,7 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
       md5 = md5
     ))
   } else {
-    response <- api$CreateMedia(project_id, MediaSpec$new(
+    response <- api$create_media(project_id, MediaSpec$new(
       type = type_id,
       uid = upload_uid,
       gid = upload_gid,
@@ -123,27 +123,27 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   upload_uid <- uuid::UUIDgenerate()
   upload_gid <- uuid::UUIDgenerate()
 
-  host <- api$apiClient$basePath
+  host <- api$api_client$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
-  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
-  tus$SetHeaders(list("Upload-Uid" = upload_uid))
+  tus$set_headers(api$api_client$apiKeys['Authorization'])
+  tus$set_headers(list("Upload-Uid" = upload_uid))
 
   if (is.vector(paths)) {
     fn <- tempfile()
     utils::tar(fn, paths, compression = "gzip")
-    uploader <- tus$Uploader(file_path = fn, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+    uploader <- tus$uploader(file_path = fn, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   } else {
-    uploader <- tus$Uploader(file_path = paths, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+    uploader <- tus$uploader(file_path = paths, chunk_size = chunk_size, retries = 10, retry_delay = 15)
   }
 
-  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  num_chunks <- ceiling(uploader$get_file_size()/chunk_size)
   
   last_progress <- 0
   print(last_progress)
   
   for (chunk_count in range(num_chunks)) {
-    uploader$UploadChunk()
+    uploader$upload_chunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
       print(this_progress)
@@ -152,7 +152,7 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
   }
   
   # Initiate transcode.
-  response <- api$Transcode(project_id, TranscodeSpec$new(
+  response <- api$transcode(project_id, TranscodeSpec$new(
     type = -1, #Tar-based import
     uid = upload_uid,
     gid = upload_gid,
@@ -172,8 +172,8 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
 #' @returns Generator the yields progress (0-100).
 #' @export
 download_media = function(api, media, out_path) {
-  auth_value <- api$apiClient$apiKeys['Authorization']
-  host <- api$apiClient$basePath
+  auth_value <- api$api_client$apiKeys['Authorization']
+  host <- api$api_client$basePath
   if (!is.null(media$media_files)) {
     archival <- media$media_files$archival
     streaming <- media$media_files$streaming
@@ -214,8 +214,8 @@ download_media = function(api, media, out_path) {
 #' @param out_path  Path to where to download.
 #' @export
 download_temporary_file = function(api, temporary_file, out_path) {
-  auth_value <- api$apiClient$apiKeys['Authorization']
-  host <- api$apiClient$basePath
+  auth_value <- api$api_client$apiKeys['Authorization']
+  host <- api$api_client$basePath
   url <- temporary_file$path
   
   # Supply token here for eventual media authorization
@@ -239,19 +239,19 @@ download_temporary_file = function(api, temporary_file, out_path) {
 #' @param path Path to the file. 
 #' @export
 upload_file = function(path, api) {
-  host <- api$apiClient$basePath
+  host <- api$api_client$basePath
   upload_uid <- uuid::UUIDgenerate()
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
-  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
-  tus$SetHeaders(list("Upload-Uid" = upload_uid))
+  tus$set_headers(api$api_client$apiKeys['Authorization'])
+  tus$set_headers(list("Upload-Uid" = upload_uid))
   chunk_size <- 1*1024*1024 # 1 Mb
-  uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
-  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  uploader <- tus$uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  num_chunks <- ceiling(uploader$get_file_size()/chunk_size)
   last_progress <- 0
   print(last_progress)
   for (chunk_count in range(num_chunks)) {
-    uploader$UploadChunk()
+    uploader$upload_chunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
       print(this_progress)
@@ -285,19 +285,19 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
   
   upload_uid <- uuid::UUIDgenerate()
   
-  host <- api$apiClient$basePath
+  host <- api$api_client$basePath
   tusURL <- paste(host, "files/", sep = "/")
   tus <- TusClient$new(tusURL)
-  tus$SetHeaders(api$apiClient$apiKeys['Authorization'])
-  tus$SetHeaders(list("Upload-Uid" = upload_uid))
-  uploader <- tus$Uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
-  num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+  tus$set_headers(api$api_client$apiKeys['Authorization'])
+  tus$set_headers(list("Upload-Uid" = upload_uid))
+  uploader <- tus$uploader(file_path = path, chunk_size = chunk_size, retries = 10, retry_delay = 15)
+  num_chunks <- ceiling(uploader$get_file_size()/chunk_size)
   
   last_progress <- 0
   print(last_progress)
   
   for (chunk_count in range(num_chunks)) {
-    uploader$UploadChunk()
+    uploader$upload_chunk()
     this_progress <- round((chunk_count/num_chunks)*100, 1)
     if (this_progress != last_progress) {
       print(this_progress)
@@ -305,7 +305,7 @@ upload_temporary_file = function(api, project, path, lookup = NULL, hours = 24, 
     }
   }
   
-  response <- api$CreateTemporaryFile(project, TemporaryFileSpec$new(
+  response <- api$create_temporary_file(project, TemporaryFileSpec$new(
     url = uploader$url,
     name = name,
     lookup = lookup,

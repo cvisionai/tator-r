@@ -75,12 +75,12 @@ spec:
   return(manifest_yaml)
 }
 
-#' @description Test missing upload file for SaveAlgorithManifest endpoint
+#' @description Test missing upload file for SaveAlgorithmManifest endpoint
 missing_upload_file = function(host, token, project_id) {
   tator_api <- get_api(host, token)
   caught_exception <- tryCatch({
     spec <- tator::AlgorithmManifestSpec$new(name = "test.yaml", upload_url = "not_there")
-    tator_api$SaveAlgorithmManifest(project = project_id, algorithm.manifest.spec = spec)
+    tator_api$save_algorithm_manifest(project = project_id, algorithm.manifest.spec = spec)
     return(FALSE)
   }, error = function(e) {
     expect_equal(e$message, "missing value where TRUE/FALSE needed")
@@ -116,7 +116,7 @@ upload_test_algorithm_manifest = function(
     
     # Save the uploaded file using the save algorithm manifest endpoint
     spec <- tator::AlgorithmManifestSpec$new(name = manifest_name, upload_url = url)
-    response <- tator_api$SaveAlgorithmManifest(project = project_id, algorithm.manifest.spec = spec)
+    response <- tator_api$save_algorithm_manifest(project = project_id, algorithm.manifest.spec = spec)
   }, finally = function() {
     file.remove(local_yaml_file)
   })
@@ -124,11 +124,11 @@ upload_test_algorithm_manifest = function(
   return(response)
 }
 
-#' @details Unit test for the SaveAlgorithmManifest endpoint
+#' @details Unit test for the $save_algorithm_manifest endpoint
 # Unit testing of the save algorithm endpoint involves the following:
 #   - Provide something where the upload file doesn't exist
 #   - Upload two of the same files (have the same name, but will result in two separate files)
-test_that("Unit test for the SaveAlgorithManifest endpoint", {
+test_that("Unit test for the SaveAlgorithmManifest endpoint", {
   skip_on_cran()
   missing_upload_file(host = host, token = token, project_id = project_id)
 
@@ -141,19 +141,19 @@ test_that("Unit test for the SaveAlgorithManifest endpoint", {
   expect_equal(basename(response_2$url), "test_1.yaml")
 })
 
-#' @details Unit test for the RegisterAlgorithm endpoint
+#' @details Unit test for the register_algorithm endpoint
 # Unit testing of the algorithm registration endpoint involves the following:
 #   - Create a request body that's fine, but has bad syntax for the .yaml file
 #   - Create a request body for a .yaml file that doesn't exist
 #   - Normal request body
-test_that("Unit test for the RegisterAlgorithm endpoint", {
+test_that("Unit test for the register_algorithm endpoint", {
   skip_on_cran()
   # Create a randomized unique algorithm name (that we'll end up deleting later anyway)
   algo_name <- uuid::UUIDgenerate()
   
   # Get the user ID
   tator_api <- get_api(host, token)
-  user <- tator_api$Whoami()
+  user <- tator_api$whoami()
   user_id <- user$id
   
   # Create a request body that's fine but has bad syntax for the .yaml file
@@ -171,7 +171,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
       files_per_job = 1
     )
     
-    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
     if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
@@ -193,7 +193,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
       files_per_job = 1
     )
     
-    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
     if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
@@ -218,11 +218,11 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
     files_per_job = 1
   )
   
-  response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+  response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
   
   # Get the algorithm info
   algorithm_id <- response$id
-  algorithm_info <- tator_api$GetAlgorithm(algorithm_id)
+  algorithm_info <- tator_api$get_algorithm(algorithm_id)
   expect_equal(spec$name, algorithm_info$name)
   expect_equal(spec$user, algorithm_info$user)
   expect_equal(spec$description, algorithm_info$description)
@@ -238,8 +238,8 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
     files_per_job = 2
   )
   
-  response <- tator_api$UpdateAlgorithm(id = algorithm_id, algorithm.spec = spec)
-  algorithm_info <- tator_api$GetAlgorithm(algorithm_id)
+  response <- tator_api$update_algorithm(id = algorithm_id, algorithm.spec = spec)
+  algorithm_info <- tator_api$get_algorithm(algorithm_id)
   expect_equal(spec$name, algorithm_info$name)
   expect_equal(spec$user, algorithm_info$user)
   expect_equal(spec$description, algorithm_info$description)
@@ -258,11 +258,11 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
     files_per_job = 1
   )
   
-  response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = new_spec)
+  response <- tator_api$register_algorithm(project = project_id, algorithm.spec = new_spec)
 
   algorithm_ids <- c(algorithm_ids, response$id)
   spec_list <- c(spec, new_spec)
-  algorithm_list <- tator_api$GetAlgorithmList(project = project_id)
+  algorithm_list <- tator_api$get_algorithm_list(project = project_id)
   
   for (alg in algorithm_list) {
     found_match <- FALSE
@@ -282,19 +282,19 @@ test_that("Unit test for the RegisterAlgorithm endpoint", {
   # Finally delete all the algorithms
   current_number_of_algs <- length(algorithm_ids)
   for (alg_id in algorithm_ids) {
-    tator_api$DeleteAlgorithm(id = alg_id)
-    algorithm_list <- tator_api$GetAlgorithmList(project = project_id)
+    tator_api$delete_algorithm(id = alg_id)
+    algorithm_list <- tator_api$get_algorithm_list(project = project_id)
     
     current_number_of_algs <- current_number_of_algs - 1
     expect_equal(length(algorithm_list), current_number_of_algs)
   }
 })
 
-#' @details Unit test for the RegisterAlgorithm endpoint focused on missing request body fields
+#' @details Unit test for the register_algorithm endpoint focused on missing request body fields
 #' 
 #' Request bodies are created with missing required fields and a workflow tries
 #' to be registered with these incorrect request bodies.
-test_that("Unit test for the RegisterAlgorithm endpoint focused on missing request body fields", {
+test_that("Unit test for the register_algorithm endpoint focused on missing request body fields", {
   skip_on_cran()
   name <- uuid::UUIDgenerate()
   description <- "description"
@@ -303,7 +303,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
   
   # Setup the interface to tator and get the user ID
   tator_api <- get_api(host, token)
-  user <- tator_api$Whoami()
+  user <- tator_api$whoami()
   user_id <- user$id
   
   # Upload a manifest file
@@ -321,7 +321,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
       files_per_job = files_per_job
     )
     
-    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
     if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
@@ -341,7 +341,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
       files_per_job = files_per_job
     )
     
-    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
     if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
@@ -361,7 +361,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
       files_per_job = files_per_job
     )
     
-    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
     if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
@@ -381,7 +381,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
       files_per_job = files_per_job
     )
     
-    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
     if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }
@@ -401,7 +401,7 @@ test_that("Unit test for the RegisterAlgorithm endpoint focused on missing reque
       cluster = cluster
     )
     
-    response <- tator_api$RegisterAlgorithm(project = project_id, algorithm.spec = spec)
+    response <- tator_api$register_algorithm(project = project_id, algorithm.spec = spec)
     if (class(response$content)[1] == "BadRequestResponse") {
       caught_exception <- TRUE
     }

@@ -2,7 +2,7 @@ project_fixture <- function(host, token) {
   api <- get_api(host, token)
   current_dt <- Sys.time()
   dt_str <- strftime(current_dt, format="%Y_%m_%d__%H_%M_%S")
-  response <- api$CreateProject(ProjectSpec$new(
+  response <- api$create_project(ProjectSpec$new(
     name = paste("test_project_", dt_str, sep=""),
     summary = paste("Test project created by tator-r unit tests on", current_dt)
   ))
@@ -11,12 +11,12 @@ project_fixture <- function(host, token) {
 
 project_cleanup <- function(host, token, project_id) {
   api <- get_api(host, token)
-  api$DeleteProject(project_id)
+  api$delete_project(project_id)
 }
 
 image_type_fixture <- function(host, token, project_id) {
   api <- get_api(host, token)
-  response <- api$CreateMediaType(project_id, MediaTypeSpec$new(
+  response <- api$create_media_type(project_id, MediaTypeSpec$new(
     name = "image_type",
     description = "Test image type",
     dtype = "image"
@@ -71,7 +71,7 @@ image_set_cleanup <- function(image_path) {
 
 video_type_fixture <- function(host, token, project_id) {
   api <- get_api(host, token)
-  response <- api$CreateMediaType(project_id, MediaTypeSpec$new(
+  response <- api$create_media_type(project_id, MediaTypeSpec$new(
     name = "video_type",
     description = "Test video type",
     dtype = "video"
@@ -98,7 +98,7 @@ video_fixture <- function(host, token, project_id, video_type_id, video_file_pat
   upload_media(api, video_type_id, video_file_path)
   cat(noquote("Waiting for transcode..."))
   while (TRUE) {
-    response <- api$GetMediaList(project_id, name = "ForBiggerEscapes.mp4")
+    response <- api$get_media_list(project_id, name = "ForBiggerEscapes.mp4")
     if (length(response) == 0) {
       Sys.sleep(3)
       next
@@ -120,7 +120,7 @@ video_fixture <- function(host, token, project_id, video_type_id, video_file_pat
 
 dot_type_fixture <- function(host, token, project_id, video_type_id, image_type_id) {
   api <- get_api(host, token)
-  response <- api$CreateLocalizationType(project_id, LocalizationTypeSpec$new(
+  response <- api$create_localization_type(project_id, LocalizationTypeSpec$new(
     name = "dot_type",
     description = "Test dot type",
     media_types = list(video_type_id, image_type_id),
@@ -132,7 +132,7 @@ dot_type_fixture <- function(host, token, project_id, video_type_id, image_type_
 
 line_type_fixture <- function(host, token, project_id, video_type_id, image_type_id) {
   api <- get_api(host, token)
-  response <- api$CreateLocalizationType(project_id, LocalizationTypeSpec$new(
+  response <- api$create_localization_type(project_id, LocalizationTypeSpec$new(
     name = "line_type",
     description = "Test line type",
     media_types = list(video_type_id, image_type_id),
@@ -144,7 +144,7 @@ line_type_fixture <- function(host, token, project_id, video_type_id, image_type
 
 box_type_fixture <- function(host, token, project_id, video_type_id, image_type_id) {
   api <- get_api(host, token)
-  response <- api$CreateLocalizationType(project_id, LocalizationTypeSpec$new(
+  response <- api$create_localization_type(project_id, LocalizationTypeSpec$new(
     name = "box_type",
     description = "Test box type",
     media_types = list(video_type_id, image_type_id),
@@ -156,7 +156,7 @@ box_type_fixture <- function(host, token, project_id, video_type_id, image_type_
 
 state_type_fixture <- function(host, token, project_id, video_type_id) {
   api <- get_api(host, token)
-  response <- api$CreateStateType(project_id, StateTypeSpec$new(
+  response <- api$create_state_type(project_id, StateTypeSpec$new(
     name = "state_type",
     description = "Test state type",
     media_types = list(video_type_id),
@@ -168,7 +168,7 @@ state_type_fixture <- function(host, token, project_id, video_type_id) {
 
 track_type_fixture <- function(host, token, project_id, video_type_id) {
   api <- get_api(host, token)
-  response <- api$CreateStateType(project_id, StateTypeSpec$new(
+  response <- api$create_state_type(project_id, StateTypeSpec$new(
     name = "track_type",
     description = "Test track type",
     media_types = list(video_type_id),

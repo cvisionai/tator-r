@@ -9,17 +9,17 @@ TusUploader <- R6::R6Class(
   public = list(
     client = NULL,
     #' @description Upload a chunk
-    UploadChunk = function() {
+    upload_chunk = function() {
       if (is.null(self$url)) {
-        self$SetURL(self$CreateURL())
+        self$set_url(self$create_url())
         self$offset <- 0
       }
-      self$DoRequest()
+      self$do_request()
       self$offset <- strtoi(self$request$response_headers["upload-offset"])
     },
     #' @description Create the upload URL
-    CreateURL = function() {
-      resp <- httr::POST(self$client$url, config = c(add_headers(unlist(self$GetURLCreationHeaders()))))
+    create_url = function() {
+      resp <- httr::POST(self$client$url, config = c(add_headers(unlist(self$get_url_creation_headers()))))
       url <- resp$headers["location"]
       if (is.null(url) || url == "NULL") {
         stop(paste("Could not request create file url, response status", resp$status_code))
@@ -27,20 +27,20 @@ TusUploader <- R6::R6Class(
       return(paste(url))
     },
     #' @description Execute the request
-    DoRequest = function() {
+    do_request = function() {
       self$request <- TusRequest$new(self)
-      self$request$Perform()
+      self$request$perform()
       if (self$request$status_code != 204) {
-        self$Retry()
+        self$retry()
       }
     },
     #' @description Retry the upload
-    Retry = function() {
+    retry = function() {
       if (self$retries > self$retried) {
         Sys.sleep(self$retry_delay)
         self$retried <- self$retried + 1
-        self$offset <- self$GetOffset()
-        self$DoRequest()
+        self$offset <- self$get_offset()
+        self$do_request()
       } else {
         stop(paste("Upload failed after", self$retries, "retries: status code", self$request$status_code, ", body ", self$request$content))
       }

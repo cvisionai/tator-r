@@ -8,7 +8,7 @@ test_that("project setup", {
   exit_code <- system(cmd)
   expect_equal(exit_code, 0)
   api <- get_api(host, token)
-  projects <- api$GetProjectList()
+  projects <- api$get_project_list()
   success <- FALSE
   for (project in projects) {
     if (project$name == "Test Project") {
@@ -17,6 +17,6 @@ test_that("project setup", {
       break
     }
   }
-  api$DeleteProject(project_id)
+  api$delete_project(project_id)
   expect_true(success)
 })

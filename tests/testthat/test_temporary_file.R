@@ -2,7 +2,7 @@ test_that("Temporary file", {
   skip_on_cran()
   tator_api <- get_api(host, token)
   
-  all_temps <- tator_api$GetTemporaryFileList(project_id)
+  all_temps <- tator_api$get_temporary_file_list(project_id)
   expect_true(is.list(all_temps))
   expect_false(is.null(all_temps))
   initial_len <- length(all_temps)
@@ -16,7 +16,7 @@ test_that("Temporary file", {
   expect_equal(class(response)[1], "CreateResponse")
   print(response$message)
   
-  all_temps <- tator_api$GetTemporaryFileList(project_id)
+  all_temps <- tator_api$get_temporary_file_list(project_id)
   expect_equal(length(all_temps), (initial_len + 1))
   
   td <- tempdir()

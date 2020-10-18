@@ -42,20 +42,20 @@ opt = parse_args(opt_parser)
 
 # Create the interface
 tator_api <- get_api(opt$host, opt$token)
-user <- tator_api$Whoami()
+user <- tator_api$whoami()
 user_id <- user$id
 
 # Upload the manifest file
 tus_url <- paste(opt$host, '/files/', sep = "")
 loginfo(sprintf("Uploading file %s...", opt$manifest))
 tus <- TusClient$new(tus_url)
-tus$SetHeaders(tator_api$apiClient$apiKeys['Authorization'])
-tus$SetHeaders(list("Upload-Uid" = uuid::UUIDgenerate()))
+tus$set_headers(tator_api$api_client$apiKeys['Authorization'])
+tus$set_headers(list("Upload-Uid" = uuid::UUIDgenerate()))
 chunk_size <- 1 * 1024 * 1024
-uploader <- tus$Uploader(file_path = opt$manifest, chunk_size = chunk_size)
-num_chunks <- ceiling(uploader$GetFileSize()/chunk_size)
+uploader <- tus$uploader(file_path = opt$manifest, chunk_size = chunk_size)
+num_chunks <- ceiling(uploader$get_file_size()/chunk_size)
 for (i in 1:num_chunks) {
-  uploader$UploadChunk()
+  uploader$upload_chunk()
 }
 manifest_upload_url <- uploader$url
 
@@ -64,7 +64,7 @@ spec <- AlgorithmManifestSpec$new(
   name = basename(opt$manifest),
   upload_url = manifest_upload_url
 )
-response <- tator_api$SaveAlgorithmManifest(project = opt$project_id, algorithm.manifest.spec = spec)
+response <- tator_api$save_algorithm_manifest(project = opt$project_id, algorithm.manifest.spec = spec)
 
 # Register the algorithm argo workflow
 spec <- Algorithm$new(
@@ -76,7 +76,7 @@ spec <- Algorithm$new(
   cluster = opt$cluster_id,
   files_per_job = opt$files_per_job
 )
-response <- tator_api$RegisterAlgorithm(project = opt$project_id, algorithm.spec = spec)
+response <- tator_api$register_algorithm(project = opt$project_id, algorithm.spec = spec)
 
 loginfo(sprintf("Algorithm registered with ID: %s", response$id))
 

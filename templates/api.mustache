@@ -4,7 +4,7 @@
 #' @title {{baseName}} operations
 #' @description {{importPath}}
 #' @format An \code{R6Class} generator object
-#' @field apiClient Handles the client-server communication.
+#' @field api_client Handles the client-server communication.
 #'
 #' @importFrom R6 R6Class
 {{#useRlangExceptionHandling}}
@@ -14,20 +14,20 @@
 {{classname}} <- R6::R6Class(
   '{{classname}}',
   public = list(
-    apiClient = NULL,
+    api_client = NULL,
     #' @description initialization method
-    #' @param apiClient ApiClient class object
-    initialize = function(apiClient){
+    #' @param api_client ApiClient class object
+    initialize = function(api_client){
       httr::set_config(httr::config(http_version = 0))
-      if (!missing(apiClient)) {
-        self$apiClient <- apiClient
+      if (!missing(api_client)) {
+        self$api_client <- api_client
       }
       else {
-        self$apiClient <- ApiClient$new()
+        self$api_client <- ApiClient$new()
       }
     },
     {{#operation}}
-    #' @description {{{operationId}}}
+    #' @description {{{operationIdSnakeCase}}}
     {{#notes}}
     #' @details {{{unescapedNotes}}}
     {{/notes}}
@@ -38,8 +38,8 @@
     #' @param {{paramName}} {{paramName}}
     {{/optionalParams}}
     #' @param ... Optional params
-    {{{operationId}}} = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
-      apiResponse <- private${{{operationId}}}WithHttpInfo({{#allParams}}{{paramName}}, {{/allParams}}...)
+    {{{operationIdSnakeCase}}} = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
+      apiResponse <- private${{{operationIdSnakeCase}}}_with_http_info({{#allParams}}{{paramName}}, {{/allParams}}...)
       resp <- apiResponse$response
       if (httr::status_code(resp) >= 200 && httr::status_code(resp) <= 299) {
         apiResponse$content
@@ -55,7 +55,7 @@
   ),
   private = list(
     {{#operation}}
-    {{{operationId}}}WithHttpInfo = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
+    {{{operationIdSnakeCase}}}_with_http_info = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
       args <- list(...)
       queryParams <- list()
       headerParams <- c()
@@ -121,29 +121,29 @@
       {{#isBasic}}
       {{#isBasicBasic}}
       # HTTP basic auth
-      headerParams['Authorization'] <- paste("Basic", base64enc::base64encode(charToRaw(paste(self$apiClient$username, self$apiClient$password, sep=":"))))
+      headerParams['Authorization'] <- paste("Basic", base64enc::base64encode(charToRaw(paste(self$api_client$username, self$api_client$password, sep=":"))))
       {{/isBasicBasic}}
       {{/isBasic}}
       {{#isApiKey}}
       # API key authentication
       {{#isKeyInHeader}}
-      if ("{{{keyParamName}}}" %in% names(self$apiClient$apiKeys) && nchar(self$apiClient$apiKeys["{{{keyParamName}}}"]) > 0) {
-        headerParams['{{keyParamName}}'] <- paste(unlist(self$apiClient$apiKeys["{{keyParamName}}"]), collapse='')
+      if ("{{{keyParamName}}}" %in% names(self$api_client$apiKeys) && nchar(self$api_client$apiKeys["{{{keyParamName}}}"]) > 0) {
+        headerParams['{{keyParamName}}'] <- paste(unlist(self$api_client$apiKeys["{{keyParamName}}"]), collapse='')
       }
       {{/isKeyInHeader}}
       {{#isKeyInQuery}}
-      if ("{{{keyParamName}}}" %in% names(self$apiClient$apiKeys) && nchar(self$apiClient$apiKeys["{{{keyParamName}}}"]) > 0) {
-        queryParams['{{keyParamName}}'] <- paste(unlist(self$apiClient$apiKeys["{{keyParamName}}"]), collapse='')
+      if ("{{{keyParamName}}}" %in% names(self$api_client$apiKeys) && nchar(self$api_client$apiKeys["{{{keyParamName}}}"]) > 0) {
+        queryParams['{{keyParamName}}'] <- paste(unlist(self$api_client$apiKeys["{{keyParamName}}"]), collapse='')
       }
       {{/isKeyInQuery}}
       {{/isApiKey}}
       {{#isOAuth}}
       # OAuth token
-      headerParams['Authorization'] <- paste("Bearer", self$apiClient$accessToken, sep=" ")
+      headerParams['Authorization'] <- paste("Bearer", self$api_client$accessToken, sep=" ")
       {{/isOAuth}}
       {{/authMethods}}
 
-      resp <- self$apiClient$CallApi(url = paste0(self$apiClient$basePath, urlPath),
+      resp <- self$api_client$CallApi(url = paste0(self$api_client$basePath, urlPath),
                                  method = "{{httpMethod}}",
                                  queryParams = queryParams,
                                  headerParams = headerParams,
@@ -160,7 +160,7 @@
         {{/isPrimitiveType}}
         {{^isPrimitiveType}}
         deserializedRespObj <- tryCatch(
-          self$apiClient$deserialize(resp, "{{returnType}}", loadNamespace("{{packageName}}")),
+          self$api_client$deserialize(resp, "{{returnType}}", loadNamespace("{{packageName}}")),
           error = function(e){
            {{#useDefaultExceptionHandling}}
              stop("Failed to deserialize response")
@@ -196,7 +196,7 @@
       } else if (httr::status_code(resp) >= 400 && httr::status_code(resp) <= 499) {
         if (httr::status_code(resp) == 400) {
           deserializedRespObj <- tryCatch(
-            self$apiClient$deserialize(resp, "BadRequestResponse", loadNamespace("{{packageName}}")),
+            self$api_client$deserialize(resp, "BadRequestResponse", loadNamespace("{{packageName}}")),
             error = function(e){
             {{#useDefaultExceptionHandling}}
               stop("Failed to deserialize response")
@@ -209,7 +209,7 @@
           ApiResponse$new(deserializedRespObj, resp) 
         } else if (httr::status_code(resp) == 404) {
           deserializedRespObj <- tryCatch(
-            self$apiClient$deserialize(resp, "NotFoundResponse", loadNamespace("{{packageName}}")),
+            self$api_client$deserialize(resp, "NotFoundResponse", loadNamespace("{{packageName}}")),
             error = function(e){
             {{#useDefaultExceptionHandling}}
               stop("Failed to deserialize response")

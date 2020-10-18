@@ -23,7 +23,7 @@ TusClient <- R6::R6Class(
     },
     #' @description Set headers
     #' @param headers Headers to set
-    SetHeaders = function(headers = list()) {
+    set_headers = function(headers = list()) {
       self$headers <- c(self$headers, headers)
     },
     #' @description Get the uploader
@@ -32,7 +32,7 @@ TusClient <- R6::R6Class(
     #' @param chunk_size Chunk size 
     #' @param retries Retry limit 
     #' @param retry_delay Retry delay 
-    Uploader = function(file_stream = NULL, file_path = NULL, chunk_size = NULL, retries = 10, retry_delay = 15) {
+    uploader = function(file_stream = NULL, file_path = NULL, chunk_size = NULL, retries = 10, retry_delay = 15) {
       return(TusUploader$new(
         client = self,
         file_stream = file_stream,

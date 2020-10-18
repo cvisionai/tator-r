@@ -29,7 +29,7 @@ opt = parse_args(opt_parser);
 tator_api <- get_api(opt$host, opt$token)
 
 # Get the temporary file object.
-temporary_file <- tator_api$GetTemporaryFile(opt$temporary_file_id)
+temporary_file <- tator_api$get_temporary_file(opt$temporary_file_id)
 
 # Download the file.
 loginfo(sprintf("Downloading to %s ...", opt$file_path))

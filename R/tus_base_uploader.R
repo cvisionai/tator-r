@@ -74,7 +74,7 @@ TusBaseUploader <- R6::R6Class(
       
       self$file_path <- file_path
       self$file_stream <- file_stream
-      self$stop_at <- self$GetFileSize()
+      self$stop_at <- self$get_file_size()
       self$client <- client
       self$metadata <- metadata
       self$store_url <- store_url
@@ -82,7 +82,7 @@ TusBaseUploader <- R6::R6Class(
       self$fingerprinter <- fingerprinter # || fingerprinter$Fingerprint()
       self$offset <- 0
       self$url <- NULL
-      self$InitURLAndOffset(url)
+      self$init_url_and_offset(url)
       self$chunk_size <- chunk_size
       self$retries <- retries
       self$request <- NULL
@@ -93,28 +93,28 @@ TusBaseUploader <- R6::R6Class(
       self$checksum_algorithm <- "sha1"
     },
     #' @description Get headers
-    GetHeaders = function() {
+    get_headers = function() {
       client_headers <- self$client$headers
       return(c(self$default_headers, client_headers))
     },
     #' @description Get URL creation headers
-    GetURLCreationHeaders = function() {
-      headers <- self$GetHeaders()
-      headers <- c(headers, "upload-length" = toString(self$GetFileSize()))
-      headers <- c(headers, "upload-metadata" = paste(self$EncodeMetadata(), collapse = ","))
+    get_url_creation_headers = function() {
+      headers <- self$get_headers()
+      headers <- c(headers, "upload-length" = toString(self$get_file_size()))
+      headers <- c(headers, "upload-metadata" = paste(self$encode_metadata(), collapse = ","))
       return(headers)
     },
     #' @description Get checksum algorithm
-    ChecksumAlgorithm = function() {
+    get_checksum_algorithm = function() {
       return(self$checksum_algorithm)
     },
     #' @description Get checksum algorithm name
-    ChecksumAlgorithmName = function() {
+    get_checksum_algorithm_name = function() {
       return(self$checksum_algorithm_name)
     },
     #' @description Get tus upload offset header 
-    GetOffset = function() {
-      resp <- httr::HEAD(self$url, add_headers(unlist(self$GetHeaders())))
+    get_offset = function() {
+      resp <- httr::HEAD(self$url, add_headers(unlist(self$get_headers())))
       offset <- resp$headers["upload-offset"]
       if (is.null(offset)) {
         stop(paste("Could not get offset, response status code", resp$status_code))
@@ -122,7 +122,7 @@ TusBaseUploader <- R6::R6Class(
       return(strtoi(offset))
     },
     #' @description Encode metadata 
-    EncodeMetadata = function() {
+    encode_metadata = function() {
       encoded_list <- list()
       for (key in names(self$metadata)) {
         key_str <- toString(key)
@@ -138,32 +138,32 @@ TusBaseUploader <- R6::R6Class(
     },
     #' @description Init URL and offset
     #' @param url URL
-    InitURLAndOffset = function(url = NULL) {
+    init_url_and_offset = function(url = NULL) {
       if (!is.null(url)) {
-        self$SetURL(url)
+        self$set_url(url)
       }
       
       if (self$store_url && !is.null(self$url_storage)) {
-        key <- self$fingerprinter$GetFingerPrint(self$GetFileStream())
-        self$SetURL(self$url_storage[key])
+        key <- self$fingerprinter$get_finger_print(self$get_file_stream())
+        self$set_url(self$url_storage[key])
       }
       
       if (!is.null(self$url)) {
-        self$offset <- self$GetOffset()
+        self$offset <- self$get_offset()
       }
     },
     #' @description Set URL
     #' @param url URL
-    SetURL = function(url) {
+    set_url = function(url) {
       self$url <- url
       
       if (self$store_url && !is.null(self$url_storage)) {
-        key <- self$fingerprinter$GetFingerPrint(self$GetFileStream())
-        self$SetURL(self$url_storage[key])
+        key <- self$fingerprinter$get_finger_print(self$get_file_stream())
+        self$set_url(self$url_storage[key])
       }
     },
     #' @description Get request length
-    GetRequestLength = function() {
+    get_request_length = function() {
       remainder <- self$stop_at - self$offset
       if (remainder > self$chunk_size) {
         return(self$chunk_size)
@@ -172,7 +172,7 @@ TusBaseUploader <- R6::R6Class(
       }
     },
     #' @description Get file stream 
-    GetFileStream = function() {
+    get_file_stream = function() {
       if (!is.null(self$file_stream)) {
         seek(self$file_stream, where = 0, origin = "start")
         return(self$file_stream)
@@ -185,8 +185,8 @@ TusBaseUploader <- R6::R6Class(
       stop(paste("invalid file", self$file_path))
     },
     #' @description Get file size 
-    GetFileSize = function() {
-      stream <- self$GetFileStream()
+    get_file_size = function() {
+      stream <- self$get_file_stream()
       count <- 0
       while (TRUE) {
         old_count <- count

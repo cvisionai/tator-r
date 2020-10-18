@@ -25,14 +25,14 @@ opt = parse_args(opt_parser);
 tator_api <- get_api(opt$host, opt$token)
 
 # Create the project.
-result <- tator_api$CreateProject(ProjectSpec$new("Test Project", "A test project."))
+result <- tator_api$create_project(ProjectSpec$new("Test Project", "A test project."))
 project <- result$id
 loginfo(result$message)
 
 stopifnot("Project was not created"=is.numeric(project))
 
 # Create image type.
-result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
+result <- tator_api$create_media_type(project, MediaTypeSpec$new(
   name = "Test Images",
   description = "A test image type.",
   dtype = "image",
@@ -91,7 +91,7 @@ loginfo(result$message)
 
 
 # Create video type.
-result <- tator_api$CreateMediaType(project, MediaTypeSpec$new(
+result <- tator_api$create_media_type(project, MediaTypeSpec$new(
   name = "Test Videos",
   description = "A test video type.",
   dtype = "video",
@@ -150,10 +150,10 @@ video_type <- result$id
 loginfo(result$message)
 
 # Get baseline version.
-baseline_version <- tator_api$GetVersionList(project)[1]$id
+baseline_version <- tator_api$get_version_list(project)[1]$id
 
 # Create additional version.
-result <- tator_api$CreateVersion(project, VersionSpec$new(
+result <- tator_api$create_version(project, VersionSpec$new(
   name = "Test Version",
   description = "A test version.",
   show_empty = TRUE,
@@ -163,7 +163,7 @@ version <- result$id
 loginfo(result$message)
 
 # Create box type.
-result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
+result <- tator_api$create_localization_type(project, LocalizationTypeSpec$new(
   name = "Test Boxes",
   description = "A test box type.",
   dtype = "box",
@@ -230,7 +230,7 @@ box_type <- result$id
 loginfo(result$message)
 
 # Create line type.
-result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
+result <- tator_api$create_localization_type(project, LocalizationTypeSpec$new(
   name = "Test Lines",
   description = "A test line type.",
   dtype = "line",
@@ -289,7 +289,7 @@ line_type <- result$id
 loginfo(result$message)
 
 # Create dot type.
-result <- tator_api$CreateLocalizationType(project, LocalizationTypeSpec$new(
+result <- tator_api$create_localization_type(project, LocalizationTypeSpec$new(
   name = "Test Dots",
   description = "A test dot type.",
   dtype = "dot",

@@ -9,7 +9,7 @@ NOTE: This package is in development and not ready for use. It will be available
 library(tator)
 
 api <- get_api(host = 'https://www.tatorapp.com', token = 'MY_TOKEN')
-api$GetMediaList(1) # Pass a project ID
+api$get_media_list(1) # Pass a project ID
 ```
 
 Visit the [examples](tests/examples) for more.

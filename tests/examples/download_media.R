@@ -30,7 +30,7 @@ opt = parse_args(opt_parser);
 tator_api <- get_api(opt$host, opt$token)
 
 # Find the project.
-projects <- tator_api$GetProjectList()
+projects <- tator_api$get_project_list()
 project <- NULL
 for (p in projects) {
   if (p$name == opt$project_name) {
@@ -44,7 +44,7 @@ if (is.null(project) || project$name != opt$project_name) {
 }
 
 # Find the media.
-media_list <- tator_api$GetMediaList(project$id, name = opt$media_name)
+media_list <- tator_api$get_media_list(project$id, name = opt$media_name)
 loginfo(sprintf("Found %d media matching name %s.", length(media_list), opt$media_name))
 
 # Download the media.
