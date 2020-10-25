@@ -39,7 +39,7 @@ From what we understand, this note can be ignored.
 https://stackoverflow.com/questions/23829978/checking-cran-incoming-feasibility-note-maintainer
 
 ### R-hub
-
+All builds had 1 Note, the same as the win-builder note.
 
 ## Tests
 Because this package is mostly generated code to interact with
