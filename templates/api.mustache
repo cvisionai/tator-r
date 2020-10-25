@@ -38,6 +38,16 @@
     #' @param {{paramName}} {{paramName}}
     {{/optionalParams}}
     #' @param ... Optional params
+    #' @examples
+    #' \dontrun{
+    #'     library({{{packageName}}})
+    #'     api <- get_api(host = 'https://www.tatorapp.com', token = 'MY_TOKEN')
+    #'     result <- api${{{operationIdSnakeCase}}}(
+    {{#requiredParams}}
+    #'         {{{paramName}}}{{^-last}}, {{/-last}}
+    {{/requiredParams}}
+    #'     )
+    #' }
     {{{operationIdSnakeCase}}} = function({{#requiredParams}}{{paramName}}, {{/requiredParams}}{{#optionalParams}}{{paramName}}={{^defaultValue}}NULL{{/defaultValue}}{{#defaultValue}}{{#isListContainer}}list(){{/isListContainer}}{{^isListContainer}}{{{.}}}{{/isListContainer}}{{/defaultValue}}, {{/optionalParams}}...){
       apiResponse <- private${{{operationIdSnakeCase}}}_with_http_info({{#allParams}}{{paramName}}, {{/allParams}}...)
       resp <- apiResponse$response

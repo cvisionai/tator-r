@@ -1,11 +1,12 @@
 Package: tator
-Title: R Client for Tator
-Version: 0.0.2
+Title: R Client for 'Tator'
+Version: 0.0.3
 Authors@R: 
     person(family = "CVision AI",
            role = c("aut", "cre", "cph"),
            email = "info@cvisionai.com")
-Description: This is the R client for Tator from CVision AI.
+Description: This is the R client for 'Tator' from 'CVision AI'.
+    The 'Tator' API documentation can be found at <https://www.tatorapp.com/docs/>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

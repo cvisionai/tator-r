@@ -1,3 +1,19 @@
+## Resubmission
+Hello, we were asked to address the following issues:
+
+- Please always write package names, software names and API (application
+  programming interface) names in single quotes in title and description.
+  e.g: --> 'CVision'
+
+- Please add a web reference for the API in the form <https:.....> to the
+  description of the DESCRIPTION file with no space after 'https:' and
+  angle brackets for auto-linking.
+
+- Please add small executable examples in your Rd-files to illustrate the
+  use of the exported function but also enable automatic testing.
+
+We believe we have addressed these. Thank you.
+
 ## Test environments
 * Local MacOS 10.15.5, R version 4.0.2
 * Local Windows 10, R version 4.0.2
@@ -8,19 +24,21 @@
 ## R CMD check results
 ### Local MacOS: 
 ```
-── R CMD check results ───────────────────── tator 0.0.1 ────
-Duration: 2m 35.6s
+── R CMD check results ─────────────────────────── tator 0.0.3 ────
+Duration: 6m 1.5s
 
 0 errors ✓ | 0 warnings ✓ | 0 notes ✓
 ```
 ### win-builder
 1 NOTE:
 ```
-Possibly mis-spelled words in DESCRIPTION:
-  CVision (8:50)
-  Tator (2:21, 8:39)
+* checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'CVision AI <info@cvisionai.com>'
 ```
-These are spelled correctly. CVision is our company name and Tator is the name of the service.
+From what we understand, this note can be ignored.
+https://stackoverflow.com/questions/23829978/checking-cran-incoming-feasibility-note-maintainer
+
+### R-hub
 
 
 ## Tests
