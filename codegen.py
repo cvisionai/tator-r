@@ -20,13 +20,6 @@ def remove_oneof(data):
             remove_oneof(data[key])
     return data
 
-filepath = sys.argv[1]
-if not os.path.exists(filepath):
-        response = requests.get("https://www.tatorapp.com/schema")
-        assert response.status_code == 200
-        with open(filepath, 'wb') as f:
-            f.write(response.content)
-
 def remove_non_json_apis(data):
     """ The R openapi generator does not handle non-json responses
     """
@@ -51,6 +44,12 @@ def replace_description_newlines(data):
             replace_description_newlines(data[key])
     return data
 
+filepath = sys.argv[1]
+if not os.path.exists(filepath):
+        response = requests.get("https://www.tatorapp.com/schema")
+        assert response.status_code == 200
+        with open(filepath, 'wb') as f:
+            f.write(response.content)
 with open(filepath, 'r') as f:
     schema = yaml.load(f, Loader=yaml.FullLoader)
     schema = remove_oneof(schema)
