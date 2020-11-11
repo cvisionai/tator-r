@@ -22,8 +22,6 @@ def remove_oneof(data):
 
 filepath = sys.argv[1]
 if not os.path.exists(filepath):
-    print("No file")
-if not os.path.exists(filepath):
         response = requests.get("https://www.tatorapp.com/schema")
         assert response.status_code == 200
         with open(filepath, 'wb') as f:
