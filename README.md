@@ -5,7 +5,7 @@ NOTE: This package is in development and not ready for use. It will be available
 [R](https://www.r-project.org) client for [Tator](https://github.com/cvisionai/tator).
 
 ## Example usage
-```R
+```
 library(tator)
 
 api <- get_api(host = 'https://www.tatorapp.com', token = 'MY_TOKEN')
@@ -16,13 +16,13 @@ Visit the [examples](tests/examples) for more.
 
 ## Installation
 
-### From CRAN
-Not yet available
+### From GitHub
+Download from [Releases](https://github.com/cvisionai/tator-r/releases)
 
 ### From source
 Requires Make and Docker with docker image `openapitools/openapi-generator-cli:latest`
 
-```shell
+```
 # Generate openapi code
 $ make r-bindings
 # Build and install tator-r
