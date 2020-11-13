@@ -19,6 +19,8 @@ Visit the [examples](tests/examples) for more.
 ### From GitHub
 Download from [Releases](https://github.com/cvisionai/tator-r/releases)
 
+Installation instructions for R packages can be found [here](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/install.packages)
+
 ### From source
 Requires Make and Docker with docker image `openapitools/openapi-generator-cli:latest`
 
