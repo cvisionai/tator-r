@@ -6,12 +6,12 @@ Authors@R:
            role = c("aut", "cre", "cph"),
            email = "info@cvisionai.com")
 Description: This is the R client for 'Tator' from 'CVision AI'.
-    The 'Tator' API documentation can be found at <https://www.tatorapp.com/docs/>.
+    The 'Tator' API documentation can be found at <https://tator.io/api/0>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends: R (>= 3.5.0)
 Imports:
   R6,

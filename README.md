@@ -6,7 +6,7 @@
 ```
 library(tator)
 
-api <- get_api(host = 'https://www.tatorapp.com', token = 'MY_TOKEN')
+api <- get_api(host = 'https://cloud.tator.io', token = 'MY_TOKEN')
 api$get_media_list(1) # Pass a project ID
 ```
 
@@ -32,7 +32,7 @@ $ ./build.sh
 
 ## API documentation
 
-Documentation for all API functions and models can be found in the [OpenAPI documentation](https://www.tatorapp.com/docs/).
+Documentation for all API functions and models can be found in the [OpenAPI documentation](https://tator.io/api/0).
 
 ## Authors
 

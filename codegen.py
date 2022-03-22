@@ -46,7 +46,7 @@ def replace_description_newlines(data):
 
 filepath = sys.argv[1]
 if not os.path.exists(filepath):
-        response = requests.get("https://www.tatorapp.com/schema")
+        response = requests.get("https://cloud.tator.io/schema")
         assert response.status_code == 200
         with open(filepath, 'wb') as f:
             f.write(response.content)
