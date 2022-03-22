@@ -1,14 +1,14 @@
 #' @title get_api
 #' @description Retrieves a TatorAPI instance using the given host and token.
-#' @param host URL of host. Default is https://www.tatorapp.com.
+#' @param host URL of host. Default is https://cloud.tator.io.
 #' @param token API token.
 #' @return TatorApi object
 #' @examples
 #' \dontrun{
-#'   api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'   api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #' }
 #' @export
-get_api = function(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN")) {
+get_api = function(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN")) {
   instance <- TatorApi$new()
   instance$api_client$apiKeys["Authorization"] <- stringr::str_interp("Token ${token}")
   instance$api_client$basePath <- host
@@ -23,7 +23,7 @@ get_api = function(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_
 #' @return Generator that yields a response.
 #' @examples 
 #' \dontrun{
-#'   tator_api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'   tator_api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #'   states <- list()
 #'   for (frame in seq(0, video$num_frames, 10)) {
 #'      states <- c(states,
@@ -64,7 +64,7 @@ chunked_create = function(FUN, project, spec_list) {
 #' @param chunk_size Chunk size in bytes. Default is 2MB.
 #' @examples 
 #' \dontrun{
-#'   tator_api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'   tator_api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #'   response <- upload_media(tator_api, media_type_id, local_media_path)
 #' }
 #' @export
@@ -149,7 +149,7 @@ upload_media = function(api, type_id, path, md5 = NULL, section = NULL, fname = 
 #'        response. The response is `None` until the last yield, when the response
 #' @examples
 #' \dontrun{
-#'   tator_api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'   tator_api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #'   paths <- dir(local_media_dir)
 #'   paths <- sapply(paths, function(p) { file.path(local_media_dir, p) })
 #'   response <- upload_media_archive(tator_api, project_id, paths) 
@@ -208,7 +208,7 @@ upload_media_archive = function(api, project_id, paths, section = "Test Section"
 #' @returns Generator the yields progress (0-100).
 #' @examples
 #' \dontrun{
-#'    tator_api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'    tator_api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #'    # Find the media.
 #'    media_list <- tator_api$get_media_list(project_id, name = media_name)
 #'    loginfo(sprintf("Found %d media matching name %s.", length(media_list), media_name))
@@ -264,7 +264,7 @@ download_media = function(api, media, out_path) {
 #' @param out_path  Path to where to download.
 #' @examples 
 #' \dontrun{
-#'     tator_api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'     tator_api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #'     # Get the temporary file object.
 #'     temporary_file <- tator_api$get_temporary_file(temporary_file_id)
 #'     # Download the file.
@@ -298,7 +298,7 @@ download_temporary_file = function(api, temporary_file, out_path) {
 #' @param path Path to the file. 
 #' @examples 
 #' \dontrun{
-#'    tator_api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'    tator_api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #'    url <- upload_file(local_file, tator_api)
 #' }
 #' @export
@@ -339,7 +339,7 @@ upload_file = function(path, api) {
 #'        is the response object from :meth:`tator.util.TatorApi.create_temporary_file`.
 #' @examples 
 #' \dontrun{
-#'    tator_api <- get_api(host = "https://www.tatorapp.com", token = Sys.getenv("TATOR_TOKEN"))
+#'    tator_api <- get_api(host = "https://cloud.tator.io", token = Sys.getenv("TATOR_TOKEN"))
 #'    t <- tempfile(fileext = ".txt")
 #'    write("foo", file = t)
 #'    response <- upload_temporary_file(tator_api, project_id, t)
